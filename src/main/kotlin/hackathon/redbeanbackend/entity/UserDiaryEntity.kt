@@ -9,6 +9,7 @@ data class UserDiaryEntity(
     @Column(length = 50000) var content: String,
     var createdAt: LocalDateTime,
     @ManyToOne @JoinColumn(name = "user_id") var user: UserEntity? = null,
+    @OneToOne(mappedBy = "diary") var result: UserDiaryResultEntity? = null,
 ) {
     constructor() : this(0, "", LocalDateTime.now())
     constructor(content: String, user: UserEntity) : this(null, content, LocalDateTime.now(), user)
