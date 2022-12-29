@@ -1,6 +1,5 @@
 package hackathon.redbeanbackend.entity
 
-import hackathon.redbeanbackend.domain.Gender
 import jakarta.persistence.*
 
 @Entity(name = "user")

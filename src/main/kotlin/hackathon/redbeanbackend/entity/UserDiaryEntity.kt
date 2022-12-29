@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 @Entity(name = "user_diary")
 data class UserDiaryEntity(
     @Id @GeneratedValue var id: Long? = null,
-    var content: String,
+    @Column(length = 50000) var content: String,
     var createdAt: LocalDateTime,
     @ManyToOne @JoinColumn(name = "user_id") var user: UserEntity? = null,
 ) {

@@ -18,7 +18,8 @@ class ControllerAdvice {
 
     @ExceptionHandler
     fun validationException(e: MethodArgumentNotValidException): ResponseEntity<APIResponse>? {
-        return ResponseEntity.badRequest().body(APIResponse.error(e.fieldErrors.firstOrNull()?.defaultMessage?:"알 수 없는 오류입니다"))
+        return ResponseEntity.badRequest()
+            .body(APIResponse.error(e.fieldErrors.firstOrNull()?.defaultMessage ?: "알 수 없는 오류입니다"))
     }
 
     @ExceptionHandler
