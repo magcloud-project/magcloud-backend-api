@@ -17,12 +17,17 @@ class UserDiaryService(
     private val userRepository: JPAUserRepository,
     private val diaryRepository: JPAUserDiaryRepository,
     private val inferenceService: InferenceService){
-    fun addDiary(userId: Long, content: String): APIResponse {
+    fun addDiary(userId: Long, diaryDate: String, content: String): APIResponse {
         val user = userRepository.findById(userId)
         if (!user.isPresent) throw NotFoundException("그런 유저는 찾을 수 없습니다")
 
-        val previousDiaries = getDiariesByDate(userId, getToday())
-        if (previousDiaries.isNotEmpty()) throw DomainException("오늘의 일기는 이미 작성했습니다")
+        val previousDiaries = diaryRepository.getByIdAndDate(userId, LocalDate.parse(diaryDate, DateTimeFormatter.BASIC_ISO_DATE))
+        if (previousDiaries != null){
+            //UPDATE CODE
+            previousDiaries.content = content
+            diaryRepository.save(previousDiaries)
+            return APIResponse.ok("일기가 수정되었습니다.");
+        }
 
         val userDiary = UserDiaryEntity(content, user.get())
         val requestedResult = diaryRepository.save(userDiary)
@@ -41,11 +46,11 @@ class UserDiaryService(
         return user.get().diaries.map { DiaryResponseDTO(it.id!!, it.content, it.createdAt, it.result?.toDTO()) }
     }
     fun getDiariesByDate(userId: Long,date: String): List<DiaryResponseDTO> {
-        val user = userRepository.findById(userId)
-        if (!user.isPresent) throw NotFoundException("그런 유저는 찾을 수 없습니다")
-        return user.get().diaries.filter { compareDate(it.createdAt, date) }.map { DiaryResponseDTO(it.id!!, it.content, it.createdAt, it.result?.toDTO()) }
+        val diary = diaryRepository.getByIdAndDate(userId, LocalDate.parse(date, DateTimeFormatter.BASIC_ISO_DATE)) ?: return emptyList()
+        return listOf(diary).map { DiaryResponseDTO(it.id!!, it.content, it.createdAt, it.result?.toDTO()) }
     }
     fun compareDate(date: LocalDateTime, originDate: String): Boolean{
+        println("${date.format(DateTimeFormatter.ofPattern("yyyyMMdd"))} $originDate")
         return date.format(DateTimeFormatter.ofPattern("yyyyMMdd")) == originDate
     }
 }

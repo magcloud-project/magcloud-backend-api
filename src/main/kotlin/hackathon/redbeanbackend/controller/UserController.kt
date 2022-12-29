@@ -61,7 +61,7 @@ class UserController(
         @RequestBody @Valid dto: DiaryCreateDTO,
         @RequestHeader(value = "X-AUTH-TOKEN") token: String?
     ): ResponseEntity<APIResponse> {
-        val result = userDiaryService.addDiary(findUserByToken(token), dto.content!!)
+        val result = userDiaryService.addDiary(findUserByToken(token), dto.date!!, dto.content!!)
         return ResponseEntity.ok(result)
     }
 

@@ -34,6 +34,7 @@ class ControllerAdvice {
 
     @ExceptionHandler
     fun defaultHandle(e: RuntimeException): ResponseEntity<APIResponse>? {
+        e.printStackTrace()
         return ResponseEntity.badRequest().body(APIResponse.error("알 수 없는 오류가 발생했습니다"))
     }
 }
