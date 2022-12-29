@@ -1,22 +1,21 @@
 package hackathon.redbeanbackend.entity
 
 import hackathon.redbeanbackend.domain.Gender
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.Id
+import jakarta.persistence.*
 import lombok.AllArgsConstructor
 
-@Entity
-@AllArgsConstructor
+@Entity(name="user")
 data class UserEntity(
     @Id @GeneratedValue var id: Long? = null,
     var email: String,
     var password: String,
-    var gender: Gender,
+    @Enumerated(value = EnumType.STRING) var gender: Gender,
     var age: Int,
-    var name: String
+    var name: String,
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true) var tags: MutableList<UserTagEntity> = mutableListOf(),
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true) var diaries: MutableList<UserDiaryEntity> = mutableListOf()
 ){
-    constructor() : this(null, "", "", Gender.MALE, 0, "")
+    constructor() : this(null, "", "", Gender.MALE, 0, "", mutableListOf())
     constructor(email: String, password: String, gender: Gender, age: Int, name: String) : this(null, email, password, gender, age, name)
 
 }

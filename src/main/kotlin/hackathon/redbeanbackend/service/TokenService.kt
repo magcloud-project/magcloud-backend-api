@@ -5,6 +5,7 @@ import hackathon.redbeanbackend.dto.APIResponse
 import hackathon.redbeanbackend.dto.AuthRegisterDTO
 import hackathon.redbeanbackend.entity.UserEntity
 import hackathon.redbeanbackend.repository.JPAUserRepository
+import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.beans.factory.annotation.Value
@@ -41,4 +42,13 @@ class TokenService(@Value("\${secret.token}") val secret: String) {
             Pair("regDate", System.currentTimeMillis())
         )
     private fun generateAccessTokenExpiration() = Date(System.currentTimeMillis() + 9999999 * 1000)
+
+    fun getIdFromToken(token: String): Long? {
+        return try{
+            (Jwts.parserBuilder().setSigningKey(signKey).build()
+                .parseClaimsJws(token).body["id"] as Int).toLong()
+        }catch(e: Exception) {
+            null
+        }
+    }
 }
