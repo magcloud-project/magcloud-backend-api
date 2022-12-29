@@ -6,3 +6,6 @@ spring:
     password: ${MYSQL_PASSWORD}
 secret:
   token: ${AUTH_SECRET}
+  inference-url: ${INFERENCE_URL}
+server:
+  port: ${SERVER_PORT}
