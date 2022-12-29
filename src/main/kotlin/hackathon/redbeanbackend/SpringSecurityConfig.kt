@@ -3,27 +3,27 @@ package hackathon.redbeanbackend
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.Customizer
-import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
-import org.springframework.security.config.web.server.ServerHttpSecurity
+import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer.AuthorizationManagerRequestMatcherRegistry
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import org.springframework.security.web.server.SecurityWebFilterChain
+import org.springframework.security.web.SecurityFilterChain
 
+
+@EnableWebSecurity
 @Configuration
-@EnableWebFluxSecurity
-class HelloWebfluxSecurityConfig {
+class HelloWebfluxSecurityConfig{
     @Bean
     fun bCryptPasswordEncoder(): BCryptPasswordEncoder {
         return BCryptPasswordEncoder()
     }
 
     @Bean
-    fun springSecurityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
-        return http.authorizeExchange()
-            .anyExchange().permitAll()
+    fun config(http: HttpSecurity): SecurityFilterChain? {
+        return http
+            .authorizeHttpRequests().anyRequest().permitAll()
             .and()
             .csrf().disable()
-            .httpBasic(Customizer.withDefaults())
-            .formLogin(Customizer.withDefaults())
             .build()
     }
 }

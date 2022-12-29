@@ -17,6 +17,6 @@ data class UserEntity(
     var name: String
 ){
     constructor() : this(null, "", "", Gender.MALE, 0, "")
-    constructor(email: String, password: String, gender: Gender, age: Int, name: String) : this()
+    constructor(email: String, password: String, gender: Gender, age: Int, name: String) : this(null, email, password, gender, age, name)
 
 }
