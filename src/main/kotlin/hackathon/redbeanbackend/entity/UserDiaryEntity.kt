@@ -12,6 +12,6 @@ data class UserDiaryEntity(
     @OneToOne(mappedBy = "diary") var result: UserDiaryResultEntity? = null,
 ) {
     constructor() : this(0, "", LocalDateTime.now())
-    constructor(content: String, user: UserEntity) : this(null, content, LocalDateTime.now(), user)
+    constructor(content: String, user: UserEntity, createdAt: LocalDateTime) : this(null, content, createdAt, user)
 
 }

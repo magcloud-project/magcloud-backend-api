@@ -29,7 +29,7 @@ class UserDiaryService(
             return APIResponse.ok("일기가 수정되었습니다.");
         }
 
-        val userDiary = UserDiaryEntity(content, user.get())
+        val userDiary = UserDiaryEntity(content, user.get(), LocalDate.parse(diaryDate, DateTimeFormatter.BASIC_ISO_DATE).atStartOfDay())
         val requestedResult = diaryRepository.save(userDiary)
         inferenceService.requestInference(requestedResult)
         return APIResponse.ok("일기가 추가되었습니다")
