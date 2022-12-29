@@ -8,7 +8,6 @@ data class UserEntity(
     @Id @GeneratedValue var id: Long? = null,
     var email: String,
     var password: String,
-    @Enumerated(value = EnumType.STRING) var gender: Gender,
     var age: Int,
     var name: String,
     @OneToMany(
@@ -22,12 +21,11 @@ data class UserEntity(
         orphanRemoval = true
     ) var diaries: MutableList<UserDiaryEntity> = mutableListOf()
 ) {
-    constructor() : this(null, "", "", Gender.MALE, 0, "", mutableListOf())
-    constructor(email: String, password: String, gender: Gender, age: Int, name: String) : this(
+    constructor() : this(null, "", "", 0, "", mutableListOf())
+    constructor(email: String, password: String, age: Int, name: String) : this(
         null,
         email,
         password,
-        gender,
         age,
         name
     )

@@ -24,7 +24,6 @@ class UserService(
         val user = UserEntity(
             authRegisterDTO.email,
             encrypt(authRegisterDTO.password!!),
-            authRegisterDTO.gender!!,
             authRegisterDTO.age!!,
             authRegisterDTO.name!!
         )
