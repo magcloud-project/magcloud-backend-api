@@ -17,4 +17,5 @@ data class UserDiaryResultEntity(
     constructor() : this(null, null)
     constructor(diary: UserDiaryEntity) : this(null, diary)
     constructor(diary: UserDiaryEntity, sadness: Float, joy: Float, natural: Float, anger: Float, fear: Float, depression: Float) : this(null, diary, sadness, joy, natural, anger, fear, depression)
+    fun toDTO() = hackathon.redbeanbackend.dto.DiaryResultDTO(diary!!.id!!, sadness, joy, naturality, anger, fear, depression)
 }

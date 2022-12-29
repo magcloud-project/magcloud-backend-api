@@ -13,4 +13,5 @@ data class UserDiaryEntity(
 ) {
     constructor() : this(0, "", LocalDateTime.now())
     constructor(content: String, user: UserEntity) : this(null, content, LocalDateTime.now(), user)
+
 }

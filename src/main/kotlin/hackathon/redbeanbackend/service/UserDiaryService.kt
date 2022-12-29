@@ -35,12 +35,12 @@ class UserDiaryService(private val userRepository: JPAUserRepository, private va
     fun getDiariesOfUser(userId: Long): List<DiaryResponseDTO> {
         val user = userRepository.findById(userId)
         if (!user.isPresent) throw NotFoundException("그런 유저는 찾을 수 없습니다")
-        return user.get().diaries.map { DiaryResponseDTO(it.id!!, it.content, it.createdAt) }
+        return user.get().diaries.map { DiaryResponseDTO(it.id!!, it.content, it.createdAt, it.result?.toDTO()) }
     }
     fun getDiariesByDate(userId: Long,date: String): List<DiaryResponseDTO> {
         val user = userRepository.findById(userId)
         if (!user.isPresent) throw NotFoundException("그런 유저는 찾을 수 없습니다")
-        return user.get().diaries.filter { compareDate(it.createdAt, date) }.map { DiaryResponseDTO(it.id!!, it.content, it.createdAt) }
+        return user.get().diaries.filter { compareDate(it.createdAt, date) }.map { DiaryResponseDTO(it.id!!, it.content, it.createdAt, it.result?.toDTO()) }
     }
     fun compareDate(date: LocalDateTime, originDate: String): Boolean{
         return date.format(DateTimeFormatter.ofPattern("yyyyMMdd")) == originDate
