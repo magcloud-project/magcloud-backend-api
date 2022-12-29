@@ -22,14 +22,27 @@ class InferenceService(
     private val translateService: TranslateService) {
     @Async
     fun requestInference(diary: UserDiaryEntity){
+        println("inference start");
         try{
             val response = _requestInference(diary)
-            val diaryResult = UserDiaryResultEntity(diary, response.sadness, response.joy, response.natural, response.anger, response.fear, response.depression)
-            userDiaryResultRepository.save(diaryResult)
+
+            val previousInference = userDiaryResultRepository.findByDiaryId(diary.id!!)
+            if(previousInference != null){
+                previousInference.anxious = response.Anxious;
+                previousInference.lonely = response.Lonely;
+                previousInference.normal = response.Normal;
+                previousInference.stress = response.Stressed;
+
+                userDiaryResultRepository.save(previousInference)
+            } else {
+                val diaryResult = UserDiaryResultEntity(diary, response.Stressed, response.Anxious, response.Normal, response.Lonely)
+                userDiaryResultRepository.save(diaryResult)
+            }
         }catch(ex: RuntimeException){
             ex.printStackTrace()
         }
         //Inference Finished
+        println("inference fin");
     }
     private fun _requestInference(diary: UserDiaryEntity): InferenceResponseDTO{
         val translated = translateService.translateToEnglish(diary.content)

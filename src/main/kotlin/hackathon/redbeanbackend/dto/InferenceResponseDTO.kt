@@ -1,4 +1,4 @@
 package hackathon.redbeanbackend.dto
 
-class InferenceResponseDTO(val sadness: Float, val joy: Float, val natural: Float, val anger: Float, val fear: Float, val depression: Float) {
+class InferenceResponseDTO(val Stressed: Float, val Anxious: Float, val Normal : Float, val Lonely: Float) {
 }

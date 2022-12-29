@@ -26,6 +26,7 @@ class UserDiaryService(
             //UPDATE CODE
             previousDiaries.content = content
             diaryRepository.save(previousDiaries)
+            inferenceService.requestInference(previousDiaries)
             return APIResponse.ok("일기가 수정되었습니다.");
         }
 
