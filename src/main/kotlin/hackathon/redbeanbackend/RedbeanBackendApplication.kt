@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class RedbeanBackendApplication
 
 fun main(args: Array<String>) {
-	runApplication<RedbeanBackendApplication>(*args)
+    runApplication<RedbeanBackendApplication>(*args)
 }

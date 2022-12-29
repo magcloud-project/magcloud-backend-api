@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/v1/auth")
 class AuthController(private val userService: UserService) {
     @PostMapping
-    fun requestLogin(@RequestBody dto: LoginDTO): ResponseEntity<LoginResponseDTO>{
+    fun requestLogin(@RequestBody dto: LoginDTO): ResponseEntity<LoginResponseDTO> {
         return ResponseEntity.ok(userService.onLoginRequest(dto))
     }
 }
