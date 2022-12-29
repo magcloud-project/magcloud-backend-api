@@ -4,6 +4,9 @@ spring:
     url: ${FLYWAY_URL}
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
 secret:
   token: ${AUTH_SECRET}
   inference-url: ${INFERENCE_URL}
