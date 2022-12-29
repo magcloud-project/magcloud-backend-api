@@ -1,5 +1,7 @@
 package hackathon.redbeanbackend.dto
 
+import jakarta.validation.constraints.NotEmpty
+
 data class TagCreateDTO(
-    val name: String
+    @field:NotEmpty val name: String? = null
 )

@@ -1,5 +1,7 @@
 package hackathon.redbeanbackend.dto
 
+import jakarta.validation.constraints.NotNull
+
 data class UserTagAddDTO(
-    val id: Long
+    @field:NotNull val id: Long? = null
 )

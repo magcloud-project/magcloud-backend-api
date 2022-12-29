@@ -6,6 +6,7 @@ import hackathon.redbeanbackend.service.TokenService
 import hackathon.redbeanbackend.service.UserDiaryService
 import hackathon.redbeanbackend.service.UserService
 import hackathon.redbeanbackend.service.UserTagService
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -18,26 +19,26 @@ class UserController(
     private val userDiaryService: UserDiaryService
 ) {
     @PostMapping
-    fun onRegisterRequested(@RequestBody request: AuthRegisterDTO): ResponseEntity<APIResponse> {
+    fun onRegisterRequested(@RequestBody @Valid request: AuthRegisterDTO): ResponseEntity<APIResponse> {
         val result = userService.onRegisterRequest(request)
         return ResponseEntity.ok(result)
     }
 
     @PutMapping("/tag")
     fun onAdd(
-        @RequestBody dto: UserTagAddDTO,
+        @RequestBody @Valid dto: UserTagAddDTO,
         @RequestHeader(value = "X-AUTH-TOKEN") token: String?
     ): ResponseEntity<APIResponse> {
-        val result = userTagService.addTagToUser(findUserByToken(token), dto.id)
+        val result = userTagService.addTagToUser(findUserByToken(token), dto.id!!)
         return ResponseEntity.ok(result)
     }
 
     @DeleteMapping("/tag")
     fun onDelete(
-        @RequestBody dto: UserTagAddDTO,
+        @RequestBody @Valid dto: UserTagAddDTO,
         @RequestHeader(value = "X-AUTH-TOKEN") token: String?
     ): ResponseEntity<APIResponse> {
-        val result = userTagService.deleteTagOfUser(findUserByToken(token), dto.id)
+        val result = userTagService.deleteTagOfUser(findUserByToken(token), dto.id!!)
         return ResponseEntity.ok(result)
     }
 
@@ -49,16 +50,15 @@ class UserController(
 
     @PostMapping("/diary")
     fun onDiaryAdd(
-        @RequestBody dto: DiaryCreateDTO,
+        @RequestBody @Valid dto: DiaryCreateDTO,
         @RequestHeader(value = "X-AUTH-TOKEN") token: String?
     ): ResponseEntity<APIResponse> {
-        val result = userDiaryService.addDiary(findUserByToken(token), dto.content)
+        val result = userDiaryService.addDiary(findUserByToken(token), dto.content!!)
         return ResponseEntity.ok(result)
     }
 
     @GetMapping("/diary")
     fun onDiaryGet(
-        @RequestBody dto: DiaryCreateDTO,
         @RequestHeader(value = "X-AUTH-TOKEN") token: String?
     ): ResponseEntity<List<DiaryResponseDTO>> {
         val result = userDiaryService.getDiariesOfUser(findUserByToken(token))

@@ -6,6 +6,6 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
 
 data class LoginDTO(
-    @field:NotNull @field:NotEmpty @field:Email val email: String,
-    @field:NotNull @field:Size(min = 6, max = 16) val password: String,
+    @field:NotNull(message="이메일은 필수입니다") @field:NotEmpty(message="이메일은 필수입니다") @field:Email(message="이메일은 형태여야합니다") val email: String? = null,
+    @field:NotNull(message="비밀번호를 확인하세요") @field:Size(min = 6, max = 16, message="비밀번호를 확인하세요") val password: String? = null,
 )

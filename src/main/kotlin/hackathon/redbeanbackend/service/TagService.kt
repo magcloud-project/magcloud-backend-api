@@ -21,7 +21,7 @@ class TagService(private val repository: JPATagRepository) {
     }
 
     fun createNewTag(dto: TagCreateDTO): TagResponseDTO {
-        val previous = repository.getTagEntityByName(dto.name)
+        val previous = repository.getTagEntityByName(dto.name!!)
         if (previous != null) throw DomainException("같은 이름의 태그가 이미 존재합니다")
         val newTag = TagEntity(dto.name)
         val result = repository.save(newTag)
