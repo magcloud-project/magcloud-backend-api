@@ -5,4 +5,4 @@ data class UserDTO(
     val email: String,
     val age: Int,
     val name: String
-    )
+)

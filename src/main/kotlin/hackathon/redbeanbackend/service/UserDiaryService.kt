@@ -1,6 +1,5 @@
 package hackathon.redbeanbackend.service
 
-import hackathon.redbeanbackend.domain.DomainException
 import hackathon.redbeanbackend.domain.NotFoundException
 import hackathon.redbeanbackend.dto.APIResponse
 import hackathon.redbeanbackend.dto.DiaryResponseDTO
@@ -16,13 +15,15 @@ import java.time.format.DateTimeFormatter
 class UserDiaryService(
     private val userRepository: JPAUserRepository,
     private val diaryRepository: JPAUserDiaryRepository,
-    private val inferenceService: InferenceService){
+    private val inferenceService: InferenceService
+) {
     fun addDiary(userId: Long, diaryDate: String, content: String): APIResponse {
         val user = userRepository.findById(userId)
         if (!user.isPresent) throw NotFoundException("그런 유저는 찾을 수 없습니다")
 
-        val previousDiaries = diaryRepository.getByIdAndDate(userId, LocalDate.parse(diaryDate, DateTimeFormatter.BASIC_ISO_DATE))
-        if (previousDiaries != null){
+        val previousDiaries =
+            diaryRepository.getByIdAndDate(userId, LocalDate.parse(diaryDate, DateTimeFormatter.BASIC_ISO_DATE))
+        if (previousDiaries != null) {
             //UPDATE CODE
             previousDiaries.content = content
             diaryRepository.save(previousDiaries)
@@ -30,7 +31,11 @@ class UserDiaryService(
             return APIResponse.ok("일기가 수정되었습니다.");
         }
 
-        val userDiary = UserDiaryEntity(content, user.get(), LocalDate.parse(diaryDate, DateTimeFormatter.BASIC_ISO_DATE).atStartOfDay())
+        val userDiary = UserDiaryEntity(
+            content,
+            user.get(),
+            LocalDate.parse(diaryDate, DateTimeFormatter.BASIC_ISO_DATE).atStartOfDay()
+        )
         val requestedResult = diaryRepository.save(userDiary)
         inferenceService.requestInference(requestedResult)
         return APIResponse.ok("일기가 추가되었습니다")
@@ -46,11 +51,14 @@ class UserDiaryService(
         if (!user.isPresent) throw NotFoundException("그런 유저는 찾을 수 없습니다")
         return user.get().diaries.map { DiaryResponseDTO(it.id!!, it.content, it.createdAt, it.result?.toDTO()) }
     }
-    fun getDiariesByDate(userId: Long,date: String): List<DiaryResponseDTO> {
-        val diary = diaryRepository.getByIdAndDate(userId, LocalDate.parse(date, DateTimeFormatter.BASIC_ISO_DATE)) ?: return emptyList()
+
+    fun getDiariesByDate(userId: Long, date: String): List<DiaryResponseDTO> {
+        val diary = diaryRepository.getByIdAndDate(userId, LocalDate.parse(date, DateTimeFormatter.BASIC_ISO_DATE))
+            ?: return emptyList()
         return listOf(diary).map { DiaryResponseDTO(it.id!!, it.content, it.createdAt, it.result?.toDTO()) }
     }
-    fun compareDate(date: LocalDateTime, originDate: String): Boolean{
+
+    fun compareDate(date: LocalDateTime, originDate: String): Boolean {
         println("${date.format(DateTimeFormatter.ofPattern("yyyyMMdd"))} $originDate")
         return date.format(DateTimeFormatter.ofPattern("yyyyMMdd")) == originDate
     }

@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
 @Service
-class TranslateService(val userDiaryResultRepository: JPAUserDiaryResultRepository,
-                       @Value("\${secret.naver-client-id}") val id: String,
-                       @Value("\${secret.naver-client-secret}") val secret: String) {
+class TranslateService(
+    val userDiaryResultRepository: JPAUserDiaryResultRepository,
+    @Value("\${secret.naver-client-id}") val id: String,
+    @Value("\${secret.naver-client-secret}") val secret: String
+) {
     fun translateToEnglish(text: String): String {
         val header = HttpHeaders()
         header.set("X-Naver-Client-Id", id)

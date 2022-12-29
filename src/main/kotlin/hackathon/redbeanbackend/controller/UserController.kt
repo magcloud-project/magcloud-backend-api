@@ -9,8 +9,6 @@ import hackathon.redbeanbackend.service.UserTagService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -27,7 +25,7 @@ class UserController(
     }
 
     @GetMapping
-    fun onGetRequest(@RequestHeader(value = "X-AUTH-TOKEN") token: String?): ResponseEntity<UserDTO>{
+    fun onGetRequest(@RequestHeader(value = "X-AUTH-TOKEN") token: String?): ResponseEntity<UserDTO> {
         val result = userService.getUserInfo(findUserByToken(token))
         return ResponseEntity.ok(result)
     }
@@ -70,7 +68,7 @@ class UserController(
         @RequestHeader(value = "X-AUTH-TOKEN") token: String?,
         @RequestParam(required = false) date: String?
     ): ResponseEntity<List<DiaryResponseDTO>> {
-        return if(date == null) {
+        return if (date == null) {
             val result = userDiaryService.getDiariesOfUser(findUserByToken(token))
             ResponseEntity.ok(result)
         } else {

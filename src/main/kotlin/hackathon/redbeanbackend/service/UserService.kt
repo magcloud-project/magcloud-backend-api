@@ -17,8 +17,10 @@ class UserService(
     fun compare(password: String, encryptedPassword: String): Boolean = bCrypt.matches(password, encryptedPassword)
 
     fun getUserInfo(userId: Long): UserDTO {
-        return repository.findById(userId).map { UserDTO(it.id!!, it.email, it.age, it.name) }.orElseThrow { throw DomainException() }
+        return repository.findById(userId).map { UserDTO(it.id!!, it.email, it.age, it.name) }
+            .orElseThrow { throw DomainException() }
     }
+
     fun onRegisterRequest(authRegisterDTO: AuthRegisterDTO): APIResponse {
         val previousUser = getUserByEmail(authRegisterDTO.email!!)
         if (previousUser != null) throw DomainException("이미 존재하는 이메일입니다")

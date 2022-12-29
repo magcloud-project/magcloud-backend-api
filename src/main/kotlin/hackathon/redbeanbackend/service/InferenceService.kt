@@ -1,15 +1,11 @@
 package hackathon.redbeanbackend.service
 
 import hackathon.redbeanbackend.domain.DomainException
-import hackathon.redbeanbackend.domain.NotFoundException
-import hackathon.redbeanbackend.dto.APIResponse
-import hackathon.redbeanbackend.dto.DiaryResponseDTO
 import hackathon.redbeanbackend.dto.InferenceRequestDTO
 import hackathon.redbeanbackend.dto.InferenceResponseDTO
 import hackathon.redbeanbackend.entity.UserDiaryEntity
 import hackathon.redbeanbackend.entity.UserDiaryResultEntity
 import hackathon.redbeanbackend.repository.JPAUserDiaryResultRepository
-import hackathon.redbeanbackend.repository.JPAUserRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
@@ -19,15 +15,16 @@ import org.springframework.web.client.RestTemplate
 class InferenceService(
     private val userDiaryResultRepository: JPAUserDiaryResultRepository,
     @Value("\${secret.inference-url}") val inferenceUrl: String,
-    private val translateService: TranslateService) {
+    private val translateService: TranslateService
+) {
     @Async
-    fun requestInference(diary: UserDiaryEntity){
+    fun requestInference(diary: UserDiaryEntity) {
         println("inference start");
-        try{
+        try {
             val response = _requestInference(diary)
 
             val previousInference = userDiaryResultRepository.findByDiaryId(diary.id!!)
-            if(previousInference != null){
+            if (previousInference != null) {
                 previousInference.anxious = response.Anxious;
                 previousInference.lonely = response.Lonely;
                 previousInference.normal = response.Normal;
@@ -35,18 +32,21 @@ class InferenceService(
 
                 userDiaryResultRepository.save(previousInference)
             } else {
-                val diaryResult = UserDiaryResultEntity(diary, response.Stressed, response.Anxious, response.Normal, response.Lonely)
+                val diaryResult =
+                    UserDiaryResultEntity(diary, response.Stressed, response.Anxious, response.Normal, response.Lonely)
                 userDiaryResultRepository.save(diaryResult)
             }
-        }catch(ex: RuntimeException){
+        } catch (ex: RuntimeException) {
             ex.printStackTrace()
         }
         //Inference Finished
         println("inference fin");
     }
-    private fun _requestInference(diary: UserDiaryEntity): InferenceResponseDTO{
+
+    private fun _requestInference(diary: UserDiaryEntity): InferenceResponseDTO {
         val translated = translateService.translateToEnglish(diary.content)
         val dto = InferenceRequestDTO(translated)
-        return RestTemplate().postForEntity(inferenceUrl, dto, InferenceResponseDTO::class.java).body ?: throw DomainException()
+        return RestTemplate().postForEntity(inferenceUrl, dto, InferenceResponseDTO::class.java).body
+            ?: throw DomainException()
     }
 }
