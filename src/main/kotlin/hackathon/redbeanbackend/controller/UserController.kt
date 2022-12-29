@@ -1,11 +1,9 @@
 package hackathon.redbeanbackend.controller
 
 import hackathon.redbeanbackend.domain.UnauthorizedException
-import hackathon.redbeanbackend.dto.APIResponse
-import hackathon.redbeanbackend.dto.AuthRegisterDTO
-import hackathon.redbeanbackend.dto.TagResponseDTO
-import hackathon.redbeanbackend.dto.UserTagAddDTO
+import hackathon.redbeanbackend.dto.*
 import hackathon.redbeanbackend.service.TokenService
+import hackathon.redbeanbackend.service.UserDiaryService
 import hackathon.redbeanbackend.service.UserService
 import hackathon.redbeanbackend.service.UserTagService
 import org.springframework.http.ResponseEntity
@@ -13,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/v1/user")
-class UserController(private val userService: UserService, private val userTagService: UserTagService, private val tokenService: TokenService) {
+class UserController(private val userService: UserService, private val userTagService: UserTagService, private val tokenService: TokenService, private val userDiaryService: UserDiaryService) {
     @PostMapping
     fun onRegisterRequested(@RequestBody request: AuthRegisterDTO): ResponseEntity<APIResponse> {
         val result = userService.onRegisterRequest(request)
@@ -33,6 +31,16 @@ class UserController(private val userService: UserService, private val userTagSe
     @GetMapping("/tag")
     fun onGet(@RequestHeader(value = "X-AUTH-TOKEN") token: String?): ResponseEntity<List<TagResponseDTO>>{
         val result = userTagService.getTagsOfUser(findUserByToken(token))
+        return ResponseEntity.ok(result)
+    }
+    @PostMapping("/diary")
+    fun onDiaryAdd(@RequestBody dto: DiaryCreateDTO, @RequestHeader(value = "X-AUTH-TOKEN") token: String?): ResponseEntity<APIResponse>{
+        val result = userDiaryService.addDiary(findUserByToken(token), dto.content)
+        return ResponseEntity.ok(result)
+    }
+    @GetMapping("/diary")
+    fun onDiaryGet(@RequestBody dto: DiaryCreateDTO, @RequestHeader(value = "X-AUTH-TOKEN") token: String?): ResponseEntity<List<DiaryResponseDTO>>{
+        val result = userDiaryService.getDiariesOfUser(findUserByToken(token))
         return ResponseEntity.ok(result)
     }
 
