@@ -13,7 +13,10 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Service
-class UserDiaryService(private val userRepository: JPAUserRepository, private val diaryRepository: JPAUserDiaryRepository, private val inferenceService: InferenceService) {
+class UserDiaryService(
+    private val userRepository: JPAUserRepository,
+    private val diaryRepository: JPAUserDiaryRepository,
+    private val inferenceService: InferenceService){
     fun addDiary(userId: Long, content: String): APIResponse {
         val user = userRepository.findById(userId)
         if (!user.isPresent) throw NotFoundException("그런 유저는 찾을 수 없습니다")

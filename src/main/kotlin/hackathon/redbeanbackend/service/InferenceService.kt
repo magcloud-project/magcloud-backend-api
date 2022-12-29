@@ -16,7 +16,10 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
 @Service
-class InferenceService(val userDiaryResultRepository: JPAUserDiaryResultRepository, @Value("\${secret.inference-url}") val inferenceUrl: String) {
+class InferenceService(
+    private val userDiaryResultRepository: JPAUserDiaryResultRepository,
+    @Value("\${secret.inference-url}") val inferenceUrl: String,
+    private val translateService: TranslateService) {
     @Async
     fun requestInference(diary: UserDiaryEntity){
         try{
@@ -29,7 +32,8 @@ class InferenceService(val userDiaryResultRepository: JPAUserDiaryResultReposito
         //Inference Finished
     }
     private fun _requestInference(diary: UserDiaryEntity): InferenceResponseDTO{
-        val dto = InferenceRequestDTO(diary.content)
+        val translated = translateService.translateToEnglish(diary.content)
+        val dto = InferenceRequestDTO(translated)
         return RestTemplate().postForEntity(inferenceUrl, dto, InferenceResponseDTO::class.java).body ?: throw DomainException()
     }
 }

@@ -26,6 +26,12 @@ class UserController(
         return ResponseEntity.ok(result)
     }
 
+    @GetMapping
+    fun onGetRequest(@RequestHeader(value = "X-AUTH-TOKEN") token: String?): ResponseEntity<UserDTO>{
+        val result = userService.getUserInfo(findUserByToken(token))
+        return ResponseEntity.ok(result)
+    }
+
     @PutMapping("/tag")
     fun onAdd(
         @RequestBody @Valid dto: UserTagAddDTO,

@@ -1,10 +1,7 @@
 package hackathon.redbeanbackend.service
 
 import hackathon.redbeanbackend.domain.DomainException
-import hackathon.redbeanbackend.dto.APIResponse
-import hackathon.redbeanbackend.dto.AuthRegisterDTO
-import hackathon.redbeanbackend.dto.LoginDTO
-import hackathon.redbeanbackend.dto.LoginResponseDTO
+import hackathon.redbeanbackend.dto.*
 import hackathon.redbeanbackend.entity.UserEntity
 import hackathon.redbeanbackend.repository.JPAUserRepository
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -18,6 +15,10 @@ class UserService(
 ) {
     fun encrypt(password: String): String = bCrypt.encode(password)
     fun compare(password: String, encryptedPassword: String): Boolean = bCrypt.matches(password, encryptedPassword)
+
+    fun getUserInfo(userId: Long): UserDTO {
+        return repository.findById(userId).map { UserDTO(it.id!!, it.email, it.age, it.name) }.orElseThrow { throw DomainException() }
+    }
     fun onRegisterRequest(authRegisterDTO: AuthRegisterDTO): APIResponse {
         val previousUser = getUserByEmail(authRegisterDTO.email!!)
         if (previousUser != null) throw DomainException("이미 존재하는 이메일입니다")
