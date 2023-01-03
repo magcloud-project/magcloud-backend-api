@@ -1,8 +1,8 @@
-package hackathon.redbeanbackend.service
+package hackathon.redbeanbackend.service.diary
 
 import hackathon.redbeanbackend.domain.NotFoundException
-import hackathon.redbeanbackend.dto.APIResponse
-import hackathon.redbeanbackend.dto.DiaryResponseDTO
+import hackathon.redbeanbackend.dto.response.APIResponse
+import hackathon.redbeanbackend.dto.response.DiaryResponseDTO
 import hackathon.redbeanbackend.entity.UserDiaryEntity
 import hackathon.redbeanbackend.repository.JPAUserDiaryRepository
 import hackathon.redbeanbackend.repository.JPAUserRepository

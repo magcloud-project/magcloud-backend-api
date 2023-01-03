@@ -34,6 +34,10 @@ dependencies {
 
     compileOnly("org.projectlombok:lombok:1.18.24")
     annotationProcessor("org.projectlombok:lombok:1.18.24")
+
+    implementation(platform("com.google.cloud:libraries-bom:26.2.0"))
+    implementation("com.google.cloud:google-cloud-firestore")
+    implementation("com.google.firebase:firebase-admin:9.1.1")
 }
 
 tasks.withType<KotlinCompile> {

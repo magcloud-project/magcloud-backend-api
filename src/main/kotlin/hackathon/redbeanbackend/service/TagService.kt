@@ -2,8 +2,8 @@ package hackathon.redbeanbackend.service
 
 import hackathon.redbeanbackend.domain.DomainException
 import hackathon.redbeanbackend.domain.NotFoundException
-import hackathon.redbeanbackend.dto.TagCreateDTO
-import hackathon.redbeanbackend.dto.TagResponseDTO
+import hackathon.redbeanbackend.dto.request.TagCreateDTO
+import hackathon.redbeanbackend.dto.response.TagResponseDTO
 import hackathon.redbeanbackend.entity.TagEntity
 import hackathon.redbeanbackend.repository.JPATagRepository
 import org.springframework.stereotype.Service

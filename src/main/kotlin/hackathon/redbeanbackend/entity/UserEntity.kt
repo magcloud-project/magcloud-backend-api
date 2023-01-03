@@ -18,6 +18,11 @@ data class UserEntity(
         mappedBy = "user",
         cascade = [CascadeType.ALL],
         orphanRemoval = true
+    ) var devices: MutableList<UserDeviceEntity> = mutableListOf(),
+    @OneToMany(
+        mappedBy = "user",
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true
     ) var diaries: MutableList<UserDiaryEntity> = mutableListOf()
 ) {
     constructor() : this(null, "", "", 0, "", mutableListOf())

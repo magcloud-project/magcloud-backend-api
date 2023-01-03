@@ -1,4 +1,4 @@
-package hackathon.redbeanbackend.dto
+package hackathon.redbeanbackend.dto.response
 
 class APIResponse(val success: Boolean, val message: String) {
     companion object {

@@ -1,4 +1,4 @@
-package hackathon.redbeanbackend.service
+package hackathon.redbeanbackend.service.diary
 
 import hackathon.redbeanbackend.domain.DomainException
 import hackathon.redbeanbackend.dto.InferenceRequestDTO
@@ -19,7 +19,6 @@ class InferenceService(
 ) {
     @Async
     fun requestInference(diary: UserDiaryEntity) {
-        println("inference start");
         try {
             val response = _requestInference(diary)
 
@@ -39,8 +38,6 @@ class InferenceService(
         } catch (ex: RuntimeException) {
             ex.printStackTrace()
         }
-        //Inference Finished
-        println("inference fin");
     }
 
     private fun _requestInference(diary: UserDiaryEntity): InferenceResponseDTO {

@@ -1,7 +1,7 @@
 package hackathon.redbeanbackend.controller
 
-import hackathon.redbeanbackend.dto.TagCreateDTO
-import hackathon.redbeanbackend.dto.TagResponseDTO
+import hackathon.redbeanbackend.dto.request.TagCreateDTO
+import hackathon.redbeanbackend.dto.response.TagResponseDTO
 import hackathon.redbeanbackend.service.TagService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity

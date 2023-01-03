@@ -1,6 +1,7 @@
 package hackathon.redbeanbackend.entity
 
 import jakarta.persistence.*
+import java.io.Serializable
 import java.time.LocalDateTime
 
 @Entity(name = "user_diary")
@@ -10,7 +11,7 @@ data class UserDiaryEntity(
     var createdAt: LocalDateTime,
     @ManyToOne @JoinColumn(name = "user_id") var user: UserEntity? = null,
     @OneToOne(mappedBy = "diary") var result: UserDiaryResultEntity? = null,
-) {
+) : Serializable {
     constructor() : this(0, "", LocalDateTime.now())
     constructor(content: String, user: UserEntity, createdAt: LocalDateTime) : this(null, content, createdAt, user)
 

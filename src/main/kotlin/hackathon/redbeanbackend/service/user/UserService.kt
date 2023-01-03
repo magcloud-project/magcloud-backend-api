@@ -1,7 +1,11 @@
-package hackathon.redbeanbackend.service
+package hackathon.redbeanbackend.service.user
 
 import hackathon.redbeanbackend.domain.DomainException
-import hackathon.redbeanbackend.dto.*
+import hackathon.redbeanbackend.dto.request.AuthRegisterDTO
+import hackathon.redbeanbackend.dto.request.LoginDTO
+import hackathon.redbeanbackend.dto.response.APIResponse
+import hackathon.redbeanbackend.dto.response.LoginResponseDTO
+import hackathon.redbeanbackend.dto.response.UserDTO
 import hackathon.redbeanbackend.entity.UserEntity
 import hackathon.redbeanbackend.repository.JPAUserRepository
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder

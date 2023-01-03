@@ -1,8 +1,8 @@
 package hackathon.redbeanbackend.controller
 
-import hackathon.redbeanbackend.dto.LoginDTO
-import hackathon.redbeanbackend.dto.LoginResponseDTO
-import hackathon.redbeanbackend.service.UserService
+import hackathon.redbeanbackend.dto.request.LoginDTO
+import hackathon.redbeanbackend.dto.response.LoginResponseDTO
+import hackathon.redbeanbackend.service.user.UserService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping

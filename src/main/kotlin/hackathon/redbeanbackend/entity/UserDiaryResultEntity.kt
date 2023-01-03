@@ -1,18 +1,21 @@
 package hackathon.redbeanbackend.entity
 
-import jakarta.persistence.*
+import hackathon.redbeanbackend.dto.response.DiaryResultDTO
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.OneToOne
+import jakarta.persistence.PrimaryKeyJoinColumn
 
 @Entity(name = "user_diary_result")
 data class UserDiaryResultEntity(
-    @Id @GeneratedValue var id: Long? = null,
-    @OneToOne @JoinColumn(name = "diary_id") var diary: UserDiaryEntity? = null,
+    @Id val id: Long? = null,
+    @OneToOne @PrimaryKeyJoinColumn(name = "diary_id") var diary: UserDiaryEntity? = null,
     var stress: Float = 0.0f,
     var anxious: Float = 0.0f,
     var normal: Float = 0.0f,
     var lonely: Float = 0.0f,
 ) {
     constructor() : this(null, null)
-    constructor(diary: UserDiaryEntity) : this(null, diary)
     constructor(diary: UserDiaryEntity, stress: Float, anxious: Float, normal: Float, lonley: Float) : this(
         null,
         diary,
@@ -22,5 +25,5 @@ data class UserDiaryResultEntity(
         lonley
     )
 
-    fun toDTO() = hackathon.redbeanbackend.dto.DiaryResultDTO(diary!!.id!!, stress, anxious, normal, lonely)
+    fun toDTO() = DiaryResultDTO(diary!!.id!!, stress, anxious, normal, lonely)
 }

@@ -1,4 +1,4 @@
-package hackathon.redbeanbackend.dto
+package hackathon.redbeanbackend.dto.request
 
 import jakarta.validation.constraints.*
 

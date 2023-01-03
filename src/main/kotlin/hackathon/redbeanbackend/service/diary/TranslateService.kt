@@ -1,4 +1,4 @@
-package hackathon.redbeanbackend.service
+package hackathon.redbeanbackend.service.diary
 
 import hackathon.redbeanbackend.dto.PapagoRequestDTO
 import hackathon.redbeanbackend.repository.JPAUserDiaryResultRepository

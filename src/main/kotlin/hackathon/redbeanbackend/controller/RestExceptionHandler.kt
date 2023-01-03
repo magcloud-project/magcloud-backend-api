@@ -3,7 +3,7 @@ package hackathon.redbeanbackend.controller
 import hackathon.redbeanbackend.domain.DomainException
 import hackathon.redbeanbackend.domain.NotFoundException
 import hackathon.redbeanbackend.domain.UnauthorizedException
-import hackathon.redbeanbackend.dto.APIResponse
+import hackathon.redbeanbackend.dto.response.APIResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler

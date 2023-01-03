@@ -1,4 +1,4 @@
-package hackathon.redbeanbackend.dto
+package hackathon.redbeanbackend.dto.response
 
 data class UserDTO(
     val id: Long,

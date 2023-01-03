@@ -1,4 +1,4 @@
-package hackathon.redbeanbackend.service
+package hackathon.redbeanbackend.service.user
 
 import hackathon.redbeanbackend.entity.UserEntity
 import io.jsonwebtoken.Jwts

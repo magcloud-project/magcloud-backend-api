@@ -1,11 +1,17 @@
 package hackathon.redbeanbackend.controller
 
 import hackathon.redbeanbackend.domain.UnauthorizedException
-import hackathon.redbeanbackend.dto.*
-import hackathon.redbeanbackend.service.TokenService
-import hackathon.redbeanbackend.service.UserDiaryService
-import hackathon.redbeanbackend.service.UserService
-import hackathon.redbeanbackend.service.UserTagService
+import hackathon.redbeanbackend.dto.request.AuthRegisterDTO
+import hackathon.redbeanbackend.dto.request.DiaryCreateDTO
+import hackathon.redbeanbackend.dto.request.UserTagAddDTO
+import hackathon.redbeanbackend.dto.response.APIResponse
+import hackathon.redbeanbackend.dto.response.DiaryResponseDTO
+import hackathon.redbeanbackend.dto.response.TagResponseDTO
+import hackathon.redbeanbackend.dto.response.UserDTO
+import hackathon.redbeanbackend.service.diary.UserDiaryService
+import hackathon.redbeanbackend.service.user.TokenService
+import hackathon.redbeanbackend.service.user.UserService
+import hackathon.redbeanbackend.service.user.UserTagService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
