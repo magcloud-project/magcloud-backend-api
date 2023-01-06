@@ -8,12 +8,14 @@ import hackathon.redbeanbackend.entity.UserEntity
 import hackathon.redbeanbackend.repository.JPAUserDeviceRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import java.nio.file.Files
+import java.nio.file.Path
 
 
 @Service
 class NotificationService(@Value("\${secret.google-firebase-secret-path}") val secretPath: String, val userDeviceRepository: JPAUserDeviceRepository) {
     init {
-        val credentials = NotificationService::class.java.classLoader.getResourceAsStream(secretPath)
+        val credentials = Files.newInputStream(Path.of(secretPath))
             ?: throw RuntimeException("credentials not found")
         val options = FirebaseOptions.Builder()
             .setCredentials(GoogleCredentials.fromStream(credentials))
