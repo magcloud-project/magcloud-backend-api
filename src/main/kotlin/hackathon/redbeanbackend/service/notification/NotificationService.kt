@@ -6,13 +6,14 @@ import com.google.firebase.FirebaseOptions
 import com.google.firebase.messaging.*
 import hackathon.redbeanbackend.entity.UserEntity
 import hackathon.redbeanbackend.repository.JPAUserDeviceRepository
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 
 @Service
-class NotificationService(val userDeviceRepository: JPAUserDeviceRepository) {
+class NotificationService(@Value("\${secret.google-firebase-secret-path}") val secretPath: String, val userDeviceRepository: JPAUserDeviceRepository) {
     init {
-        val credentials = NotificationService::class.java.classLoader.getResourceAsStream("secret.json")
+        val credentials = NotificationService::class.java.classLoader.getResourceAsStream(secretPath)
             ?: throw RuntimeException("credentials not found")
         val options = FirebaseOptions.Builder()
             .setCredentials(GoogleCredentials.fromStream(credentials))

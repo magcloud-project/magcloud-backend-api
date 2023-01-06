@@ -8,9 +8,22 @@ spring:
     hibernate:
       ddl-auto: update
 secret:
-  token: ${AUTH_SECRET}
   inference-url: ${INFERENCE_URL}
   naver-client-id: ${NAVER_CLIENT_ID}
   naver-client-secret: ${NAVER_CLIENT_SECRET}
+  kakao-client-id: ${KAKAO_CLIENT_ID}
+  kakao-redirect-url: ${KAKAO_REDIRECT_URL}
+  apple-key-id: ${APPLE_KEY_ID}
+  apple-keyfile-path: ${APPLE_KEYFILE_PATH}
+  apple-team-id: ${APPLE_TEAM_ID}
+  apple-client-id: ${APPLE_CLIENT_ID}
+  apple-redirect-url: ${APPLE_REDIRECT_URL}
+  google-firebase-secret-path: ${GOOGLE_FIREBASE_SECRET_PATH}
 server:
   port: ${SERVER_PORT}
+token:
+  secret: ${AUTH_SECRET}
+  expiration:
+    access: 86400
+    refresh: 384000
+
