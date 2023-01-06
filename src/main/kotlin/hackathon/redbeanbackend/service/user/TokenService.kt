@@ -1,6 +1,9 @@
 package hackathon.redbeanbackend.service.user
 
+import hackathon.redbeanbackend.dto.response.LoginResponseDTO
 import hackathon.redbeanbackend.entity.UserEntity
+import hackathon.redbeanbackend.entity.UserTokenEntity
+import hackathon.redbeanbackend.repository.JPAUserTokenRepository
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.beans.factory.annotation.Value
@@ -10,7 +13,12 @@ import java.util.*
 import javax.crypto.spec.SecretKeySpec
 
 @Service
-class TokenService(@Value("\${secret.token}") val secret: String) {
+class TokenService(
+    val tokenRepository: JPAUserTokenRepository,
+    @Value("\${token.secret}") val secret: String,
+    @Value("\${token.expiration.access}") val accessTokenExpiration: Long,
+    @Value("\${token.expiration.refresh}") val refreshTokenExpiration: Long,
+    ) {
     lateinit var signKey: Key
 
     init {
@@ -18,13 +26,33 @@ class TokenService(@Value("\${secret.token}") val secret: String) {
         signKey = SecretKeySpec(bytes, SignatureAlgorithm.HS256.jcaName)
     }
 
-    fun createToken(user: UserEntity): String {
+    fun createRefreshToken(user: UserEntity): String {
+        return Jwts.builder()
+            .setHeader(buildHeader())
+            .setClaims(user.toPayLoad())
+            .setExpiration(generateRefreshTokenExpiration())
+            .signWith(signKey, SignatureAlgorithm.HS256)
+            .compact()
+    }
+
+    fun createAccessToken(user: UserEntity): String{
         return Jwts.builder()
             .setHeader(buildHeader())
             .setClaims(user.toPayLoad())
             .setExpiration(generateAccessTokenExpiration())
             .signWith(signKey, SignatureAlgorithm.HS256)
             .compact()
+    }
+
+    fun createToken(user: UserEntity): LoginResponseDTO {
+        val accessToken = createAccessToken(user)
+        val refreshToken = createRefreshToken(user)
+        val tokenEntity = user.token?.apply { this.refreshToken = refreshToken } ?: UserTokenEntity(user.id, null, refreshToken)
+        this.tokenRepository.save(tokenEntity)
+        return LoginResponseDTO(
+            accessToken = accessToken,
+            refreshToken = refreshToken
+        )
     }
 
     private fun UserEntity.toPayLoad() =
@@ -39,7 +67,8 @@ class TokenService(@Value("\${secret.token}") val secret: String) {
             Pair("regDate", System.currentTimeMillis())
         )
 
-    private fun generateAccessTokenExpiration() = Date(System.currentTimeMillis() + 9999999 * 1000)
+    private fun generateAccessTokenExpiration() = Date(System.currentTimeMillis() + this.accessTokenExpiration * 1000)
+    private fun generateRefreshTokenExpiration() = Date(System.currentTimeMillis() + this.refreshTokenExpiration * 1000)
 
     fun getIdFromToken(token: String): Long? {
         return try {
