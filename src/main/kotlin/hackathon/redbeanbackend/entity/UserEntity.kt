@@ -8,6 +8,7 @@ import java.io.Serializable
 data class UserEntity(
     @Id @GeneratedValue var id: Long? = null,
     @Enumerated(value = EnumType.STRING) var provider: LoginProvider = LoginProvider.LOCAL,
+    @Column(updatable = false) var userIdentifier: String,
     var email: String,
     var password: String,
     var name: String,
@@ -28,10 +29,11 @@ data class UserEntity(
         orphanRemoval = true
     ) var diaries: MutableList<UserDiaryEntity> = mutableListOf()
 ): Serializable, BaseAuditEntity() {
-    constructor() : this(null, LoginProvider.LOCAL,"", "", "", null, mutableListOf())
-    constructor(provider: LoginProvider, email: String, password: String, name: String) : this(
+    constructor() : this(null, LoginProvider.LOCAL,"", "", "", "", null, mutableListOf())
+    constructor(provider: LoginProvider, identifier: String, email: String, password: String, name: String) : this(
         null,
         provider,
+        identifier,
         email,
         password,
         name

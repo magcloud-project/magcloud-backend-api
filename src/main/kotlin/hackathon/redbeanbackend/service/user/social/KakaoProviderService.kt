@@ -2,6 +2,7 @@ package hackathon.redbeanbackend.service.user.social
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.google.gson.Gson
 import hackathon.redbeanbackend.domain.DomainException
 import hackathon.redbeanbackend.domain.LoginProvider
 import hackathon.redbeanbackend.dto.SocialInfoDTO
@@ -51,6 +52,9 @@ class KakaoProviderService(
         val jsonNode: JsonNode = objectMapper.readTree(responseBody)
         return jsonNode.get("access_token").asText()
     }
+
+    data class KakaoUserResponse(val id: Long, val connected_at: String, val kakao_account: KakaoEmailAccount?)
+    data class KakaoEmailAccount(val email: String?, val email_needs_agreement: Boolean?, val is_email_valid: Boolean?, val is_email_verified: Boolean?)
     fun getUserInfoByAccessToken(accessToken: String): SocialInfoDTO {
         val restTemplate = RestTemplate()
         val headers = HttpHeaders()
@@ -60,7 +64,7 @@ class KakaoProviderService(
         val request = HttpEntity<MultiValueMap<String, String>>(params, headers)
         val url = "https://kapi.kakao.com/v2/user/me"
         val dat = restTemplate.postForObject(url, request, String::class.java)
-        println(dat)
-        return SocialInfoDTO("", "")
+        val response = Gson().fromJson(dat, KakaoUserResponse::class.java)
+        return SocialInfoDTO("kakao", response.id.toString(), response?.kakao_account?.email ?: "email-unavailable")
     }
 }

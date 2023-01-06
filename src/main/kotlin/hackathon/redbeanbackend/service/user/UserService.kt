@@ -33,6 +33,7 @@ class UserService(
         val user = UserEntity(
             LoginProvider.LOCAL,
             authRegisterDTO.email,
+            authRegisterDTO.email,
             encrypt(authRegisterDTO.password!!),
             authRegisterDTO.name!!
         )
@@ -40,7 +41,7 @@ class UserService(
         return APIResponse.ok("성공적으로 생성하였습니다")
     }
 
-    fun getUserByEmail(email: String) = repository.getByProviderAndEmail(LoginProvider.LOCAL, email)
+    fun getUserByEmail(email: String) = repository.getByProviderAndUserIdentifier(LoginProvider.LOCAL, email)
 
     fun onLoginRequest(loginDTO: LoginDTO): LoginResponseDTO {
         val user = getUserByEmail(loginDTO.email!!) ?: throw DomainException("아이디나 비밀번호를 확인해주세요.")

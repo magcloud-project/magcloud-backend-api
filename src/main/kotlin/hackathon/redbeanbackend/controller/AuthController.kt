@@ -6,6 +6,7 @@ import hackathon.redbeanbackend.dto.request.LoginDTO
 import hackathon.redbeanbackend.dto.request.RefreshTokenRequestDTO
 import hackathon.redbeanbackend.dto.response.LoginResponseDTO
 import hackathon.redbeanbackend.service.user.UserService
+import hackathon.redbeanbackend.service.user.social.AppleProviderService
 import hackathon.redbeanbackend.service.user.social.KakaoProviderService
 import hackathon.redbeanbackend.service.user.social.SocialProvider
 import jakarta.validation.Valid
@@ -17,7 +18,8 @@ import java.util.*
 @RequestMapping("/api/v1/auth")
 class AuthController(
     private val userService: UserService,
-    private val kakaoService: KakaoProviderService) {
+    private val kakaoService: KakaoProviderService,
+    private val appleService: AppleProviderService) {
     @PostMapping
     fun requestLogin(@RequestBody @Valid dto: LoginDTO): ResponseEntity<LoginResponseDTO> {
         return ResponseEntity.ok(userService.onLoginRequest(dto))
@@ -49,7 +51,7 @@ class AuthController(
         return when (provider) {
             LoginProvider.KAKAO -> kakaoService
             LoginProvider.GOOGLE -> kakaoService
-            LoginProvider.APPLE -> kakaoService
+            LoginProvider.APPLE -> appleService
             else -> throw DomainException("Invalid provider")
         }
     }
