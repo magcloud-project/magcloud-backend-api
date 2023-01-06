@@ -4,6 +4,7 @@ import co.bearus.magcloud.domain.DomainException
 import co.bearus.magcloud.domain.LoginProvider
 import co.bearus.magcloud.dto.request.LoginDTO
 import co.bearus.magcloud.dto.request.RefreshTokenRequestDTO
+import co.bearus.magcloud.dto.request.SocialLoginDTO
 import co.bearus.magcloud.dto.response.LoginResponseDTO
 import co.bearus.magcloud.service.user.UserService
 import co.bearus.magcloud.service.user.social.AppleProviderService
@@ -32,10 +33,10 @@ class AuthController(
         return ResponseEntity.ok(userService.onTokenRefreshRequest(body.refreshToken))
     }
     @PostMapping("/{provider}")
-    fun requestSocialLogin(@RequestBody token: String, @PathVariable provider: String): ResponseEntity<LoginResponseDTO> {
+    fun requestSocialLogin(@RequestBody token: SocialLoginDTO, @PathVariable provider: String): ResponseEntity<LoginResponseDTO> {
         val currentProvider = parseProvider(provider)
         val providerService = getProviderService(currentProvider)
-        return ResponseEntity.ok(providerService.login(token))
+        return ResponseEntity.ok(providerService.login(token.accessToken))
     }
 
     private fun parseProvider(provider: String): LoginProvider {
