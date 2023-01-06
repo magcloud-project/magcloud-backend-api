@@ -2,7 +2,7 @@
 
 The following was discovered as part of building this project:
 
-* The original package name 'hackathon.redbean-backend' is invalid and this project uses 'hackathon.redbeanbackend'
+* The original package name 'hackathon.redbean-backend' is invalid and this project uses 'co.bearus.magcloud'
   instead.
 
 # Getting Started
