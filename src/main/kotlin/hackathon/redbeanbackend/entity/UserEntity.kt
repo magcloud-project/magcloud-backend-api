@@ -1,14 +1,17 @@
 package hackathon.redbeanbackend.entity
 
+import hackathon.redbeanbackend.domain.LoginProvider
 import jakarta.persistence.*
+import java.io.Serializable
 
 @Entity(name = "user")
 data class UserEntity(
     @Id @GeneratedValue var id: Long? = null,
+    @Enumerated(value = EnumType.STRING) var provider: LoginProvider = LoginProvider.LOCAL,
     var email: String,
     var password: String,
-    var age: Int,
     var name: String,
+    @OneToOne(mappedBy = "user") var token: UserTokenEntity? = null,
     @OneToMany(
         mappedBy = "user",
         cascade = [CascadeType.ALL],
@@ -24,13 +27,13 @@ data class UserEntity(
         cascade = [CascadeType.ALL],
         orphanRemoval = true
     ) var diaries: MutableList<UserDiaryEntity> = mutableListOf()
-) {
-    constructor() : this(null, "", "", 0, "", mutableListOf())
-    constructor(email: String, password: String, age: Int, name: String) : this(
+): Serializable, BaseAuditEntity() {
+    constructor() : this(null, LoginProvider.LOCAL,"", "", "", null, mutableListOf())
+    constructor(provider: LoginProvider, email: String, password: String, name: String) : this(
         null,
+        provider,
         email,
         password,
-        age,
         name
     )
 
