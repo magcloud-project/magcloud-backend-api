@@ -1,12 +1,12 @@
 package co.bearus.magcloud.service.user.social
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.google.gson.Gson
 import co.bearus.magcloud.domain.DomainException
 import co.bearus.magcloud.domain.LoginProvider
 import co.bearus.magcloud.dto.SocialInfoDTO
 import co.bearus.magcloud.dto.response.LoginResponseDTO
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.google.gson.Gson
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -16,24 +16,24 @@ import org.springframework.stereotype.Service
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
 import org.springframework.web.client.RestTemplate
-import java.util.*
 
 @Service
 class KakaoProviderService(
     private val socialService: SocialService,
     @Value("\${secret.kakao-client-id}") val kakaoClientId: String,
     @Value("\${secret.kakao-redirect-url}") val kakaoRedirectUrl: String,
-): SocialProvider {
+) : SocialProvider {
     override fun login(authToken: String): LoginResponseDTO {
-        try{
+        try {
             val accessToken = getAccessTokenByCode(authToken)
             val socialLoginDto = getUserInfoByAccessToken(accessToken)
             return socialService.socialLogin(LoginProvider.KAKAO, socialLoginDto)
-        }catch(e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             throw DomainException()
         }
     }
+
     fun getAccessTokenByCode(code: String): String {
         val restTemplate = RestTemplate()
         val headers = HttpHeaders()
@@ -54,7 +54,13 @@ class KakaoProviderService(
     }
 
     data class KakaoUserResponse(val id: Long, val connected_at: String, val kakao_account: KakaoEmailAccount?)
-    data class KakaoEmailAccount(val email: String?, val email_needs_agreement: Boolean?, val is_email_valid: Boolean?, val is_email_verified: Boolean?)
+    data class KakaoEmailAccount(
+        val email: String?,
+        val email_needs_agreement: Boolean?,
+        val is_email_valid: Boolean?,
+        val is_email_verified: Boolean?
+    )
+
     fun getUserInfoByAccessToken(accessToken: String): SocialInfoDTO {
         val restTemplate = RestTemplate()
         val headers = HttpHeaders()

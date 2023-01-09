@@ -20,20 +20,26 @@ class AuthController(
     private val kakaoService: KakaoProviderService,
     private val nativeKakaoService: KakaoNativeProviderService,
     private val nativeAppleService: AppleNativeProviderService,
-    private val appleService: AppleProviderService) {
+    private val appleService: AppleProviderService
+) {
     @PostMapping
     fun requestLogin(@RequestBody @Valid dto: LoginDTO): ResponseEntity<LoginResponseDTO> {
         return ResponseEntity.ok(userService.onLoginRequest(dto))
     }
+
     @PostMapping("/refresh")
     fun requestRefresh(@RequestBody body: RefreshTokenRequestDTO): ResponseEntity<LoginResponseDTO> {
-        if(body.refreshToken == null){
+        if (body.refreshToken == null) {
             throw DomainException("리프레시 토큰이 없습니다.")
         }
         return ResponseEntity.ok(userService.onTokenRefreshRequest(body.refreshToken))
     }
+
     @PostMapping("/{provider}")
-    fun requestSocialLogin(@RequestBody token: SocialLoginDTO, @PathVariable provider: String): ResponseEntity<LoginResponseDTO> {
+    fun requestSocialLogin(
+        @RequestBody token: SocialLoginDTO,
+        @PathVariable provider: String
+    ): ResponseEntity<LoginResponseDTO> {
         val currentProvider = parseProvider(provider)
         return ResponseEntity.ok(currentProvider.login(token.accessToken))
     }

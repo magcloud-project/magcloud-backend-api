@@ -1,6 +1,5 @@
 package co.bearus.magcloud.service.user.social
 
-import co.bearus.magcloud.domain.DomainException
 import co.bearus.magcloud.domain.LoginProvider
 import co.bearus.magcloud.dto.SocialInfoDTO
 import co.bearus.magcloud.dto.response.LoginResponseDTO

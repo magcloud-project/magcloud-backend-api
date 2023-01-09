@@ -1,21 +1,22 @@
 package co.bearus.magcloud.service.notification
 
+import co.bearus.magcloud.entity.UserEntity
+import co.bearus.magcloud.repository.JPAUserDeviceRepository
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import com.google.firebase.messaging.*
-import co.bearus.magcloud.entity.UserEntity
-import co.bearus.magcloud.repository.JPAUserDeviceRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.io.ByteArrayInputStream
-import java.nio.file.Files
-import java.nio.file.Path
 import java.util.*
 
 
 @Service
-class NotificationService(@Value("\${secret.google-firebase-secret-value}") val secretValue: String, val userDeviceRepository: JPAUserDeviceRepository) {
+class NotificationService(
+    @Value("\${secret.google-firebase-secret-value}") val secretValue: String,
+    val userDeviceRepository: JPAUserDeviceRepository
+) {
     init {
         val credentials = ByteArrayInputStream(Base64.getDecoder().decode(secretValue))
 //        val credentials = Files.newInputStream(Path.of(secretPath))

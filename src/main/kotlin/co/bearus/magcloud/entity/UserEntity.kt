@@ -28,8 +28,8 @@ data class UserEntity(
         cascade = [CascadeType.ALL],
         orphanRemoval = true
     ) var diaries: MutableList<UserDiaryEntity> = mutableListOf()
-): Serializable, BaseAuditEntity() {
-    constructor() : this(null, LoginProvider.LOCAL,"", "", "", "", null, mutableListOf())
+) : Serializable, BaseAuditEntity() {
+    constructor() : this(null, LoginProvider.LOCAL, "", "", "", "", null, mutableListOf())
     constructor(provider: LoginProvider, identifier: String, email: String, password: String, name: String) : this(
         null,
         provider,

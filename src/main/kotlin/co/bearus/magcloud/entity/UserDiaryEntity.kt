@@ -3,7 +3,6 @@ package co.bearus.magcloud.entity
 import jakarta.persistence.*
 import java.io.Serializable
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 @Entity(name = "user_diary")
 data class UserDiaryEntity(

@@ -18,7 +18,7 @@ class TokenService(
     @Value("\${token.secret}") val secret: String,
     @Value("\${token.expiration.access}") val accessTokenExpiration: Long,
     @Value("\${token.expiration.refresh}") val refreshTokenExpiration: Long,
-    ) {
+) {
     lateinit var signKey: Key
 
     init {
@@ -35,7 +35,7 @@ class TokenService(
             .compact()
     }
 
-    fun createAccessToken(user: UserEntity): String{
+    fun createAccessToken(user: UserEntity): String {
         return Jwts.builder()
             .setHeader(buildHeader())
             .setClaims(user.toPayLoad())
@@ -47,7 +47,8 @@ class TokenService(
     fun createToken(user: UserEntity): LoginResponseDTO {
         val accessToken = createAccessToken(user)
         val refreshToken = createRefreshToken(user)
-        val tokenEntity = user.token?.apply { this.refreshToken = refreshToken } ?: UserTokenEntity(user.id, null, refreshToken)
+        val tokenEntity =
+            user.token?.apply { this.refreshToken = refreshToken } ?: UserTokenEntity(user.id, null, refreshToken)
         this.tokenRepository.save(tokenEntity)
         return LoginResponseDTO(
             accessToken = accessToken,

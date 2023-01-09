@@ -9,7 +9,6 @@ import co.bearus.magcloud.dto.response.LoginResponseDTO
 import co.bearus.magcloud.dto.response.UserDTO
 import co.bearus.magcloud.entity.UserEntity
 import co.bearus.magcloud.repository.JPAUserRepository
-import co.bearus.magcloud.service.user.social.SocialProvider
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -18,7 +17,7 @@ class UserService(
     private val repository: JPAUserRepository,
     private val tokenService: TokenService,
     val bCrypt: BCryptPasswordEncoder
-){
+) {
     fun encrypt(password: String): String = bCrypt.encode(password)
     fun compare(password: String, encryptedPassword: String): Boolean = bCrypt.matches(password, encryptedPassword)
 

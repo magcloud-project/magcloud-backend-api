@@ -1,6 +1,9 @@
 package co.bearus.magcloud.dto.request
 
-import jakarta.validation.constraints.*
+import jakarta.validation.constraints.Email
+import jakarta.validation.constraints.NotEmpty
+import jakarta.validation.constraints.NotNull
+import jakarta.validation.constraints.Size
 
 data class AuthRegisterDTO(
     @field:NotNull @field:NotEmpty(message = "이름을 입력해주세요") val name: String? = null,

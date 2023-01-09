@@ -8,7 +8,6 @@ import co.bearus.magcloud.repository.JPAUserDiaryRepository
 import co.bearus.magcloud.repository.JPAUserRepository
 import org.springframework.stereotype.Service
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Service
@@ -49,7 +48,14 @@ class UserDiaryService(
     fun getDiariesOfUser(userId: Long): List<DiaryResponseDTO> {
         val user = userRepository.findById(userId)
         if (!user.isPresent) throw NotFoundException("그런 유저는 찾을 수 없습니다")
-        return user.get().diaries.map { DiaryResponseDTO(it.id!!, it.content, it.date.atStartOfDay(), it.result?.toDTO()) }
+        return user.get().diaries.map {
+            DiaryResponseDTO(
+                it.id!!,
+                it.content,
+                it.date.atStartOfDay(),
+                it.result?.toDTO()
+            )
+        }
     }
 
     fun getDiariesByDate(userId: Long, date: String): List<DiaryResponseDTO> {
