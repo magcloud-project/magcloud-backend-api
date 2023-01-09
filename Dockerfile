@@ -12,8 +12,7 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-RUN  chmod +x gradlew && \
-     gradle bootJar&& \
+RUN  gradle bootJar&& \
      cp $(find ./build/libs/* ! -name '*plain*') app.jar && \
      mv app.jar ../ && rm -rf * && mv ../app.jar .
 
@@ -24,10 +23,11 @@ ENV PORT=8081
 LABEL maintainer="cchuyong@naver.com"
 LABEL title="magcloud-backend"
 
+WORKDIR /usr/src/app
 COPY --from=builder /usr/src/app/app.jar /usr/src/app/app.jar
 
 EXPOSE ${PORT}/tcp
 
 STOPSIGNAL SIGTERM
 
-ENTRYPOINT ["java","-jar","-Dspring.profiles.active=${BUILD_LEVEL}","app.jar"]
+ENTRYPOINT ["java","-jar","app.jar"]
