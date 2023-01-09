@@ -31,8 +31,7 @@ class AppleNativeProviderService(
     @Value("\${secret.apple-key-id}") val appleKeyId: String,
     @Value("\${secret.apple-keyfile-value}") val appleKeyValue: String,
     @Value("\${secret.apple-team-id}") val appleTeamId: String,
-    @Value("\${secret.apple-native-client-id}") val appleClientId: String,
-    @Value("\${secret.apple-redirect-url}") val appleRedirectUrl: String,
+    @Value("\${secret.apple-native-client-id}") val appleClientId: String
 ) : SocialProvider {
     val pKey: PrivateKey = getPrivateKey()
     override fun login(authToken: String): LoginResponseDTO {

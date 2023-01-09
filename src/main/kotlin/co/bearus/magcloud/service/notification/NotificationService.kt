@@ -19,8 +19,6 @@ class NotificationService(
 ) {
     init {
         val credentials = ByteArrayInputStream(Base64.getDecoder().decode(secretValue))
-//        val credentials = Files.newInputStream(Path.of(secretPath))
-//            ?: throw RuntimeException("credentials not found")
         val options = FirebaseOptions.Builder()
             .setCredentials(GoogleCredentials.fromStream(credentials))
             .build()

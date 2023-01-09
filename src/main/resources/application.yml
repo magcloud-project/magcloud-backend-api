@@ -18,7 +18,6 @@ secret:
   apple-team-id: ${APPLE_TEAM_ID}
   apple-client-id: ${APPLE_CLIENT_ID}
   apple-native-client-id: ${APPLE_NATIVE_CLIENT_ID}
-  apple-redirect-url: ${APPLE_REDIRECT_URL}
   google-firebase-secret-value: ${GOOGLE_FIREBASE_SECRET_VALUE}
 server:
   port: ${SERVER_PORT}
