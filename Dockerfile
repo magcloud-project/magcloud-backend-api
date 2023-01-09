@@ -4,16 +4,16 @@ ARG BUILDER_IMAGE="gradle:jdk18-alpine"
 #Builderstage for Gradle Dependencies Cache
 FROM --platform=linux/amd64 ${BUILDER_IMAGE} as builder
 
-#WORKDIR /build
-#COPY build.gradle.kts settings.gradle.kts /build/
-#RUN gradle bootJar -x test --parallel --continue > /dev/null 2>&1 || true
+WORKDIR /build
+COPY build.gradle.kts settings.gradle.kts /build/
+RUN gradle bootJar -x test --parallel --continue > /dev/null 2>&1 || true
 
 WORKDIR /usr/src/app
 
 COPY . .
 
 RUN  chmod +x gradlew && \
-     gradle bootJar --refresh-dependencies && \
+     gradle bootJar&& \
      cp $(find ./build/libs/* ! -name '*plain*') app.jar && \
      mv app.jar ../ && rm -rf * && mv ../app.jar .
 
