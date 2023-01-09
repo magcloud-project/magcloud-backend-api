@@ -8,15 +8,18 @@ import co.bearus.magcloud.entity.UserEntity
 import co.bearus.magcloud.repository.JPAUserDeviceRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import java.io.ByteArrayInputStream
 import java.nio.file.Files
 import java.nio.file.Path
+import java.util.*
 
 
 @Service
-class NotificationService(@Value("\${secret.google-firebase-secret-path}") val secretPath: String, val userDeviceRepository: JPAUserDeviceRepository) {
+class NotificationService(@Value("\${secret.google-firebase-secret-value}") val secretValue: String, val userDeviceRepository: JPAUserDeviceRepository) {
     init {
-        val credentials = Files.newInputStream(Path.of(secretPath))
-            ?: throw RuntimeException("credentials not found")
+        val credentials = ByteArrayInputStream(Base64.getDecoder().decode(secretValue))
+//        val credentials = Files.newInputStream(Path.of(secretPath))
+//            ?: throw RuntimeException("credentials not found")
         val options = FirebaseOptions.Builder()
             .setCredentials(GoogleCredentials.fromStream(credentials))
             .build()

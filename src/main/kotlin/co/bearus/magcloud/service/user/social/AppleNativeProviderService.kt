@@ -33,7 +33,7 @@ import java.util.*
 class AppleNativeProviderService(
     private val socialService: SocialService,
     @Value("\${secret.apple-key-id}") val appleKeyId: String,
-    @Value("\${secret.apple-keyfile-path}") val appleKeyPath: String,
+    @Value("\${secret.apple-keyfile-value}") val appleKeyValue: String,
     @Value("\${secret.apple-team-id}") val appleTeamId: String,
     @Value("\${secret.apple-native-client-id}") val appleClientId: String,
     @Value("\${secret.apple-redirect-url}") val appleRedirectUrl: String,
@@ -90,7 +90,7 @@ class AppleNativeProviderService(
     data class IdTokenPayload(val iss: String, val aud: String, val exp: Long, val iat: Long, val sub: String, val at_hash: String, val auth_time: String, val nonce_supported: Boolean)
 
     private final fun getPrivateKey(): PrivateKey {
-        val content = String(Files.readAllBytes(Paths.get(appleKeyPath)), StandardCharsets.UTF_8)
+        val content = String(Base64.getDecoder().decode(appleKeyValue))
         return try {
             val privateKey = content.replace("-----BEGIN PRIVATE KEY-----", "")
                 .replace("-----END PRIVATE KEY-----", "")
