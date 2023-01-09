@@ -18,7 +18,7 @@ RUN  gradle bootJar&& \
 
 FROM --platform=linux/amd64 ${BASE_IMAGE}
 
-ENV PORT=8081
+ENV PORT=8080
 
 LABEL maintainer="cchuyong@naver.com"
 LABEL title="magcloud-backend"
