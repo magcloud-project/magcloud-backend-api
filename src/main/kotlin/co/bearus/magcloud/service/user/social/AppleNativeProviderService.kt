@@ -3,6 +3,7 @@ package co.bearus.magcloud.service.user.social
 import co.bearus.magcloud.domain.DomainException
 import co.bearus.magcloud.domain.LoginProvider
 import co.bearus.magcloud.dto.SocialInfoDTO
+import co.bearus.magcloud.dto.request.SocialLoginDTO
 import co.bearus.magcloud.dto.response.LoginResponseDTO
 import com.google.gson.Gson
 import io.jsonwebtoken.JwsHeader
@@ -34,9 +35,9 @@ class AppleNativeProviderService(
     @Value("\${secret.apple-native-client-id}") val appleClientId: String
 ) : SocialProvider {
     val pKey: PrivateKey = getPrivateKey()
-    override fun login(authToken: String): LoginResponseDTO {
+    override fun login(dto: SocialLoginDTO): LoginResponseDTO {
         try {
-            val socialLoginDto = getUserInfoByClientSecret(authToken)
+            val socialLoginDto = getUserInfoByClientSecret(dto)
             return socialService.socialLogin(LoginProvider.APPLE, socialLoginDto)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -44,13 +45,13 @@ class AppleNativeProviderService(
         }
     }
 
-    fun getUserInfoByClientSecret(authToken: String): SocialInfoDTO {
+    fun getUserInfoByClientSecret(dto: SocialLoginDTO): SocialInfoDTO {
         val restTemplate = RestTemplate()
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_FORM_URLENCODED
         val params: LinkedMultiValueMap<String, String> = LinkedMultiValueMap()
         params.add("grant_type", "authorization_code")
-        params.add("code", authToken)
+        params.add("code", dto.accessToken)
         params.add("client_id", this.appleClientId)
         params.add("client_secret", this.generateSecretKey())
 
@@ -66,7 +67,7 @@ class AppleNativeProviderService(
 
         val decoded = String(Decoders.BASE64.decode(payload))
         val tokenPayload = Gson().fromJson(decoded, IdTokenPayload::class.java)
-        return SocialInfoDTO("apple", tokenPayload.sub, "")
+        return SocialInfoDTO(dto.fullName ?: "apple", tokenPayload.sub, dto.email ?: "")
     }
 
     fun generateSecretKey(): String {

@@ -3,6 +3,7 @@ package co.bearus.magcloud.service.user.social
 import co.bearus.magcloud.domain.DomainException
 import co.bearus.magcloud.domain.LoginProvider
 import co.bearus.magcloud.dto.SocialInfoDTO
+import co.bearus.magcloud.dto.request.SocialLoginDTO
 import co.bearus.magcloud.dto.response.LoginResponseDTO
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -23,9 +24,9 @@ class KakaoProviderService(
     @Value("\${secret.kakao-client-id}") val kakaoClientId: String,
     @Value("\${secret.kakao-redirect-url}") val kakaoRedirectUrl: String,
 ) : SocialProvider {
-    override fun login(authToken: String): LoginResponseDTO {
+    override fun login(dto: SocialLoginDTO): LoginResponseDTO {
         try {
-            val accessToken = getAccessTokenByCode(authToken)
+            val accessToken = getAccessTokenByCode(dto.accessToken)
             val socialLoginDto = getUserInfoByAccessToken(accessToken)
             return socialService.socialLogin(LoginProvider.KAKAO, socialLoginDto)
         } catch (e: Exception) {

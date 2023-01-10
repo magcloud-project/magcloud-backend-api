@@ -40,8 +40,9 @@ class AuthController(
         @RequestBody token: SocialLoginDTO,
         @PathVariable provider: String
     ): ResponseEntity<LoginResponseDTO> {
+        println(provider)
         val currentProvider = parseProvider(provider)
-        return ResponseEntity.ok(currentProvider.login(token.accessToken))
+        return ResponseEntity.ok(currentProvider.login(token))
     }
 
     private fun parseProvider(provider: String): SocialProvider {

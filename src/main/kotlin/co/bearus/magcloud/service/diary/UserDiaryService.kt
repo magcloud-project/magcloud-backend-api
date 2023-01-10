@@ -55,7 +55,7 @@ class UserDiaryService(
     }
 
     fun getDiaryByDate(userId: Long, date: String): DiaryResponseDTO? {
-        val diary = diaryRepository.getByIdAndDate(userId, LocalDate.parse(date, DateTimeFormatter.BASIC_ISO_DATE)) ?: return null
+        val diary = diaryRepository.getByIdAndDate(userId, LocalDate.parse(date, DateTimeFormatter.BASIC_ISO_DATE)) ?: throw NotFoundException()
         return DiaryResponseDTO(diary.id!!, diary.content, diary.date.atStartOfDay(), diary.emotions.map { emotion -> EmotionResponseDTO(emotion.emotion, emotion.value) })
     }
 
