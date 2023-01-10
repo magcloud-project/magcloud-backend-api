@@ -7,7 +7,7 @@ import co.bearus.magcloud.dto.request.LoginDTO
 import co.bearus.magcloud.dto.response.APIResponse
 import co.bearus.magcloud.dto.response.LoginResponseDTO
 import co.bearus.magcloud.dto.response.UserDTO
-import co.bearus.magcloud.entity.UserEntity
+import co.bearus.magcloud.entity.user.UserEntity
 import co.bearus.magcloud.repository.JPAUserRepository
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service

@@ -1,7 +1,7 @@
 package co.bearus.magcloud.repository
 
 import co.bearus.magcloud.domain.LoginProvider
-import co.bearus.magcloud.entity.UserEntity
+import co.bearus.magcloud.entity.user.UserEntity
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface JPAUserRepository : JpaRepository<UserEntity, Long> {

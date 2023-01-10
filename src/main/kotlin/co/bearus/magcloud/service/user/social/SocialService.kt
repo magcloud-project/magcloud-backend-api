@@ -3,7 +3,7 @@ package co.bearus.magcloud.service.user.social
 import co.bearus.magcloud.domain.LoginProvider
 import co.bearus.magcloud.dto.SocialInfoDTO
 import co.bearus.magcloud.dto.response.LoginResponseDTO
-import co.bearus.magcloud.entity.UserEntity
+import co.bearus.magcloud.entity.user.UserEntity
 import co.bearus.magcloud.repository.JPAUserRepository
 import co.bearus.magcloud.service.user.TokenService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder

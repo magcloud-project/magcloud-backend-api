@@ -1,7 +1,6 @@
 package co.bearus.magcloud.service.diary
 
 import co.bearus.magcloud.dto.PapagoRequestDTO
-import co.bearus.magcloud.repository.JPAUserDiaryResultRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpHeaders
@@ -12,7 +11,6 @@ import org.springframework.web.client.RestTemplate
 
 @Service
 class TranslateService(
-    val userDiaryResultRepository: JPAUserDiaryResultRepository,
     @Value("\${secret.naver-client-id}") val id: String,
     @Value("\${secret.naver-client-secret}") val secret: String
 ) {

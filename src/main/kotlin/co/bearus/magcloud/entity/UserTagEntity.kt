@@ -1,5 +1,6 @@
 package co.bearus.magcloud.entity
 
+import co.bearus.magcloud.entity.user.UserEntity
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn

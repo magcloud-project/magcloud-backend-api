@@ -3,9 +3,9 @@ package co.bearus.magcloud.service.notification
 import co.bearus.magcloud.domain.DomainException
 import co.bearus.magcloud.dto.request.DeviceRegisterDTO
 import co.bearus.magcloud.dto.response.APIResponse
-import co.bearus.magcloud.entity.DeviceIdentity
-import co.bearus.magcloud.entity.UserDeviceEntity
-import co.bearus.magcloud.entity.UserEntity
+import co.bearus.magcloud.entity.user.DeviceIdentity
+import co.bearus.magcloud.entity.user.UserDeviceEntity
+import co.bearus.magcloud.entity.user.UserEntity
 import co.bearus.magcloud.repository.JPAUserDeviceRepository
 import co.bearus.magcloud.repository.JPAUserRepository
 import org.springframework.stereotype.Service

@@ -1,8 +1,8 @@
 package co.bearus.magcloud.service.user
 
 import co.bearus.magcloud.dto.response.LoginResponseDTO
-import co.bearus.magcloud.entity.UserEntity
-import co.bearus.magcloud.entity.UserTokenEntity
+import co.bearus.magcloud.entity.user.UserEntity
+import co.bearus.magcloud.entity.user.UserTokenEntity
 import co.bearus.magcloud.repository.JPAUserTokenRepository
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm

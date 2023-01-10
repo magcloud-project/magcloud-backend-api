@@ -3,7 +3,8 @@ package co.bearus.magcloud.service.diary
 import co.bearus.magcloud.domain.NotFoundException
 import co.bearus.magcloud.dto.response.APIResponse
 import co.bearus.magcloud.dto.response.DiaryResponseDTO
-import co.bearus.magcloud.entity.UserDiaryEntity
+import co.bearus.magcloud.dto.response.EmotionResponseDTO
+import co.bearus.magcloud.entity.diary.UserDiaryEntity
 import co.bearus.magcloud.repository.JPAUserDiaryRepository
 import co.bearus.magcloud.repository.JPAUserRepository
 import org.springframework.stereotype.Service
@@ -40,11 +41,6 @@ class UserDiaryService(
         return APIResponse.ok("일기가 추가되었습니다")
     }
 
-    private fun getToday(): String {
-        val date = LocalDate.now()
-        return date.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
-    }
-
     fun getDiariesOfUser(userId: Long): List<DiaryResponseDTO> {
         val user = userRepository.findById(userId)
         if (!user.isPresent) throw NotFoundException("그런 유저는 찾을 수 없습니다")
@@ -53,15 +49,14 @@ class UserDiaryService(
                 it.id!!,
                 it.content,
                 it.date.atStartOfDay(),
-                it.result?.toDTO()
+                it.emotions.map { emotion -> EmotionResponseDTO(emotion.emotion, emotion.value) }
             )
         }
     }
 
-    fun getDiariesByDate(userId: Long, date: String): List<DiaryResponseDTO> {
-        val diary = diaryRepository.getByIdAndDate(userId, LocalDate.parse(date, DateTimeFormatter.BASIC_ISO_DATE))
-            ?: return emptyList()
-        return listOf(diary).map { DiaryResponseDTO(it.id!!, it.content, it.date.atStartOfDay(), it.result?.toDTO()) }
+    fun getDiaryByDate(userId: Long, date: String): DiaryResponseDTO? {
+        val diary = diaryRepository.getByIdAndDate(userId, LocalDate.parse(date, DateTimeFormatter.BASIC_ISO_DATE)) ?: return null
+        return DiaryResponseDTO(diary.id!!, diary.content, diary.date.atStartOfDay(), diary.emotions.map { emotion -> EmotionResponseDTO(emotion.emotion, emotion.value) })
     }
 
 }

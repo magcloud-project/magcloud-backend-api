@@ -1,4 +1,4 @@
-package co.bearus.magcloud.entity
+package co.bearus.magcloud.entity.user
 
 import jakarta.persistence.Entity
 import jakarta.persistence.Id

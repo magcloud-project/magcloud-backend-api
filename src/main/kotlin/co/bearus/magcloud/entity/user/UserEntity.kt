@@ -1,6 +1,9 @@
-package co.bearus.magcloud.entity
+package co.bearus.magcloud.entity.user
 
 import co.bearus.magcloud.domain.LoginProvider
+import co.bearus.magcloud.entity.BaseAuditEntity
+import co.bearus.magcloud.entity.UserTagEntity
+import co.bearus.magcloud.entity.diary.UserDiaryEntity
 import jakarta.persistence.*
 import java.io.Serializable
 
@@ -22,7 +25,7 @@ data class UserEntity(
         mappedBy = "user",
         cascade = [CascadeType.ALL],
         orphanRemoval = true
-    ) var devices: MutableList<UserDeviceEntity> = mutableListOf(),
+    ) var devices: MutableSet<UserDeviceEntity> = mutableSetOf(),
     @OneToMany(
         mappedBy = "user",
         cascade = [CascadeType.ALL],

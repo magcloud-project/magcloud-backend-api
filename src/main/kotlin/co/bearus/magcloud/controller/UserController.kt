@@ -15,6 +15,8 @@ import co.bearus.magcloud.service.user.UserTagService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -73,17 +75,23 @@ class UserController(
     fun onDiaryGet(
         @RequestHeader(value = "X-AUTH-TOKEN") token: String?,
         @RequestParam(required = false) date: String?
-    ): ResponseEntity<List<DiaryResponseDTO>> {
+    ): ResponseEntity<DiaryResponseDTO> {
+        val user = findUserByToken(token)
         return if (date == null) {
-            val result = userDiaryService.getDiariesOfUser(findUserByToken(token))
+            val result = userDiaryService.getDiaryByDate(user, getToday())
             ResponseEntity.ok(result)
         } else {
-            val result = userDiaryService.getDiariesByDate(findUserByToken(token), date)
+            val result = userDiaryService.getDiaryByDate(user, date)
             ResponseEntity.ok(result)
         }
     }
 
     private fun findUserByToken(token: String?): Long {
         return tokenService.getIdFromToken(token ?: throw UnauthorizedException()) ?: throw UnauthorizedException()
+    }
+
+    private fun getToday(): String {
+        val date = LocalDate.now()
+        return date.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
     }
 }

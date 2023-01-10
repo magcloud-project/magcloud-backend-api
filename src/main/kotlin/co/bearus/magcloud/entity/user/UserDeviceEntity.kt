@@ -1,4 +1,4 @@
-package co.bearus.magcloud.entity
+package co.bearus.magcloud.entity.user
 
 import jakarta.persistence.*
 
@@ -9,4 +9,10 @@ class UserDeviceEntity(
     @Id var fcmToken: String
 ) {
     constructor() : this(null, "")
+
+    override fun hashCode(): Int {
+        return fcmToken.hashCode()
+    }
+
+    override fun equals(other: Any?) = fcmToken == other
 }
