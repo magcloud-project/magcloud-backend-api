@@ -1,5 +1,7 @@
 package co.bearus.magcloud.controller
 
+import co.bearus.magcloud.advice.RequestUser
+import co.bearus.magcloud.advice.WebUser
 import co.bearus.magcloud.domain.UnauthorizedException
 import co.bearus.magcloud.dto.request.AuthRegisterDTO
 import co.bearus.magcloud.dto.request.DiaryCreateDTO
@@ -23,7 +25,6 @@ import java.time.format.DateTimeFormatter
 class UserController(
     private val userService: UserService,
     private val userTagService: UserTagService,
-    private val tokenService: TokenService,
     private val userDiaryService: UserDiaryService
 ) {
     @PostMapping
@@ -33,69 +34,63 @@ class UserController(
     }
 
     @GetMapping
-    fun onGetRequest(@RequestHeader(value = "X-AUTH-TOKEN") token: String?): ResponseEntity<UserDTO> {
-        val result = userService.getUserInfo(findUserByToken(token))
+    fun onGetRequest(@RequestUser user: WebUser): ResponseEntity<UserDTO> {
+        val result = userService.getUserInfo(user.userId)
         return ResponseEntity.ok(result)
     }
 
     @PutMapping("/tag")
     fun onAdd(
         @RequestBody @Valid dto: UserTagAddDTO,
-        @RequestHeader(value = "X-AUTH-TOKEN") token: String?
+        @RequestUser user: WebUser
     ): ResponseEntity<APIResponse> {
-        val result = userTagService.addTagToUser(findUserByToken(token), dto.id!!)
+        val result = userTagService.addTagToUser(user.userId, dto.id!!)
         return ResponseEntity.ok(result)
     }
 
     @DeleteMapping("/tag")
     fun onDelete(
         @RequestBody @Valid dto: UserTagAddDTO,
-        @RequestHeader(value = "X-AUTH-TOKEN") token: String?
+        @RequestUser user: WebUser
     ): ResponseEntity<APIResponse> {
-        val result = userTagService.deleteTagOfUser(findUserByToken(token), dto.id!!)
+        val result = userTagService.deleteTagOfUser(user.userId, dto.id!!)
         return ResponseEntity.ok(result)
     }
 
     @GetMapping("/tag")
-    fun onGet(@RequestHeader(value = "X-AUTH-TOKEN") token: String?): ResponseEntity<List<TagResponseDTO>> {
-        val result = userTagService.getTagsOfUser(findUserByToken(token))
+    fun onGet(@RequestUser user: WebUser, token: String?): ResponseEntity<List<TagResponseDTO>> {
+        val result = userTagService.getTagsOfUser(user.userId)
         return ResponseEntity.ok(result)
     }
 
     @PostMapping("/diary")
     fun onDiaryAdd(
         @RequestBody @Valid dto: DiaryCreateDTO,
-        @RequestHeader(value = "X-AUTH-TOKEN") token: String?
+        @RequestUser user: WebUser
     ): ResponseEntity<APIResponse> {
-        val result = userDiaryService.addDiary(findUserByToken(token), dto.date!!, dto.content!!)
+        val result = userDiaryService.addDiary(user.userId, dto.date!!, dto.content!!)
         return ResponseEntity.ok(result)
     }
 
     @GetMapping("/diary")
     fun onDiaryGet(
-        @RequestHeader(value = "X-AUTH-TOKEN") token: String?,
+        @RequestUser user: WebUser,
         @RequestParam(required = false) date: String?
     ): ResponseEntity<DiaryResponseDTO> {
-        val user = findUserByToken(token)
         return if (date == null) {
-            val result = userDiaryService.getDiaryByDate(user, getToday())
+            val result = userDiaryService.getDiaryByDate(user.userId, getToday())
             ResponseEntity.ok(result)
         } else {
-            val result = userDiaryService.getDiaryByDate(user, date)
+            val result = userDiaryService.getDiaryByDate(user.userId, date)
             ResponseEntity.ok(result)
         }
     }
 
     @GetMapping("/diaries")
     fun onDiaryAllGet(
-        @RequestHeader(value = "X-AUTH-TOKEN") token: String?,
+        @RequestUser user: WebUser
     ): ResponseEntity<List<DiaryResponseDTO>> {
-        val user = findUserByToken(token)
-        return ResponseEntity.ok(userDiaryService.getDiariesOfUser(user))
-    }
-
-    private fun findUserByToken(token: String?): Long {
-        return tokenService.getIdFromToken(token ?: throw UnauthorizedException()) ?: throw UnauthorizedException()
+        return ResponseEntity.ok(userDiaryService.getDiariesOfUser(user.userId))
     }
 
     private fun getToday(): String {
