@@ -1,7 +1,6 @@
 package co.bearus.magcloud.entity.diary
 
 import co.bearus.magcloud.entity.BaseAuditEntity
-import co.bearus.magcloud.entity.user.UserDeviceEntity
 import co.bearus.magcloud.entity.user.UserEntity
 import jakarta.persistence.*
 import java.io.Serializable

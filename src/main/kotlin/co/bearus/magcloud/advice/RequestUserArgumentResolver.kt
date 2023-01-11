@@ -10,7 +10,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
 
 @Component
-class RequestUserArgumentResolver(private val tokenService: TokenService): HandlerMethodArgumentResolver {
+class RequestUserArgumentResolver(private val tokenService: TokenService) : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter): Boolean {
         return parameter.getParameterAnnotation(RequestUser::class.java) != null
     }
@@ -22,7 +22,8 @@ class RequestUserArgumentResolver(private val tokenService: TokenService): Handl
         binderFactory: WebDataBinderFactory?
     ): Any {
         val token = webRequest.getHeader("X-AUTH-TOKEN")
-        val userId = tokenService.getIdFromToken(token ?: throw UnauthorizedException()) ?: throw UnauthorizedException()
+        val userId =
+            tokenService.getIdFromToken(token ?: throw UnauthorizedException()) ?: throw UnauthorizedException()
         return WebUser(userId)
     }
 }

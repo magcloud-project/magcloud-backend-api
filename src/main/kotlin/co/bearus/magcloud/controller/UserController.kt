@@ -2,7 +2,6 @@ package co.bearus.magcloud.controller
 
 import co.bearus.magcloud.advice.RequestUser
 import co.bearus.magcloud.advice.WebUser
-import co.bearus.magcloud.domain.UnauthorizedException
 import co.bearus.magcloud.dto.request.AuthRegisterDTO
 import co.bearus.magcloud.dto.request.DiaryCreateDTO
 import co.bearus.magcloud.dto.request.UserTagAddDTO
@@ -11,7 +10,6 @@ import co.bearus.magcloud.dto.response.DiaryResponseDTO
 import co.bearus.magcloud.dto.response.TagResponseDTO
 import co.bearus.magcloud.dto.response.UserDTO
 import co.bearus.magcloud.service.diary.UserDiaryService
-import co.bearus.magcloud.service.user.TokenService
 import co.bearus.magcloud.service.user.UserService
 import co.bearus.magcloud.service.user.UserTagService
 import jakarta.validation.Valid

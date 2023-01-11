@@ -46,6 +46,10 @@ class KakaoNativeProviderService(
         val url = "https://kapi.kakao.com/v2/user/me"
         val dat = restTemplate.postForObject(url, request, String::class.java)
         val response = Gson().fromJson(dat, KakaoUserResponse::class.java)
-        return SocialInfoDTO(dto.fullName?:"kakao", response.id.toString(), response?.kakao_account?.email?:dto.email ?: "email-unavailable")
+        return SocialInfoDTO(
+            dto.fullName ?: "kakao",
+            response.id.toString(),
+            response?.kakao_account?.email ?: dto.email ?: "email-unavailable"
+        )
     }
 }
