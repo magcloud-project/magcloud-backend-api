@@ -21,8 +21,9 @@ class UserDiaryService(
         val user = userRepository.findById(userId)
         if (!user.isPresent) throw NotFoundException("그런 유저는 찾을 수 없습니다")
 
+        val date = LocalDate.parse(diaryDate, DateTimeFormatter.BASIC_ISO_DATE)
         val previousDiaries =
-            diaryRepository.getByIdAndDate(userId, LocalDate.parse(diaryDate, DateTimeFormatter.BASIC_ISO_DATE))
+            diaryRepository.getByUserIdAndDate(userId, date)
         if (previousDiaries != null) {
             //UPDATE CODE
             previousDiaries.content = content
@@ -34,7 +35,7 @@ class UserDiaryService(
         val userDiary = UserDiaryEntity(
             content,
             user.get(),
-            LocalDate.parse(diaryDate, DateTimeFormatter.BASIC_ISO_DATE)
+            date
         )
         val requestedResult = diaryRepository.save(userDiary)
         inferenceService.requestInference(requestedResult)
@@ -55,7 +56,7 @@ class UserDiaryService(
     }
 
     fun getDiaryByDate(userId: Long, date: String): DiaryResponseDTO? {
-        val diary = diaryRepository.getByIdAndDate(userId, LocalDate.parse(date, DateTimeFormatter.BASIC_ISO_DATE))
+        val diary = diaryRepository.getByUserIdAndDate(userId, LocalDate.parse(date, DateTimeFormatter.BASIC_ISO_DATE))
             ?: throw NotFoundException()
         return DiaryResponseDTO(
             diary.id!!,
