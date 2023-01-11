@@ -8,14 +8,15 @@ import jakarta.persistence.*
 import java.io.Serializable
 
 @Entity(name = "user")
+@Table(indexes = [Index(name = "idx_user_identity_provider", columnList = "provider, userIdentifier", unique = true)])
 data class UserEntity(
     @Id @GeneratedValue var id: Long? = null,
     @Enumerated(value = EnumType.STRING) var provider: LoginProvider = LoginProvider.LOCAL,
     @Column(updatable = false) var userIdentifier: String,
-    var email: String,
-    var password: String,
-    var name: String,
-    @OneToOne(mappedBy = "user") var token: UserTokenEntity? = null,
+    @Column(length = 255, name = "email") var email: String,
+    @Column(length = 255, name = "password") var password: String,
+    @Column(length = 128, name = "name") var name: String,
+    @OneToOne(cascade = [CascadeType.ALL], mappedBy = "user") var token: UserTokenEntity? = null,
     @OneToMany(
         mappedBy = "user",
         cascade = [CascadeType.ALL],

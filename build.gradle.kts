@@ -38,6 +38,9 @@ dependencies {
     implementation(platform("com.google.cloud:libraries-bom:26.2.0"))
     implementation("com.google.cloud:google-cloud-firestore")
     implementation("com.google.firebase:firebase-admin:9.1.1")
+
+    implementation("org.flywaydb:flyway-core:9.11.0")
+    implementation("org.flywaydb:flyway-mysql")
 }
 
 tasks.withType<KotlinCompile> {
