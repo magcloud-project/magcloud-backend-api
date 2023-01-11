@@ -7,11 +7,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-    show-sql: true
   flyway:
     enabled: true
     baseline-on-migrate: true
-
+logging:
+  pattern:
+    console: "[%level][%thread][%logger{0}:%line] - %msg%n"
 secret:
   inference-url: ${INFERENCE_URL}
   naver-client-id: ${NAVER_CLIENT_ID}
