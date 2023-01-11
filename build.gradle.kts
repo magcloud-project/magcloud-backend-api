@@ -41,6 +41,10 @@ dependencies {
 
     implementation("org.flywaydb:flyway-core:9.11.0")
     implementation("org.flywaydb:flyway-mysql")
+
+    // https://mvnrepository.com/artifact/com.nimbusds/nimbus-jose-jwt
+    implementation("com.nimbusds:nimbus-jose-jwt:9.28")
+
 }
 
 tasks.withType<KotlinCompile> {

@@ -17,6 +17,7 @@ class SocialService(
     val bCrypt: BCryptPasswordEncoder
 ) {
     fun socialLogin(provider: LoginProvider, socialInfoDTO: SocialInfoDTO): LoginResponseDTO {
+        println(socialInfoDTO)
         var previousUser = repository.getByProviderAndUserIdentifier(provider, socialInfoDTO.id)
         if (previousUser == null) {
             previousUser = socialLoginRegister(provider, socialInfoDTO)
@@ -28,7 +29,7 @@ class SocialService(
         val user = UserEntity(
             provider,
             socialInfoDTO.id,
-            "",
+            socialInfoDTO.email,
             generateRandomPassword(),
             socialInfoDTO.name
         )
