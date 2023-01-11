@@ -86,6 +86,14 @@ class UserController(
         }
     }
 
+    @GetMapping("/diaries")
+    fun onDiaryAllGet(
+        @RequestHeader(value = "X-AUTH-TOKEN") token: String?,
+    ): ResponseEntity<List<DiaryResponseDTO>> {
+        val user = findUserByToken(token)
+        return ResponseEntity.ok(userDiaryService.getDiariesOfUser(user))
+    }
+
     private fun findUserByToken(token: String?): Long {
         return tokenService.getIdFromToken(token ?: throw UnauthorizedException()) ?: throw UnauthorizedException()
     }
