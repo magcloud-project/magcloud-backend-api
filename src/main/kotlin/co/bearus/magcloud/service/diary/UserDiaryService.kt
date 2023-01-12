@@ -48,7 +48,7 @@ class UserDiaryService(
         if(previousDiaries.version != dto.previousVersion!!) throw DomainException("이전 버전과 일치하지 않습니다")
 
         previousDiaries.content = dto.content!!
-        previousDiaries.version = dto.version!!
+        previousDiaries.version++
 
         diaryRepository.save(previousDiaries)
         inferenceService.requestInference(previousDiaries)
@@ -63,6 +63,7 @@ class UserDiaryService(
                 it.id!!,
                 it.content,
                 it.date.atStartOfDay(),
+                it.modifiedDate!!,
                 it.version,
                 it.emotions.map { emotion -> EmotionResponseDTO(emotion.emotion, emotion.value) }
             )
@@ -76,6 +77,7 @@ class UserDiaryService(
             diary.id!!,
             diary.content,
             diary.date.atStartOfDay(),
+            diary.modifiedDate!!,
             diary.version,
             diary.emotions.map { emotion -> EmotionResponseDTO(emotion.emotion, emotion.value) })
     }
