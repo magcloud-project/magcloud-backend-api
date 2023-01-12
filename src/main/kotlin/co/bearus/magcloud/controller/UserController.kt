@@ -4,6 +4,7 @@ import co.bearus.magcloud.advice.RequestUser
 import co.bearus.magcloud.advice.WebUser
 import co.bearus.magcloud.dto.request.AuthRegisterDTO
 import co.bearus.magcloud.dto.request.DiaryCreateDTO
+import co.bearus.magcloud.dto.request.DiaryPatchDTO
 import co.bearus.magcloud.dto.request.UserTagAddDTO
 import co.bearus.magcloud.dto.response.APIResponse
 import co.bearus.magcloud.dto.response.DiaryResponseDTO
@@ -70,7 +71,16 @@ class UserController(
         return ResponseEntity.ok(result)
     }
 
-    @GetMapping("/diary")
+    @PatchMapping("/diary")
+    fun onDiaryPatch(
+        @RequestBody @Valid dto: DiaryPatchDTO,
+        @RequestUser user: WebUser
+    ): ResponseEntity<APIResponse> {
+        val result = userDiaryService.patchDiary(user.userId, dto)
+        return ResponseEntity.ok(result)
+    }
+
+        @GetMapping("/diary")
     fun onDiaryGet(
         @RequestUser user: WebUser,
         @RequestParam(required = false) date: String?

@@ -6,5 +6,6 @@ data class DiaryResponseDTO(
     val id: Long,
     val content: String,
     val createdAt: LocalDateTime,
+    val version: Long,
     val result: List<EmotionResponseDTO>
 )

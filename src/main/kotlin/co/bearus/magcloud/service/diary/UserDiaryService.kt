@@ -1,6 +1,8 @@
 package co.bearus.magcloud.service.diary
 
+import co.bearus.magcloud.domain.DomainException
 import co.bearus.magcloud.domain.NotFoundException
+import co.bearus.magcloud.dto.request.DiaryPatchDTO
 import co.bearus.magcloud.dto.response.APIResponse
 import co.bearus.magcloud.dto.response.DiaryResponseDTO
 import co.bearus.magcloud.dto.response.EmotionResponseDTO
@@ -22,15 +24,8 @@ class UserDiaryService(
         if (!user.isPresent) throw NotFoundException("그런 유저는 찾을 수 없습니다")
 
         val date = LocalDate.parse(diaryDate, DateTimeFormatter.BASIC_ISO_DATE)
-        val previousDiaries =
-            diaryRepository.getByUserIdAndDate(userId, date)
-        if (previousDiaries != null) {
-            //UPDATE CODE
-            previousDiaries.content = content
-            diaryRepository.save(previousDiaries)
-            inferenceService.requestInference(previousDiaries)
-            return APIResponse.ok("일기가 수정되었습니다.");
-        }
+        val previousDiaries = diaryRepository.getByUserIdAndDate(userId, date)
+        if (previousDiaries != null) throw DomainException("이미 해당 날짜에 일기가 존재합니다")
 
         val userDiary = UserDiaryEntity(
             content,
@@ -42,6 +37,24 @@ class UserDiaryService(
         return APIResponse.ok("일기가 추가되었습니다")
     }
 
+    fun patchDiary(userId: Long, dto: DiaryPatchDTO): APIResponse {
+        val user = userRepository.findById(userId)
+        if (!user.isPresent) throw NotFoundException("그런 유저는 찾을 수 없습니다")
+
+        val date = LocalDate.parse(dto.date!!, DateTimeFormatter.BASIC_ISO_DATE)
+        val previousDiaries =
+            diaryRepository.getByUserIdAndDate(userId, date) ?: throw DomainException("일기가 존재하지 않습니다")
+
+        if(previousDiaries.version != dto.previousVersion!!) throw DomainException("이전 버전과 일치하지 않습니다")
+
+        previousDiaries.content = dto.content!!
+        previousDiaries.version = dto.version!!
+
+        diaryRepository.save(previousDiaries)
+        inferenceService.requestInference(previousDiaries)
+        return APIResponse.ok("일기가 수정되었습니다.");
+    }
+
     fun getDiariesOfUser(userId: Long): List<DiaryResponseDTO> {
         val user = userRepository.findById(userId)
         if (!user.isPresent) throw NotFoundException("그런 유저는 찾을 수 없습니다")
@@ -50,6 +63,7 @@ class UserDiaryService(
                 it.id!!,
                 it.content,
                 it.date.atStartOfDay(),
+                it.version,
                 it.emotions.map { emotion -> EmotionResponseDTO(emotion.emotion, emotion.value) }
             )
         }
@@ -62,6 +76,7 @@ class UserDiaryService(
             diary.id!!,
             diary.content,
             diary.date.atStartOfDay(),
+            diary.version,
             diary.emotions.map { emotion -> EmotionResponseDTO(emotion.emotion, emotion.value) })
     }
 
