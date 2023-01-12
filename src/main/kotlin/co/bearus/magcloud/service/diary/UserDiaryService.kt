@@ -45,7 +45,7 @@ class UserDiaryService(
         val previousDiaries =
             diaryRepository.getByUserIdAndDate(userId, date) ?: throw DomainException("일기가 존재하지 않습니다")
 
-        if(previousDiaries.version != dto.previousVersion!!) throw DomainException("이전 버전과 일치하지 않습니다")
+        if(dto.force != true && previousDiaries.version != dto.previousVersion!!) throw DomainException("이전 버전과 일치하지 않습니다")
 
         previousDiaries.content = dto.content!!
         previousDiaries.version++
