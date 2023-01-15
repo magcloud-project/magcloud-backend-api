@@ -80,7 +80,7 @@ class UserController(
         return ResponseEntity.ok(result)
     }
 
-        @GetMapping("/diary")
+    @GetMapping("/diary")
     fun onDiaryGet(
         @RequestUser user: WebUser,
         @RequestParam(required = false) date: String?

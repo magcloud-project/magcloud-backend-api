@@ -19,7 +19,7 @@ class NotificationService(
 ) {
     init {
         val credentials = ByteArrayInputStream(Base64.getDecoder().decode(secretValue))
-        val options = FirebaseOptions.Builder()
+        val options = FirebaseOptions.builder()
             .setCredentials(GoogleCredentials.fromStream(credentials))
             .build()
         FirebaseApp.initializeApp(options)

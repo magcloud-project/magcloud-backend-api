@@ -4,6 +4,7 @@ import co.bearus.magcloud.advice.RequestUser
 import co.bearus.magcloud.advice.WebUser
 import co.bearus.magcloud.dto.request.DeviceRegisterDTO
 import co.bearus.magcloud.dto.response.APIResponse
+import co.bearus.magcloud.service.notification.NotificationService
 import co.bearus.magcloud.service.notification.UserDeviceService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -13,12 +14,20 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/v1/user/device")
-class UserDeviceController(private val userDeviceService: UserDeviceService) {
+class UserDeviceController(
+    private val userDeviceService: UserDeviceService,
+    private val notificationService: NotificationService
+) {
     @PostMapping
     fun registerNewDevice(
         @RequestUser user: WebUser,
         @RequestBody deviceRegisterDTO: DeviceRegisterDTO
     ): ResponseEntity<APIResponse> {
         return ResponseEntity.ok(this.userDeviceService.registerDevice(user.userId, deviceRegisterDTO))
+    }
+
+    @PostMapping("/noti")
+    fun sendNoti() {
+        notificationService.broadcastMessage("asdf", "bsdef")
     }
 }

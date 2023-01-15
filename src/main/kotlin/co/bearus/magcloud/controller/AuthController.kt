@@ -1,7 +1,6 @@
 package co.bearus.magcloud.controller
 
 import co.bearus.magcloud.domain.DomainException
-import co.bearus.magcloud.domain.LoginProvider
 import co.bearus.magcloud.dto.request.LoginDTO
 import co.bearus.magcloud.dto.request.RefreshTokenRequestDTO
 import co.bearus.magcloud.dto.request.SocialLoginDTO

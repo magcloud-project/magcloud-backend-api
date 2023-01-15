@@ -21,11 +21,9 @@ class InferenceService(
     @Async
     fun requestInference(diary: UserDiaryEntity) {
         try {
-            //val response = _requestInference(diary)
-            //Implement Inference Svc
             val selectedTopEmotion = Emotion.values().random()
-            Emotion.values().forEach { emotion->
-                val data = UserDiaryEmotionEntity(diary, emotion, if(emotion == selectedTopEmotion) 0.6 else 0.1)
+            Emotion.values().forEach { emotion ->
+                val data = UserDiaryEmotionEntity(diary, emotion, if (emotion == selectedTopEmotion) 0.6 else 0.1)
                 this.userDiaryEmotionRepository.save(data)
             }
         } catch (ex: RuntimeException) {

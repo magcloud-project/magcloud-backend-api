@@ -11,7 +11,7 @@ data class UserDiaryEntity(
     @Id @GeneratedValue var id: Long? = null,
     @Column(name = "date") var date: LocalDate,
     @Column(length = 50000) var content: String,
-    @Column(name="version") var version: Long,
+    @Column(name = "version") var version: Long,
     @ManyToOne @JoinColumn(name = "user_id") var user: UserEntity? = null,
     @OneToMany(
         mappedBy = "diary",
@@ -19,7 +19,7 @@ data class UserDiaryEntity(
         orphanRemoval = true
     ) var emotions: MutableSet<UserDiaryEmotionEntity> = mutableSetOf(),
 ) : Serializable, BaseAuditEntity() {
-    constructor() : this(0, LocalDate.now(),  "", 1)
+    constructor() : this(0, LocalDate.now(), "", 1)
     constructor(content: String, user: UserEntity, date: LocalDate) : this(null, date, content, 1, user)
 
 }
