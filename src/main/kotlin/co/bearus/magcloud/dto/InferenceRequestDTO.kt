@@ -1,4 +1,3 @@
 package co.bearus.magcloud.dto
 
-class InferenceRequestDTO(val content: String) {
-}
+data class InferenceRequestDTO(val content: String)

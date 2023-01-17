@@ -28,9 +28,6 @@ class AuthController(
 
     @PostMapping("/refresh")
     fun requestRefresh(@RequestBody body: RefreshTokenRequestDTO): ResponseEntity<LoginResponseDTO> {
-        if (body.refreshToken == null) {
-            throw DomainException("리프레시 토큰이 없습니다.")
-        }
         return ResponseEntity.ok(userService.onTokenRefreshRequest(body.refreshToken))
     }
 
