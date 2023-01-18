@@ -68,7 +68,7 @@ class AppleProviderService(
         val decoded = String(Decoders.BASE64.decode(payload))
 
         val tokenPayload = Gson().fromJson(decoded, IdTokenPayload::class.java)
-        return SocialInfoDTO(dto.fullName?: "apple", tokenPayload.sub, dto.email ?: "")
+        return SocialInfoDTO(dto.name ?: "apple", tokenPayload.sub, "")
     }
 
     fun generateSecretKey(): String {

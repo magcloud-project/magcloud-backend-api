@@ -10,7 +10,7 @@ import org.springframework.security.web.SecurityFilterChain
 
 @EnableWebSecurity
 @Configuration
-class HelloWebfluxSecurityConfig {
+class SpringSecurityConfig {
     @Bean
     fun bCryptPasswordEncoder(): BCryptPasswordEncoder {
         return BCryptPasswordEncoder()

@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 import java.time.LocalDate
 
 interface JPAUserDiaryRepository : JpaRepository<UserDiaryEntity, Long> {
-    fun getByIdAndDate(id: Long, date: LocalDate): UserDiaryEntity?
+    fun getByUserIdAndDate(userId: Long, date: LocalDate): UserDiaryEntity?
 }

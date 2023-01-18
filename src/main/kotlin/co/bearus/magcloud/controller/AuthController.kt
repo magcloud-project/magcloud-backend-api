@@ -1,7 +1,6 @@
 package co.bearus.magcloud.controller
 
 import co.bearus.magcloud.domain.DomainException
-import co.bearus.magcloud.domain.LoginProvider
 import co.bearus.magcloud.dto.request.LoginDTO
 import co.bearus.magcloud.dto.request.RefreshTokenRequestDTO
 import co.bearus.magcloud.dto.request.SocialLoginDTO
@@ -29,9 +28,6 @@ class AuthController(
 
     @PostMapping("/refresh")
     fun requestRefresh(@RequestBody body: RefreshTokenRequestDTO): ResponseEntity<LoginResponseDTO> {
-        if (body.refreshToken == null) {
-            throw DomainException("리프레시 토큰이 없습니다.")
-        }
         return ResponseEntity.ok(userService.onTokenRefreshRequest(body.refreshToken))
     }
 
@@ -40,7 +36,6 @@ class AuthController(
         @RequestBody token: SocialLoginDTO,
         @PathVariable provider: String
     ): ResponseEntity<LoginResponseDTO> {
-        println(provider)
         val currentProvider = parseProvider(provider)
         return ResponseEntity.ok(currentProvider.login(token))
     }
@@ -52,15 +47,6 @@ class AuthController(
             "google" -> appleService
             "apple" -> appleService
             "apple-native" -> nativeAppleService
-            else -> throw DomainException("Invalid provider")
-        }
-    }
-
-    private fun getProviderService(provider: LoginProvider): SocialProvider {
-        return when (provider) {
-            LoginProvider.KAKAO -> kakaoService
-            LoginProvider.GOOGLE -> kakaoService
-            LoginProvider.APPLE -> appleService
             else -> throw DomainException("Invalid provider")
         }
     }

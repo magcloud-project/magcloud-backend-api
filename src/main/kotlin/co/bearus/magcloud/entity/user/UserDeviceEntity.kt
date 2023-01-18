@@ -14,5 +14,5 @@ class UserDeviceEntity(
         return fcmToken.hashCode()
     }
 
-    override fun equals(other: Any?) = fcmToken == other
+    override fun equals(other: Any?) = other?.javaClass == this.javaClass && fcmToken == other
 }

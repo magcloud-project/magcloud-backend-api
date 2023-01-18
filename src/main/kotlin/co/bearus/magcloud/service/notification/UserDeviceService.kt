@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service
 class UserDeviceService(val userRepository: JPAUserRepository, val userDeviceRepository: JPAUserDeviceRepository) {
     fun registerDevice(id: Long, dto: DeviceRegisterDTO): APIResponse {
         val user = userRepository.findById(id).orElseThrow { throw DomainException("User not found") }
-        if (checkUserHasDevice(user, dto.fcmToken!!)) throw DomainException("User already registered that device")
+        if (checkUserHasDevice(user, dto.fcmToken)) throw DomainException("User already registered that device")
         val device = UserDeviceEntity(user, dto.fcmToken)
         userDeviceRepository.save(device)
         return APIResponse.ok("성공적으로 등록하였습니다.")

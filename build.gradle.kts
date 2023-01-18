@@ -6,6 +6,8 @@ plugins {
     kotlin("jvm") version "1.7.22"
     kotlin("plugin.spring") version "1.7.22"
     kotlin("plugin.jpa") version "1.7.22"
+    kotlin("plugin.allopen") version "1.7.22"
+    kotlin("plugin.noarg") version "1.7.22"
 }
 
 group = "hackathon"
@@ -38,6 +40,13 @@ dependencies {
     implementation(platform("com.google.cloud:libraries-bom:26.2.0"))
     implementation("com.google.cloud:google-cloud-firestore")
     implementation("com.google.firebase:firebase-admin:9.1.1")
+
+    implementation("org.flywaydb:flyway-core:9.11.0")
+    implementation("org.flywaydb:flyway-mysql")
+
+    // https://mvnrepository.com/artifact/com.nimbusds/nimbus-jose-jwt
+    implementation("com.nimbusds:nimbus-jose-jwt:9.28")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.1")
 }
 
 tasks.withType<KotlinCompile> {

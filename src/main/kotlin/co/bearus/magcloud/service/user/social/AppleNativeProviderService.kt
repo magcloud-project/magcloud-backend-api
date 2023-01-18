@@ -5,81 +5,39 @@ import co.bearus.magcloud.domain.LoginProvider
 import co.bearus.magcloud.dto.SocialInfoDTO
 import co.bearus.magcloud.dto.request.SocialLoginDTO
 import co.bearus.magcloud.dto.response.LoginResponseDTO
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
-import io.jsonwebtoken.JwsHeader
+import com.nimbusds.jose.jwk.JWK
 import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.SignatureAlgorithm
-import io.jsonwebtoken.io.Decoders
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
-import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.client.RestTemplate
-import java.security.KeyFactory
-import java.security.NoSuchAlgorithmException
-import java.security.PrivateKey
-import java.security.spec.InvalidKeySpecException
-import java.security.spec.PKCS8EncodedKeySpec
+import java.security.interfaces.RSAPublicKey
 import java.util.*
 
 
 @Service
 class AppleNativeProviderService(
     private val socialService: SocialService,
-    @Value("\${secret.apple-key-id}") val appleKeyId: String,
-    @Value("\${secret.apple-keyfile-value}") val appleKeyValue: String,
-    @Value("\${secret.apple-team-id}") val appleTeamId: String,
-    @Value("\${secret.apple-native-client-id}") val appleClientId: String
 ) : SocialProvider {
-    val pKey: PrivateKey = getPrivateKey()
+    data class JWTTokenHeader(var kid: String, val alr: String)
+
     override fun login(dto: SocialLoginDTO): LoginResponseDTO {
         try {
-            val socialLoginDto = getUserInfoByClientSecret(dto)
-            return socialService.socialLogin(LoginProvider.APPLE, socialLoginDto)
+            val header = dto.accessToken.split("\\.".toRegex()).toTypedArray()[0]
+            val decodedHeader = String(Base64.getDecoder().decode(header))
+            val parsedHeader = Gson().fromJson(decodedHeader, JWTTokenHeader::class.java)
+            val parsed = Jwts.parserBuilder()
+                .setSigningKey(getKeyFromApple(parsedHeader.kid))
+                .build()
+                .parseClaimsJws(dto.accessToken)
+            return socialService.socialLogin(
+                LoginProvider.APPLE,
+                SocialInfoDTO(dto.name ?: "apple", parsed.body["sub"] as String, parsed.body["email"] as String)
+            )
         } catch (e: Exception) {
             e.printStackTrace()
             throw DomainException()
         }
-    }
-
-    fun getUserInfoByClientSecret(dto: SocialLoginDTO): SocialInfoDTO {
-        val restTemplate = RestTemplate()
-        val headers = HttpHeaders()
-        headers.contentType = MediaType.APPLICATION_FORM_URLENCODED
-        val params: LinkedMultiValueMap<String, String> = LinkedMultiValueMap()
-        params.add("grant_type", "authorization_code")
-        params.add("code", dto.accessToken)
-        params.add("client_id", this.appleClientId)
-        params.add("client_secret", this.generateSecretKey())
-
-        val request = HttpEntity(params, headers)
-        val url = "https://appleid.apple.com/auth/token"
-        val response: ResponseEntity<String> = restTemplate.postForEntity(url, request, String::class.java)
-        val responseBody = response.body
-
-        val tokenResponse = Gson().fromJson(responseBody, TokenResponse::class.java)
-        val payload =
-            tokenResponse.id_token.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }
-                .toTypedArray()[1]
-
-        val decoded = String(Decoders.BASE64.decode(payload))
-        val tokenPayload = Gson().fromJson(decoded, IdTokenPayload::class.java)
-        return SocialInfoDTO(dto.fullName ?: "apple", tokenPayload.sub, dto.email ?: "")
-    }
-
-    fun generateSecretKey(): String {
-        return Jwts.builder()
-            .setHeaderParam(JwsHeader.KEY_ID, appleKeyId)
-            .setIssuer(appleTeamId)
-            .setAudience("https://appleid.apple.com")
-            .setSubject(appleClientId)
-            .setExpiration(Date(System.currentTimeMillis() + 10000 * 60 * 5))
-            .setIssuedAt(Date(System.currentTimeMillis()))
-            .signWith(pKey, SignatureAlgorithm.ES256)
-            .compact()
     }
 
     data class TokenResponse(
@@ -101,18 +59,15 @@ class AppleNativeProviderService(
         val nonce_supported: Boolean
     )
 
-    private final fun getPrivateKey(): PrivateKey {
-        val content = String(Base64.getDecoder().decode(appleKeyValue))
-        return try {
-            val privateKey = content.replace("-----BEGIN PRIVATE KEY-----", "")
-                .replace("-----END PRIVATE KEY-----", "")
-                .replace("\\s+".toRegex(), "")
-            val kf: KeyFactory = KeyFactory.getInstance("EC")
-            kf.generatePrivate(PKCS8EncodedKeySpec(Base64.getDecoder().decode(privateKey)))
-        } catch (e: NoSuchAlgorithmException) {
-            throw RuntimeException("Java did not support the algorithm:EC", e)
-        } catch (e: InvalidKeySpecException) {
-            throw RuntimeException("Invalid key format")
-        }
+    data class Key(val kty: String, val kid: String, val use: String, val alg: String, val n: String, val e: String)
+    data class KeyResponse(
+        val keys: List<Key>
+    )
+
+    private final fun getKeyFromApple(kid: String): RSAPublicKey {
+        val restTemplate = RestTemplate()
+        val keyObj = restTemplate.getForObject("https://appleid.apple.com/auth/keys", KeyResponse::class.java)
+        val key = keyObj?.keys?.firstOrNull() { it.kid == kid } ?: throw DomainException("Invalid key")
+        return JWK.parse(ObjectMapper().writeValueAsString(key)).toRSAKey().toRSAPublicKey()
     }
 }

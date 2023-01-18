@@ -1,26 +1,33 @@
 package co.bearus.magcloud.controller
 
-import co.bearus.magcloud.domain.UnauthorizedException
+import co.bearus.magcloud.advice.RequestUser
+import co.bearus.magcloud.advice.WebUser
 import co.bearus.magcloud.dto.request.DeviceRegisterDTO
 import co.bearus.magcloud.dto.response.APIResponse
+import co.bearus.magcloud.service.notification.NotificationService
 import co.bearus.magcloud.service.notification.UserDeviceService
-import co.bearus.magcloud.service.user.TokenService
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/v1/user/device")
-class UserDeviceController(private val tokenService: TokenService, private val userDeviceService: UserDeviceService) {
+class UserDeviceController(
+    private val userDeviceService: UserDeviceService,
+    private val notificationService: NotificationService
+) {
     @PostMapping
     fun registerNewDevice(
-        @RequestHeader(value = "X-AUTH-TOKEN") token: String?,
+        @RequestUser user: WebUser,
         @RequestBody deviceRegisterDTO: DeviceRegisterDTO
     ): ResponseEntity<APIResponse> {
-        val userId = findUserByToken(token)
-        return ResponseEntity.ok(this.userDeviceService.registerDevice(userId, deviceRegisterDTO))
+        return ResponseEntity.ok(this.userDeviceService.registerDevice(user.userId, deviceRegisterDTO))
     }
 
-    private fun findUserByToken(token: String?): Long {
-        return tokenService.getIdFromToken(token ?: throw UnauthorizedException()) ?: throw UnauthorizedException()
+    @PostMapping("/noti")
+    fun sendNoti() {
+        notificationService.broadcastMessage("asdf", "bsdef")
     }
 }

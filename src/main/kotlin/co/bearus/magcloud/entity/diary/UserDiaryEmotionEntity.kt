@@ -4,6 +4,7 @@ import co.bearus.magcloud.domain.Emotion
 import jakarta.persistence.*
 
 @Entity(name = "user_diary_emotion")
+@IdClass(UserDiaryEmotionIdentity::class)
 data class UserDiaryEmotionEntity(
     @Id @ManyToOne @JoinColumn(name = "diary_id") var diary: UserDiaryEntity? = null,
     @Id @Enumerated(value = EnumType.STRING) var emotion: Emotion,
