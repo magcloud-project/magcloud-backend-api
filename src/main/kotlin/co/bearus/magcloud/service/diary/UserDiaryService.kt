@@ -38,9 +38,7 @@ class UserDiaryService(
     }
 
     fun patchDiary(userId: Long, dto: DiaryPatchDTO): APIResponse {
-        val user = findUser(userId)
-
-        val date = LocalDate.parse(dto.date!!, DateTimeFormatter.BASIC_ISO_DATE)
+        val date = LocalDate.parse(dto.date, DateTimeFormatter.BASIC_ISO_DATE)
         val previousDiaries =
             diaryRepository.getByUserIdAndDate(userId, date) ?: throw DomainException("일기가 존재하지 않습니다")
 
@@ -69,8 +67,8 @@ class UserDiaryService(
         }
     }
 
-    fun getDiaryByDate(userId: Long, date: String): DiaryResponseDTO? {
-        val diary = diaryRepository.getByUserIdAndDate(userId, LocalDate.parse(date, DateTimeFormatter.BASIC_ISO_DATE))
+    fun getDiaryByDate(userId: Long, date: LocalDate): DiaryResponseDTO? {
+        val diary = diaryRepository.getByUserIdAndDate(userId, date)
             ?: throw NotFoundException()
         return DiaryResponseDTO(
             diary.id!!,

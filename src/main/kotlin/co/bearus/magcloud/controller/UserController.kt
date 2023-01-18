@@ -14,10 +14,10 @@ import co.bearus.magcloud.service.diary.UserDiaryService
 import co.bearus.magcloud.service.user.UserService
 import co.bearus.magcloud.service.user.UserTagService
 import jakarta.validation.Valid
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -83,10 +83,10 @@ class UserController(
     @GetMapping("/diary")
     fun onDiaryGet(
         @RequestUser user: WebUser,
-        @RequestParam(required = false) date: String?
+        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyyMMdd") date: LocalDate?
     ): ResponseEntity<DiaryResponseDTO> {
         return if (date == null) {
-            val result = userDiaryService.getDiaryByDate(user.userId, getToday())
+            val result = userDiaryService.getDiaryByDate(user.userId, LocalDate.now())
             ResponseEntity.ok(result)
         } else {
             val result = userDiaryService.getDiaryByDate(user.userId, date)
@@ -99,10 +99,5 @@ class UserController(
         @RequestUser user: WebUser
     ): ResponseEntity<List<DiaryResponseDTO>> {
         return ResponseEntity.ok(userDiaryService.getDiariesOfUser(user.userId))
-    }
-
-    private fun getToday(): String {
-        val date = LocalDate.now()
-        return date.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
     }
 }
