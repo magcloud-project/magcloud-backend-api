@@ -1,5 +1,6 @@
 package co.bearus.magcloud.entity.diary
 
+import co.bearus.magcloud.advice.SHA256
 import co.bearus.magcloud.entity.BaseAuditEntity
 import co.bearus.magcloud.entity.user.UserEntity
 import jakarta.persistence.*
@@ -11,7 +12,8 @@ data class UserDiaryEntity(
     @Id @GeneratedValue var id: Long? = null,
     @Column(name = "date") var date: LocalDate,
     @Column(length = 50000) var content: String,
-    @Column(name = "version") var version: Long,
+   // @Column(name = "version") var version: Long,
+    @Column(name="content_hash", length = 256) var contentHash: String,
     @ManyToOne @JoinColumn(name = "user_id") var user: UserEntity? = null,
     @OneToMany(
         mappedBy = "diary",
@@ -19,7 +21,9 @@ data class UserDiaryEntity(
         orphanRemoval = true
     ) var emotions: MutableSet<UserDiaryEmotionEntity> = mutableSetOf(),
 ) : Serializable, BaseAuditEntity() {
-    constructor() : this(0, LocalDate.now(), "", 1)
-    constructor(content: String, user: UserEntity, date: LocalDate) : this(null, date, content, 1, user)
+    constructor() : this(0, LocalDate.now(), "", "")
+    constructor(content: String, user: UserEntity, date: LocalDate) : this(null, date, content, "", user){
+        this.contentHash = SHA256.encrypt(content)
+    }
 
 }

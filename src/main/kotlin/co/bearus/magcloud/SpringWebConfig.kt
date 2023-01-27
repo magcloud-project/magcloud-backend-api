@@ -3,6 +3,7 @@ package co.bearus.magcloud
 import co.bearus.magcloud.advice.RequestUserArgumentResolver
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.context.annotation.Bean
@@ -19,6 +20,7 @@ class SpringWebConfig(private val resolver: RequestUserArgumentResolver) : WebMv
     fun objectMapper(): ObjectMapper{
         return jacksonObjectMapper()
             .registerModule(KotlinModule())
+            .registerModule(JavaTimeModule())
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
     }
 }

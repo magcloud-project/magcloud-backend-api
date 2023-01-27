@@ -1,8 +1,10 @@
 package co.bearus.magcloud.service.diary
 
+import co.bearus.magcloud.advice.SHA256
 import co.bearus.magcloud.domain.DomainException
 import co.bearus.magcloud.domain.NotFoundException
 import co.bearus.magcloud.dto.request.DiaryPatchDTO
+import co.bearus.magcloud.dto.request.UpdateRequestDTO
 import co.bearus.magcloud.dto.response.APIResponse
 import co.bearus.magcloud.dto.response.DiaryResponseDTO
 import co.bearus.magcloud.dto.response.EmotionResponseDTO
@@ -43,10 +45,9 @@ class UserDiaryService(
             diaryRepository.getByUserIdAndDate(userId, date) ?: throw DomainException("일기가 존재하지 않습니다")
 
 
-        if (dto.force != true && previousDiaries.version != dto.previousVersion!!) throw DomainException("이전 버전과 일치하지 않습니다")
+        previousDiaries.content = dto.content
+        previousDiaries.contentHash = SHA256.encrypt(dto.content)
 
-        previousDiaries.content = dto.content!!
-        previousDiaries.version++
 
         diaryRepository.save(previousDiaries)
         inferenceService.requestInference(previousDiaries)
@@ -61,10 +62,25 @@ class UserDiaryService(
                 it.content,
                 it.date.atStartOfDay(),
                 it.modifiedDate!!,
-                it.version,
                 it.emotions.map { emotion -> EmotionResponseDTO(emotion.emotion, emotion.value) }
             )
         }
+    }
+
+    fun updateRequest(userId: Long, payload: List<UpdateRequestDTO>): List<DiaryResponseDTO> {
+        val user = findUser(userId)
+        val dataMap = payload.associate { it.date to it.contentHash }
+        return user.diaries
+            .filter { !dataMap.containsKey(it.date) || dataMap[it.date] != it.contentHash }
+            .map {
+                DiaryResponseDTO(
+                    it.id!!,
+                    it.content,
+                    it.date.atStartOfDay(),
+                    it.modifiedDate!!,
+                    it.emotions.map { emotion -> EmotionResponseDTO(emotion.emotion, emotion.value) }
+                )
+            }
     }
 
     fun getDiaryByDate(userId: Long, date: LocalDate): DiaryResponseDTO? {
@@ -75,7 +91,6 @@ class UserDiaryService(
             diary.content,
             diary.date.atStartOfDay(),
             diary.modifiedDate!!,
-            diary.version,
             diary.emotions.map { emotion -> EmotionResponseDTO(emotion.emotion, emotion.value) })
     }
 

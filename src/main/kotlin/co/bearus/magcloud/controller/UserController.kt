@@ -2,10 +2,7 @@ package co.bearus.magcloud.controller
 
 import co.bearus.magcloud.advice.RequestUser
 import co.bearus.magcloud.advice.WebUser
-import co.bearus.magcloud.dto.request.AuthRegisterDTO
-import co.bearus.magcloud.dto.request.DiaryCreateDTO
-import co.bearus.magcloud.dto.request.DiaryPatchDTO
-import co.bearus.magcloud.dto.request.UserTagAddDTO
+import co.bearus.magcloud.dto.request.*
 import co.bearus.magcloud.dto.response.APIResponse
 import co.bearus.magcloud.dto.response.DiaryResponseDTO
 import co.bearus.magcloud.dto.response.TagResponseDTO
@@ -99,5 +96,13 @@ class UserController(
         @RequestUser user: WebUser
     ): ResponseEntity<List<DiaryResponseDTO>> {
         return ResponseEntity.ok(userDiaryService.getDiariesOfUser(user.userId))
+    }
+
+    @PostMapping("/diary-update")
+    fun onDiaryUpdateRequest(
+        @RequestUser user: WebUser,
+        @RequestBody payload: List<UpdateRequestDTO>
+    ): ResponseEntity<List<DiaryResponseDTO>> {
+        return ResponseEntity.ok(userDiaryService.updateRequest(user.userId, payload))
     }
 }
