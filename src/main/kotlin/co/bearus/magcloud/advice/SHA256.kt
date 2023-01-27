@@ -5,7 +5,7 @@ import java.security.NoSuchAlgorithmException
 
 
 class SHA256 {
-    companion object{
+    companion object {
         @Throws(NoSuchAlgorithmException::class)
         fun encrypt(text: String): String {
             val md = MessageDigest.getInstance("SHA-256")

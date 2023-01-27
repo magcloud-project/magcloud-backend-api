@@ -18,8 +18,9 @@ class SpringWebConfig(private val resolver: RequestUserArgumentResolver) : WebMv
     override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver>) {
         resolvers.add(resolver)
     }
+
     @Bean
-    fun objectMapper(): ObjectMapper{
+    fun objectMapper(): ObjectMapper {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         return jacksonObjectMapper()
             .registerModule(KotlinModule())
