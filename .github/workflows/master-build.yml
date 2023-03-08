@@ -8,7 +8,7 @@ on:
 env:
   AWS_REGION: ap-northeast-2
   ECR_REPOSITORY: magcloud-backend
-  ECS_SERVICE: magcloud-backend-svc
+  ECS_SERVICE: magcloud-backend-api
   ECS_CLUSTER: Bearus-Cluster
   ECS_TASK_DEFINITION: MagCloud-Backend
   CONTAINER_NAME: backend-spring
@@ -92,3 +92,20 @@ jobs:
           service: ${{ env.ECS_SERVICE }}
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: true
+
+      - name: Find last task definition revision id
+        id: task-rev-id
+        run: echo "::set-output name=ecs_rev_id::$(aws ecs describe-task-definition --task-definition ${{ env.ECS_TASK_DEFINITION }} --query taskDefinition.revision --output text)"
+
+      - name: Create Release Tag on Github
+        uses: ncipollo/release-action@v1
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ env.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ github.sha }}
+        with:
+          tag: PROD_${{ steps.task-rev-id.outputs.ecs_rev_id }}
+          name: PROD_${{ steps.task-rev-id.outputs.ecs_rev_id }}
+          body: "${{env.ECR_REGISTRY}}/${{env.ECR_REPOSITORY}}:${{env.IMAGE_TAG}}"
+          commit: ${{ github.sha }}
+          artifacts: ${{ env.ECS_TASK_DEFINITION }}:${{ steps.task-rev-id.outputs.ecs_rev_id }}

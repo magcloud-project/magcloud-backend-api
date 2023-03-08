@@ -47,6 +47,9 @@ dependencies {
     // https://mvnrepository.com/artifact/com.nimbusds/nimbus-jose-jwt
     implementation("com.nimbusds:nimbus-jose-jwt:9.28")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.1")
+// https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.1")
+
 }
 
 tasks.withType<KotlinCompile> {
