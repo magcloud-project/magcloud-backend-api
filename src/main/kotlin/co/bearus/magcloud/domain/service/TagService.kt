@@ -1,4 +1,4 @@
-package co.bearus.magcloud.service
+package co.bearus.magcloud.domain.service
 
 import co.bearus.magcloud.domain.exception.DomainException
 import co.bearus.magcloud.domain.exception.NotFoundException

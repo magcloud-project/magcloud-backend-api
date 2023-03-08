@@ -1,4 +1,4 @@
-package co.bearus.magcloud.service.notification
+package co.bearus.magcloud.domain.service.notification
 
 import co.bearus.magcloud.domain.exception.DomainException
 import co.bearus.magcloud.domain.entity.user.DeviceIdentity

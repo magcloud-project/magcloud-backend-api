@@ -2,9 +2,9 @@ package co.bearus.magcloud.controller
 
 import co.bearus.magcloud.advice.RequestUser
 import co.bearus.magcloud.advice.WebUser
-import co.bearus.magcloud.service.diary.UserDiaryService
-import co.bearus.magcloud.service.user.UserService
-import co.bearus.magcloud.service.user.UserTagService
+import co.bearus.magcloud.domain.service.diary.UserDiaryService
+import co.bearus.magcloud.domain.service.user.UserService
+import co.bearus.magcloud.domain.service.user.UserTagService
 import jakarta.validation.Valid
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.ResponseEntity
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
 
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/v1/user")
 class UserController(
     private val userService: UserService,
     private val userTagService: UserTagService,

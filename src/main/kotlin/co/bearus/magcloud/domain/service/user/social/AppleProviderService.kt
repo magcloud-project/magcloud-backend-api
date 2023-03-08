@@ -1,4 +1,4 @@
-package co.bearus.magcloud.service.user.social
+package co.bearus.magcloud.domain.service.user.social
 
 import co.bearus.magcloud.domain.exception.DomainException
 import co.bearus.magcloud.domain.type.LoginProvider

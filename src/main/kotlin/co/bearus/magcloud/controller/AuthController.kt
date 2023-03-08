@@ -1,15 +1,15 @@
 package co.bearus.magcloud.controller
 
 import co.bearus.magcloud.domain.exception.DomainException
-import co.bearus.magcloud.service.user.UserService
-import co.bearus.magcloud.service.user.social.*
+import co.bearus.magcloud.domain.service.user.UserService
+import co.bearus.magcloud.domain.service.user.social.*
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/v1/auth")
 class AuthController(
     private val userService: UserService,
     private val kakaoService: KakaoProviderService,

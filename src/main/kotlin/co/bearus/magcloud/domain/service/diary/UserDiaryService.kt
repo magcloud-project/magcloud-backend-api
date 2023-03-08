@@ -1,4 +1,4 @@
-package co.bearus.magcloud.service.diary
+package co.bearus.magcloud.domain.service.diary
 
 import co.bearus.magcloud.advice.SHA256
 import co.bearus.magcloud.domain.exception.DomainException

@@ -1,11 +1,11 @@
-package co.bearus.magcloud.service.user.social
+package co.bearus.magcloud.domain.service.user.social
 
 import co.bearus.magcloud.domain.type.LoginProvider
 import co.bearus.magcloud.domain.entity.user.UserEntity
 import co.bearus.magcloud.domain.repository.JPAUserRepository
 import co.bearus.magcloud.provider.PasswordProvider
 import co.bearus.magcloud.provider.TokenProvider
-import co.bearus.magcloud.service.user.UserService
+import co.bearus.magcloud.domain.service.user.UserService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
