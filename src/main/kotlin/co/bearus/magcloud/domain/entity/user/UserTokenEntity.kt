@@ -7,8 +7,11 @@ import jakarta.persistence.PrimaryKeyJoinColumn
 
 @Entity(name = "user_token")
 class UserTokenEntity(
-    @Id val id: Long? = null,
-    @OneToOne @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id") var user: UserEntity? = null,
+    @Id
+    val id: Long? = null,
+    @OneToOne
+    @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
+    var user: UserEntity? = null,
     var refreshToken: String
 ) {
     constructor() : this(null, null, "")

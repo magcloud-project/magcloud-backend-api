@@ -8,6 +8,12 @@ import jakarta.persistence.ManyToOne
 
 @Entity(name = "user_tags")
 data class UserTagEntity(
-    @Id @ManyToOne @JoinColumn(name = "tag_id") var tagId: TagEntity? = null,
-    @Id @ManyToOne @JoinColumn(name = "user_id") var user: UserEntity? = null,
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "tag_id")
+    var tagId: TagEntity? = null,
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    var user: UserEntity? = null,
 )

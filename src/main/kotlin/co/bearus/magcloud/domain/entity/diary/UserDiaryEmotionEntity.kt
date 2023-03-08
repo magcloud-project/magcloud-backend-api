@@ -6,8 +6,14 @@ import jakarta.persistence.*
 @Entity(name = "user_diary_emotion")
 @IdClass(UserDiaryEmotionIdentity::class)
 data class UserDiaryEmotionEntity(
-    @Id @ManyToOne @JoinColumn(name = "diary_id") var diary: UserDiaryEntity? = null,
-    @Id @Enumerated(value = EnumType.STRING) var emotion: Emotion,
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "diary_id")
+    var diary: UserDiaryEntity? = null,
+    @Id
+    @Enumerated(value = EnumType.STRING)
+    var emotion: Emotion,
+    @Column(name = "value")
     var value: Double
 ) {
     constructor() : this(null, Emotion.ANGER, 0.0)

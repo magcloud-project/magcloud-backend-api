@@ -8,7 +8,9 @@ import lombok.AllArgsConstructor
 @Entity(name = "tags")
 @AllArgsConstructor
 data class TagEntity(
-    @Id @GeneratedValue var id: Long? = null,
+    @Id
+    @GeneratedValue
+    var id: Long? = null,
     var name: String
 ) {
     constructor() : this(null, "")

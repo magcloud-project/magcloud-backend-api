@@ -3,7 +3,9 @@ package co.bearus.magcloud.service.user.social
 import co.bearus.magcloud.domain.type.LoginProvider
 import co.bearus.magcloud.domain.entity.user.UserEntity
 import co.bearus.magcloud.domain.repository.JPAUserRepository
-import co.bearus.magcloud.service.user.TokenService
+import co.bearus.magcloud.provider.PasswordProvider
+import co.bearus.magcloud.provider.TokenProvider
+import co.bearus.magcloud.service.user.UserService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
@@ -11,8 +13,8 @@ import java.util.*
 @Service
 class SocialService(
     private val repository: JPAUserRepository,
-    private val tokenService: TokenService,
-    val bCrypt: BCryptPasswordEncoder
+    private val userService: UserService,
+    private val passwordProvider: PasswordProvider,
 ) {
     fun socialLogin(
         provider: LoginProvider,
@@ -23,7 +25,7 @@ class SocialService(
         if (previousUser == null) {
             previousUser = socialLoginRegister(provider, socialInfoDTO)
         }
-        return tokenService.createToken(previousUser)
+        return userService.createToken(previousUser)
     }
 
     fun socialLoginRegister(
@@ -41,6 +43,6 @@ class SocialService(
     }
 
     fun generateRandomPassword(): String {
-        return bCrypt.encode(UUID.randomUUID().toString())
+        return passwordProvider.encrypt(UUID.randomUUID().toString())
     }
 }

@@ -1,4 +1,4 @@
-package co.bearus.magcloud.service.user
+package co.bearus.magcloud.provider
 
 import co.bearus.magcloud.domain.entity.user.UserEntity
 import co.bearus.magcloud.domain.entity.user.UserTokenEntity
@@ -12,8 +12,7 @@ import java.util.*
 import javax.crypto.spec.SecretKeySpec
 
 @Service
-class TokenService(
-    val tokenRepository: JPAUserTokenRepository,
+class TokenProvider(
     @Value("\${token.secret}") val secret: String,
     @Value("\${token.expiration.access}") val accessTokenExpiration: Long,
     @Value("\${token.expiration.refresh}") val refreshTokenExpiration: Long,
@@ -42,19 +41,6 @@ class TokenService(
             .signWith(signKey, SignatureAlgorithm.HS256)
             .compact()
     }
-
-    fun createToken(user: UserEntity): co.bearus.magcloud.controller.dto.response.LoginResponseDTO {
-        val accessToken = createAccessToken(user)
-        val refreshToken = createRefreshToken(user)
-        val tokenEntity =
-            user.token?.apply { this.refreshToken = refreshToken } ?: UserTokenEntity(user.id, null, refreshToken)
-        this.tokenRepository.save(tokenEntity)
-        return co.bearus.magcloud.controller.dto.response.LoginResponseDTO(
-            accessToken = accessToken,
-            refreshToken = refreshToken
-        )
-    }
-
     private fun UserEntity.toPayLoad() =
         mapOf<String, Any>(
             Pair("id", this.id!!)
