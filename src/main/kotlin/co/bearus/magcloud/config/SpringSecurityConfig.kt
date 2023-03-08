@@ -40,6 +40,7 @@ class SpringSecurityConfig(
             .and()
             .authorizeHttpRequests()
             .requestMatchers("/v1/auth/**").permitAll()
+            .requestMatchers("/health-check").permitAll()
             .anyRequest().authenticated()
             .and()
             .csrf().disable()
