@@ -104,8 +104,8 @@ jobs:
           ECR_REPOSITORY: ${{ env.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
         with:
-          tag: PROD_${{ steps.task-rev-id.outputs.ecs_rev_id }}
-          name: PROD_${{ steps.task-rev-id.outputs.ecs_rev_id }}
+          tag: DEV_${{ steps.task-rev-id.outputs.ecs_rev_id }}
+          name: DEV_${{ steps.task-rev-id.outputs.ecs_rev_id }}
           body: "${{env.ECR_REGISTRY}}/${{env.ECR_REPOSITORY}}:${{env.IMAGE_TAG}}"
           commit: ${{ github.sha }}
           artifacts: ${{ env.ECS_TASK_DEFINITION }}:${{ steps.task-rev-id.outputs.ecs_rev_id }}
