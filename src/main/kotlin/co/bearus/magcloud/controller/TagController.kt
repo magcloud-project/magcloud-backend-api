@@ -1,12 +1,12 @@
 package co.bearus.magcloud.controller
 
-import co.bearus.magcloud.service.TagService
+import co.bearus.magcloud.domain.service.TagService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/v1/tag")
+@RequestMapping("/v1/tag")
 class TagController(private val tagService: TagService) {
     @GetMapping("/{id}")
     fun onRegisterRequested(@PathVariable id: Long): ResponseEntity<co.bearus.magcloud.controller.dto.response.TagResponseDTO> {

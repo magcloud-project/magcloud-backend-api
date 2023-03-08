@@ -1,9 +1,11 @@
-package co.bearus.magcloud
+package co.bearus.magcloud.config
 
 import co.bearus.magcloud.advice.RequestUserArgumentResolver
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.util.StdDateFormat
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.context.annotation.Bean
@@ -14,7 +16,9 @@ import java.text.SimpleDateFormat
 
 
 @Configuration
-class SpringWebConfig(private val resolver: RequestUserArgumentResolver) : WebMvcConfigurer {
+class SpringWebConfig(
+    private val resolver: RequestUserArgumentResolver
+) : WebMvcConfigurer {
     override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver>) {
         resolvers.add(resolver)
     }
@@ -23,9 +27,18 @@ class SpringWebConfig(private val resolver: RequestUserArgumentResolver) : WebMv
     fun objectMapper(): ObjectMapper {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         return jacksonObjectMapper()
-            .registerModule(KotlinModule())
+            .registerModule(
+                KotlinModule.Builder()
+                    .withReflectionCacheSize(512)
+                    .configure(KotlinFeature.NullToEmptyCollection, false)
+                    .configure(KotlinFeature.NullToEmptyMap, false)
+                    .configure(KotlinFeature.NullIsSameAsDefault, false)
+                    .configure(KotlinFeature.SingletonSupport, false)
+                    .configure(KotlinFeature.StrictNullChecks, false)
+                    .build()
+            )
             .registerModule(JavaTimeModule())
-            .setDateFormat(dateFormat)
+            .setDateFormat(StdDateFormat().withColonInTimeZone(false))
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
     }
 }

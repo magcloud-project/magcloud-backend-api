@@ -1,4 +1,4 @@
-package co.bearus.magcloud.service.diary
+package co.bearus.magcloud.domain.service.diary
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.ParameterizedTypeReference

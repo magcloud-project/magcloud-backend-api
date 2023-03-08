@@ -1,4 +1,4 @@
-package co.bearus.magcloud.service.user
+package co.bearus.magcloud.domain.service.user
 
 import co.bearus.magcloud.domain.exception.NotFoundException
 import co.bearus.magcloud.domain.entity.UserTagEntity

@@ -23,6 +23,8 @@ secret:
   apple-native-client-id: ${APPLE_NATIVE_CLIENT_ID}
   google-firebase-secret-value: ${GOOGLE_FIREBASE_SECRET_VALUE}
 server:
+  servlet:
+    context-path: '/api'
   port: ${SERVER_PORT}
 token:
   secret: ${AUTH_SECRET}
