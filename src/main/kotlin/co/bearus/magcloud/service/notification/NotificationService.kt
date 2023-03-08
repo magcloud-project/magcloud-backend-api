@@ -1,7 +1,7 @@
 package co.bearus.magcloud.service.notification
 
-import co.bearus.magcloud.entity.user.UserEntity
-import co.bearus.magcloud.repository.JPAUserDeviceRepository
+import co.bearus.magcloud.domain.entity.user.UserEntity
+import co.bearus.magcloud.domain.repository.JPAUserDeviceRepository
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions

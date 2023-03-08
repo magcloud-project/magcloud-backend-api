@@ -2,8 +2,6 @@ package co.bearus.magcloud.controller
 
 import co.bearus.magcloud.advice.RequestUser
 import co.bearus.magcloud.advice.WebUser
-import co.bearus.magcloud.dto.request.DeviceRegisterDTO
-import co.bearus.magcloud.dto.response.APIResponse
 import co.bearus.magcloud.service.notification.NotificationService
 import co.bearus.magcloud.service.notification.UserDeviceService
 import org.springframework.http.ResponseEntity
@@ -21,8 +19,8 @@ class UserDeviceController(
     @PostMapping
     fun registerNewDevice(
         @RequestUser user: WebUser,
-        @RequestBody deviceRegisterDTO: DeviceRegisterDTO
-    ): ResponseEntity<APIResponse> {
+        @RequestBody deviceRegisterDTO: co.bearus.magcloud.controller.dto.request.DeviceRegisterDTO
+    ): ResponseEntity<co.bearus.magcloud.controller.dto.response.APIResponse> {
         return ResponseEntity.ok(this.userDeviceService.registerDevice(user.userId, deviceRegisterDTO))
     }
 

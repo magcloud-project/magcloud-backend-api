@@ -1,10 +1,7 @@
 package co.bearus.magcloud.service.user.social
 
-import co.bearus.magcloud.domain.DomainException
-import co.bearus.magcloud.domain.LoginProvider
-import co.bearus.magcloud.dto.SocialInfoDTO
-import co.bearus.magcloud.dto.request.SocialLoginDTO
-import co.bearus.magcloud.dto.response.LoginResponseDTO
+import co.bearus.magcloud.domain.exception.DomainException
+import co.bearus.magcloud.domain.type.LoginProvider
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
@@ -24,7 +21,7 @@ class KakaoProviderService(
     @Value("\${secret.kakao-client-id}") val kakaoClientId: String,
     @Value("\${secret.kakao-redirect-url}") val kakaoRedirectUrl: String,
 ) : SocialProvider {
-    override fun login(dto: SocialLoginDTO): LoginResponseDTO {
+    override fun login(dto: co.bearus.magcloud.controller.dto.request.SocialLoginDTO): co.bearus.magcloud.controller.dto.response.LoginResponseDTO {
         try {
             val accessToken = getAccessTokenByCode(dto.accessToken)
             val socialLoginDto = getUserInfoByAccessToken(accessToken)
@@ -62,7 +59,7 @@ class KakaoProviderService(
         val is_email_verified: Boolean?
     )
 
-    fun getUserInfoByAccessToken(accessToken: String): SocialInfoDTO {
+    fun getUserInfoByAccessToken(accessToken: String): co.bearus.magcloud.controller.dto.SocialInfoDTO {
         val restTemplate = RestTemplate()
         val headers = HttpHeaders()
         headers["Authorization"] = "Bearer $accessToken"
@@ -72,6 +69,10 @@ class KakaoProviderService(
         val url = "https://kapi.kakao.com/v2/user/me"
         val dat = restTemplate.postForObject(url, request, String::class.java)
         val response = Gson().fromJson(dat, KakaoUserResponse::class.java)
-        return SocialInfoDTO("kakao", response.id.toString(), response?.kakao_account?.email ?: "email-unavailable")
+        return co.bearus.magcloud.controller.dto.SocialInfoDTO(
+            "kakao",
+            response.id.toString(),
+            response?.kakao_account?.email ?: "email-unavailable"
+        )
     }
 }

@@ -1,10 +1,7 @@
 package co.bearus.magcloud.service.user.social
 
-import co.bearus.magcloud.domain.DomainException
-import co.bearus.magcloud.domain.LoginProvider
-import co.bearus.magcloud.dto.SocialInfoDTO
-import co.bearus.magcloud.dto.request.SocialLoginDTO
-import co.bearus.magcloud.dto.response.LoginResponseDTO
+import co.bearus.magcloud.domain.exception.DomainException
+import co.bearus.magcloud.domain.type.LoginProvider
 import com.google.gson.Gson
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -18,7 +15,7 @@ import org.springframework.web.client.RestTemplate
 class KakaoNativeProviderService(
     private val socialService: SocialService
 ) : SocialProvider {
-    override fun login(dto: SocialLoginDTO): LoginResponseDTO {
+    override fun login(dto: co.bearus.magcloud.controller.dto.request.SocialLoginDTO): co.bearus.magcloud.controller.dto.response.LoginResponseDTO {
         try {
             val socialLoginDto = getUserInfoByAccessToken(dto)
             return socialService.socialLogin(LoginProvider.KAKAO, socialLoginDto)
@@ -36,7 +33,7 @@ class KakaoNativeProviderService(
         val is_email_verified: Boolean?
     )
 
-    fun getUserInfoByAccessToken(dto: SocialLoginDTO): SocialInfoDTO {
+    fun getUserInfoByAccessToken(dto: co.bearus.magcloud.controller.dto.request.SocialLoginDTO): co.bearus.magcloud.controller.dto.SocialInfoDTO {
         val restTemplate = RestTemplate()
         val headers = HttpHeaders()
         headers["Authorization"] = "Bearer ${dto.accessToken}"
@@ -46,7 +43,7 @@ class KakaoNativeProviderService(
         val url = "https://kapi.kakao.com/v2/user/me"
         val dat = restTemplate.postForObject(url, request, String::class.java)
         val response = Gson().fromJson(dat, KakaoUserResponse::class.java)
-        return SocialInfoDTO(
+        return co.bearus.magcloud.controller.dto.SocialInfoDTO(
             dto.name ?: "kakao",
             response.id.toString(),
             response?.kakao_account?.email ?: "email-unavailable"

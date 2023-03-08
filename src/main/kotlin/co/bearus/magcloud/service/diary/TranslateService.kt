@@ -1,6 +1,5 @@
 package co.bearus.magcloud.service.diary
 
-import co.bearus.magcloud.dto.PapagoRequestDTO
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpHeaders
@@ -26,7 +25,7 @@ class TranslateService(
             .post("https://openapi.naver.com/v1/papago/n2mt")
             .headers(header)
             .accept(MediaType.APPLICATION_JSON)
-            .body(PapagoRequestDTO(text = text))
+            .body(co.bearus.magcloud.controller.dto.PapagoRequestDTO(text = text))
 
         val result = RestTemplate().exchange(request, responseType).body
         var linkedMap: LinkedHashMap<String?, Any?> = result?.get("message") as LinkedHashMap<String?, Any?>

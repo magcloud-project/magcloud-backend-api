@@ -1,7 +1,7 @@
 package co.bearus.magcloud.advice
 
-import co.bearus.magcloud.domain.UnauthorizedException
-import co.bearus.magcloud.service.user.TokenService
+import co.bearus.magcloud.domain.exception.UnauthorizedException
+import co.bearus.magcloud.provider.TokenProvider
 import org.springframework.core.MethodParameter
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.support.WebDataBinderFactory
@@ -10,7 +10,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
 
 @Component
-class RequestUserArgumentResolver(private val tokenService: TokenService) : HandlerMethodArgumentResolver {
+class RequestUserArgumentResolver(private val tokenService: TokenProvider) : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter): Boolean {
         return parameter.getParameterAnnotation(RequestUser::class.java) != null
     }
