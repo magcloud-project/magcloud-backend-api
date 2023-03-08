@@ -1,9 +1,8 @@
 package co.bearus.magcloud.service.user
 
-import co.bearus.magcloud.dto.response.LoginResponseDTO
-import co.bearus.magcloud.entity.user.UserEntity
-import co.bearus.magcloud.entity.user.UserTokenEntity
-import co.bearus.magcloud.repository.JPAUserTokenRepository
+import co.bearus.magcloud.domain.entity.user.UserEntity
+import co.bearus.magcloud.domain.entity.user.UserTokenEntity
+import co.bearus.magcloud.domain.repository.JPAUserTokenRepository
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.beans.factory.annotation.Value
@@ -44,13 +43,13 @@ class TokenService(
             .compact()
     }
 
-    fun createToken(user: UserEntity): LoginResponseDTO {
+    fun createToken(user: UserEntity): co.bearus.magcloud.controller.dto.response.LoginResponseDTO {
         val accessToken = createAccessToken(user)
         val refreshToken = createRefreshToken(user)
         val tokenEntity =
             user.token?.apply { this.refreshToken = refreshToken } ?: UserTokenEntity(user.id, null, refreshToken)
         this.tokenRepository.save(tokenEntity)
-        return LoginResponseDTO(
+        return co.bearus.magcloud.controller.dto.response.LoginResponseDTO(
             accessToken = accessToken,
             refreshToken = refreshToken
         )

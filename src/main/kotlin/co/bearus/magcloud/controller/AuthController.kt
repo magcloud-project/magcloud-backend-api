@@ -1,10 +1,6 @@
 package co.bearus.magcloud.controller
 
-import co.bearus.magcloud.domain.DomainException
-import co.bearus.magcloud.dto.request.LoginDTO
-import co.bearus.magcloud.dto.request.RefreshTokenRequestDTO
-import co.bearus.magcloud.dto.request.SocialLoginDTO
-import co.bearus.magcloud.dto.response.LoginResponseDTO
+import co.bearus.magcloud.domain.exception.DomainException
 import co.bearus.magcloud.service.user.UserService
 import co.bearus.magcloud.service.user.social.*
 import jakarta.validation.Valid
@@ -22,20 +18,20 @@ class AuthController(
     private val appleService: AppleProviderService
 ) {
     @PostMapping
-    fun requestLogin(@RequestBody @Valid dto: LoginDTO): ResponseEntity<LoginResponseDTO> {
+    fun requestLogin(@RequestBody @Valid dto: co.bearus.magcloud.controller.dto.request.LoginDTO): ResponseEntity<co.bearus.magcloud.controller.dto.response.LoginResponseDTO> {
         return ResponseEntity.ok(userService.onLoginRequest(dto))
     }
 
     @PostMapping("/refresh")
-    fun requestRefresh(@RequestBody body: RefreshTokenRequestDTO): ResponseEntity<LoginResponseDTO> {
+    fun requestRefresh(@RequestBody body: co.bearus.magcloud.controller.dto.request.RefreshTokenRequestDTO): ResponseEntity<co.bearus.magcloud.controller.dto.response.LoginResponseDTO> {
         return ResponseEntity.ok(userService.onTokenRefreshRequest(body.refreshToken))
     }
 
     @PostMapping("/{provider}")
     fun requestSocialLogin(
-        @RequestBody token: SocialLoginDTO,
+        @RequestBody token: co.bearus.magcloud.controller.dto.request.SocialLoginDTO,
         @PathVariable provider: String
-    ): ResponseEntity<LoginResponseDTO> {
+    ): ResponseEntity<co.bearus.magcloud.controller.dto.response.LoginResponseDTO> {
         val currentProvider = parseProvider(provider)
         return ResponseEntity.ok(currentProvider.login(token))
     }

@@ -1,6 +1,6 @@
 package co.bearus.magcloud.advice
 
-import co.bearus.magcloud.domain.UnauthorizedException
+import co.bearus.magcloud.domain.exception.UnauthorizedException
 import co.bearus.magcloud.service.user.TokenService
 import org.springframework.core.MethodParameter
 import org.springframework.stereotype.Component

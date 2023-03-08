@@ -1,10 +1,7 @@
 package co.bearus.magcloud.service.user.social
 
-import co.bearus.magcloud.domain.DomainException
-import co.bearus.magcloud.domain.LoginProvider
-import co.bearus.magcloud.dto.SocialInfoDTO
-import co.bearus.magcloud.dto.request.SocialLoginDTO
-import co.bearus.magcloud.dto.response.LoginResponseDTO
+import co.bearus.magcloud.domain.exception.DomainException
+import co.bearus.magcloud.domain.type.LoginProvider
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
 import com.nimbusds.jose.jwk.JWK
@@ -21,7 +18,7 @@ class AppleNativeProviderService(
 ) : SocialProvider {
     data class JWTTokenHeader(var kid: String, val alr: String)
 
-    override fun login(dto: SocialLoginDTO): LoginResponseDTO {
+    override fun login(dto: co.bearus.magcloud.controller.dto.request.SocialLoginDTO): co.bearus.magcloud.controller.dto.response.LoginResponseDTO {
         try {
             val header = dto.accessToken.split("\\.".toRegex()).toTypedArray()[0]
             val decodedHeader = String(Base64.getDecoder().decode(header))
@@ -32,7 +29,11 @@ class AppleNativeProviderService(
                 .parseClaimsJws(dto.accessToken)
             return socialService.socialLogin(
                 LoginProvider.APPLE,
-                SocialInfoDTO(dto.name ?: "apple", parsed.body["sub"] as String, parsed.body["email"] as String)
+                co.bearus.magcloud.controller.dto.SocialInfoDTO(
+                    dto.name ?: "apple",
+                    parsed.body["sub"] as String,
+                    parsed.body["email"] as String
+                )
             )
         } catch (e: Exception) {
             e.printStackTrace()

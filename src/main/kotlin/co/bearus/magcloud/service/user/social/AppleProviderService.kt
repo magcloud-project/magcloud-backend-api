@@ -1,10 +1,7 @@
 package co.bearus.magcloud.service.user.social
 
-import co.bearus.magcloud.domain.DomainException
-import co.bearus.magcloud.domain.LoginProvider
-import co.bearus.magcloud.dto.SocialInfoDTO
-import co.bearus.magcloud.dto.request.SocialLoginDTO
-import co.bearus.magcloud.dto.response.LoginResponseDTO
+import co.bearus.magcloud.domain.exception.DomainException
+import co.bearus.magcloud.domain.type.LoginProvider
 import com.google.gson.Gson
 import io.jsonwebtoken.JwsHeader
 import io.jsonwebtoken.Jwts
@@ -35,7 +32,7 @@ class AppleProviderService(
     @Value("\${secret.apple-client-id}") val appleClientId: String
 ) : SocialProvider {
     val pKey: PrivateKey = getPrivateKey()
-    override fun login(dto: SocialLoginDTO): LoginResponseDTO {
+    override fun login(dto: co.bearus.magcloud.controller.dto.request.SocialLoginDTO): co.bearus.magcloud.controller.dto.response.LoginResponseDTO {
         try {
             val socialLoginDto = getUserInfoByClientSecret(dto)
             return socialService.socialLogin(LoginProvider.APPLE, socialLoginDto)
@@ -45,7 +42,7 @@ class AppleProviderService(
         }
     }
 
-    fun getUserInfoByClientSecret(dto: SocialLoginDTO): SocialInfoDTO {
+    fun getUserInfoByClientSecret(dto: co.bearus.magcloud.controller.dto.request.SocialLoginDTO): co.bearus.magcloud.controller.dto.SocialInfoDTO {
         val restTemplate = RestTemplate()
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_FORM_URLENCODED
@@ -68,7 +65,7 @@ class AppleProviderService(
         val decoded = String(Decoders.BASE64.decode(payload))
 
         val tokenPayload = Gson().fromJson(decoded, IdTokenPayload::class.java)
-        return SocialInfoDTO(dto.name ?: "apple", tokenPayload.sub, "")
+        return co.bearus.magcloud.controller.dto.SocialInfoDTO(dto.name ?: "apple", tokenPayload.sub, "")
     }
 
     fun generateSecretKey(): String {

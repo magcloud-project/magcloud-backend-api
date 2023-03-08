@@ -1,17 +1,12 @@
 package co.bearus.magcloud.service.diary
 
 import co.bearus.magcloud.advice.SHA256
-import co.bearus.magcloud.domain.DomainException
-import co.bearus.magcloud.domain.NotFoundException
-import co.bearus.magcloud.dto.request.DiaryPatchDTO
-import co.bearus.magcloud.dto.request.UpdateRequestDTO
-import co.bearus.magcloud.dto.response.APIResponse
-import co.bearus.magcloud.dto.response.DiaryResponseDTO
-import co.bearus.magcloud.dto.response.EmotionResponseDTO
-import co.bearus.magcloud.entity.diary.UserDiaryEntity
-import co.bearus.magcloud.entity.user.UserEntity
-import co.bearus.magcloud.repository.JPAUserDiaryRepository
-import co.bearus.magcloud.repository.JPAUserRepository
+import co.bearus.magcloud.domain.exception.DomainException
+import co.bearus.magcloud.domain.exception.NotFoundException
+import co.bearus.magcloud.domain.entity.diary.UserDiaryEntity
+import co.bearus.magcloud.domain.entity.user.UserEntity
+import co.bearus.magcloud.domain.repository.JPAUserDiaryRepository
+import co.bearus.magcloud.domain.repository.JPAUserRepository
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -22,7 +17,11 @@ class UserDiaryService(
     private val diaryRepository: JPAUserDiaryRepository,
     private val inferenceService: InferenceService
 ) {
-    fun addDiary(userId: Long, diaryDate: String, content: String): APIResponse {
+    fun addDiary(
+        userId: Long,
+        diaryDate: String,
+        content: String
+    ): co.bearus.magcloud.controller.dto.response.APIResponse {
         val user = findUser(userId)
 
         val date = LocalDate.parse(diaryDate, DateTimeFormatter.BASIC_ISO_DATE)
@@ -36,10 +35,13 @@ class UserDiaryService(
         )
         val requestedResult = diaryRepository.save(userDiary)
         inferenceService.requestInference(requestedResult)
-        return APIResponse.ok("일기가 추가되었습니다")
+        return co.bearus.magcloud.controller.dto.response.APIResponse.ok("일기가 추가되었습니다")
     }
 
-    fun patchDiary(userId: Long, dto: DiaryPatchDTO): APIResponse {
+    fun patchDiary(
+        userId: Long,
+        dto: co.bearus.magcloud.controller.dto.request.DiaryPatchDTO
+    ): co.bearus.magcloud.controller.dto.response.APIResponse {
         val date = LocalDate.parse(dto.date, DateTimeFormatter.BASIC_ISO_DATE)
         val previousDiaries =
             diaryRepository.getByUserIdAndDate(userId, date) ?: throw DomainException("일기가 존재하지 않습니다")
@@ -51,47 +53,65 @@ class UserDiaryService(
 
         diaryRepository.save(previousDiaries)
         inferenceService.requestInference(previousDiaries)
-        return APIResponse.ok("일기가 수정되었습니다.");
+        return co.bearus.magcloud.controller.dto.response.APIResponse.ok("일기가 수정되었습니다.");
     }
 
-    fun getDiariesOfUser(userId: Long): List<DiaryResponseDTO> {
+    fun getDiariesOfUser(userId: Long): List<co.bearus.magcloud.controller.dto.response.DiaryResponseDTO> {
         val user = findUser(userId)
         return user.diaries.map {
-            DiaryResponseDTO(
+            co.bearus.magcloud.controller.dto.response.DiaryResponseDTO(
                 it.id!!,
                 it.content,
                 it.date.atStartOfDay(),
                 it.modifiedDate!!,
-                it.emotions.map { emotion -> EmotionResponseDTO(emotion.emotion, emotion.value) }
+                it.emotions.map { emotion ->
+                    co.bearus.magcloud.controller.dto.response.EmotionResponseDTO(
+                        emotion.emotion,
+                        emotion.value
+                    )
+                }
             )
         }
     }
 
-    fun updateRequest(userId: Long, payload: List<UpdateRequestDTO>): List<DiaryResponseDTO> {
+    fun updateRequest(
+        userId: Long,
+        payload: List<co.bearus.magcloud.controller.dto.request.UpdateRequestDTO>
+    ): List<co.bearus.magcloud.controller.dto.response.DiaryResponseDTO> {
         val user = findUser(userId)
         val dataMap = payload.associate { it.date to it.contentHash }
         return user.diaries
             .filter { !dataMap.containsKey(it.date) || dataMap[it.date] != it.contentHash }
             .map {
-                DiaryResponseDTO(
+                co.bearus.magcloud.controller.dto.response.DiaryResponseDTO(
                     it.id!!,
                     it.content,
                     it.date.atStartOfDay(),
                     it.modifiedDate!!,
-                    it.emotions.map { emotion -> EmotionResponseDTO(emotion.emotion, emotion.value) }
+                    it.emotions.map { emotion ->
+                        co.bearus.magcloud.controller.dto.response.EmotionResponseDTO(
+                            emotion.emotion,
+                            emotion.value
+                        )
+                    }
                 )
             }
     }
 
-    fun getDiaryByDate(userId: Long, date: LocalDate): DiaryResponseDTO? {
+    fun getDiaryByDate(userId: Long, date: LocalDate): co.bearus.magcloud.controller.dto.response.DiaryResponseDTO? {
         val diary = diaryRepository.getByUserIdAndDate(userId, date)
             ?: throw NotFoundException()
-        return DiaryResponseDTO(
+        return co.bearus.magcloud.controller.dto.response.DiaryResponseDTO(
             diary.id!!,
             diary.content,
             diary.date.atStartOfDay(),
             diary.modifiedDate!!,
-            diary.emotions.map { emotion -> EmotionResponseDTO(emotion.emotion, emotion.value) })
+            diary.emotions.map { emotion ->
+                co.bearus.magcloud.controller.dto.response.EmotionResponseDTO(
+                    emotion.emotion,
+                    emotion.value
+                )
+            })
     }
 
     private fun findUser(userId: Long): UserEntity {

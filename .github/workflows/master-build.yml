@@ -11,7 +11,7 @@ env:
   ECS_SERVICE: magcloud-backend-api
   ECS_CLUSTER: Bearus-Cluster
   ECS_TASK_DEFINITION: MagCloud-Backend
-  CONTAINER_NAME: spring
+  CONTAINER_NAME: spring-prod
 
 jobs:
   deploy:

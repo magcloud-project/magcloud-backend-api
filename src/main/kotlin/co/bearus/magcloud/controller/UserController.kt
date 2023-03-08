@@ -2,11 +2,6 @@ package co.bearus.magcloud.controller
 
 import co.bearus.magcloud.advice.RequestUser
 import co.bearus.magcloud.advice.WebUser
-import co.bearus.magcloud.dto.request.*
-import co.bearus.magcloud.dto.response.APIResponse
-import co.bearus.magcloud.dto.response.DiaryResponseDTO
-import co.bearus.magcloud.dto.response.TagResponseDTO
-import co.bearus.magcloud.dto.response.UserDTO
 import co.bearus.magcloud.service.diary.UserDiaryService
 import co.bearus.magcloud.service.user.UserService
 import co.bearus.magcloud.service.user.UserTagService
@@ -24,55 +19,58 @@ class UserController(
     private val userDiaryService: UserDiaryService
 ) {
     @PostMapping
-    fun onRegisterRequested(@RequestBody @Valid request: AuthRegisterDTO): ResponseEntity<APIResponse> {
+    fun onRegisterRequested(@RequestBody @Valid request: co.bearus.magcloud.controller.dto.request.AuthRegisterDTO): ResponseEntity<co.bearus.magcloud.controller.dto.response.APIResponse> {
         val result = userService.onRegisterRequest(request)
         return ResponseEntity.ok(result)
     }
 
     @GetMapping
-    fun onGetRequest(@RequestUser user: WebUser): ResponseEntity<UserDTO> {
+    fun onGetRequest(@RequestUser user: WebUser): ResponseEntity<co.bearus.magcloud.controller.dto.response.UserDTO> {
         val result = userService.getUserInfo(user.userId)
         return ResponseEntity.ok(result)
     }
 
     @PutMapping("/tag")
     fun onAdd(
-        @RequestBody @Valid dto: UserTagAddDTO,
+        @RequestBody @Valid dto: co.bearus.magcloud.controller.dto.request.UserTagAddDTO,
         @RequestUser user: WebUser
-    ): ResponseEntity<APIResponse> {
+    ): ResponseEntity<co.bearus.magcloud.controller.dto.response.APIResponse> {
         val result = userTagService.addTagToUser(user.userId, dto.id!!)
         return ResponseEntity.ok(result)
     }
 
     @DeleteMapping("/tag")
     fun onDelete(
-        @RequestBody @Valid dto: UserTagAddDTO,
+        @RequestBody @Valid dto: co.bearus.magcloud.controller.dto.request.UserTagAddDTO,
         @RequestUser user: WebUser
-    ): ResponseEntity<APIResponse> {
+    ): ResponseEntity<co.bearus.magcloud.controller.dto.response.APIResponse> {
         val result = userTagService.deleteTagOfUser(user.userId, dto.id!!)
         return ResponseEntity.ok(result)
     }
 
     @GetMapping("/tag")
-    fun onGet(@RequestUser user: WebUser, token: String?): ResponseEntity<List<TagResponseDTO>> {
+    fun onGet(
+        @RequestUser user: WebUser,
+        token: String?
+    ): ResponseEntity<List<co.bearus.magcloud.controller.dto.response.TagResponseDTO>> {
         val result = userTagService.getTagsOfUser(user.userId)
         return ResponseEntity.ok(result)
     }
 
     @PostMapping("/diary")
     fun onDiaryAdd(
-        @RequestBody @Valid dto: DiaryCreateDTO,
+        @RequestBody @Valid dto: co.bearus.magcloud.controller.dto.request.DiaryCreateDTO,
         @RequestUser user: WebUser
-    ): ResponseEntity<APIResponse> {
+    ): ResponseEntity<co.bearus.magcloud.controller.dto.response.APIResponse> {
         val result = userDiaryService.addDiary(user.userId, dto.date!!, dto.content!!)
         return ResponseEntity.ok(result)
     }
 
     @PatchMapping("/diary")
     fun onDiaryPatch(
-        @RequestBody @Valid dto: DiaryPatchDTO,
+        @RequestBody @Valid dto: co.bearus.magcloud.controller.dto.request.DiaryPatchDTO,
         @RequestUser user: WebUser
-    ): ResponseEntity<APIResponse> {
+    ): ResponseEntity<co.bearus.magcloud.controller.dto.response.APIResponse> {
         val result = userDiaryService.patchDiary(user.userId, dto)
         return ResponseEntity.ok(result)
     }
@@ -81,7 +79,7 @@ class UserController(
     fun onDiaryGet(
         @RequestUser user: WebUser,
         @RequestParam(required = false) @DateTimeFormat(pattern = "yyyyMMdd") date: LocalDate?
-    ): ResponseEntity<DiaryResponseDTO> {
+    ): ResponseEntity<co.bearus.magcloud.controller.dto.response.DiaryResponseDTO> {
         return if (date == null) {
             val result = userDiaryService.getDiaryByDate(user.userId, LocalDate.now())
             ResponseEntity.ok(result)
@@ -94,15 +92,15 @@ class UserController(
     @GetMapping("/diaries")
     fun onDiaryAllGet(
         @RequestUser user: WebUser
-    ): ResponseEntity<List<DiaryResponseDTO>> {
+    ): ResponseEntity<List<co.bearus.magcloud.controller.dto.response.DiaryResponseDTO>> {
         return ResponseEntity.ok(userDiaryService.getDiariesOfUser(user.userId))
     }
 
     @PostMapping("/diary-update")
     fun onDiaryUpdateRequest(
         @RequestUser user: WebUser,
-        @RequestBody payload: List<UpdateRequestDTO>
-    ): ResponseEntity<List<DiaryResponseDTO>> {
+        @RequestBody payload: List<co.bearus.magcloud.controller.dto.request.UpdateRequestDTO>
+    ): ResponseEntity<List<co.bearus.magcloud.controller.dto.response.DiaryResponseDTO>> {
         return ResponseEntity.ok(userDiaryService.updateRequest(user.userId, payload))
     }
 }

@@ -1,10 +1,8 @@
 package co.bearus.magcloud.service.user.social
 
-import co.bearus.magcloud.domain.LoginProvider
-import co.bearus.magcloud.dto.SocialInfoDTO
-import co.bearus.magcloud.dto.response.LoginResponseDTO
-import co.bearus.magcloud.entity.user.UserEntity
-import co.bearus.magcloud.repository.JPAUserRepository
+import co.bearus.magcloud.domain.type.LoginProvider
+import co.bearus.magcloud.domain.entity.user.UserEntity
+import co.bearus.magcloud.domain.repository.JPAUserRepository
 import co.bearus.magcloud.service.user.TokenService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
@@ -16,7 +14,10 @@ class SocialService(
     private val tokenService: TokenService,
     val bCrypt: BCryptPasswordEncoder
 ) {
-    fun socialLogin(provider: LoginProvider, socialInfoDTO: SocialInfoDTO): LoginResponseDTO {
+    fun socialLogin(
+        provider: LoginProvider,
+        socialInfoDTO: co.bearus.magcloud.controller.dto.SocialInfoDTO
+    ): co.bearus.magcloud.controller.dto.response.LoginResponseDTO {
         println(socialInfoDTO)
         var previousUser = repository.getByProviderAndUserIdentifier(provider, socialInfoDTO.id)
         if (previousUser == null) {
@@ -25,7 +26,10 @@ class SocialService(
         return tokenService.createToken(previousUser)
     }
 
-    fun socialLoginRegister(provider: LoginProvider, socialInfoDTO: SocialInfoDTO): UserEntity {
+    fun socialLoginRegister(
+        provider: LoginProvider,
+        socialInfoDTO: co.bearus.magcloud.controller.dto.SocialInfoDTO
+    ): UserEntity {
         val user = UserEntity(
             provider,
             socialInfoDTO.id,
