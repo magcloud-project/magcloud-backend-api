@@ -13,5 +13,5 @@ EXPOSE ${PORT}/tcp
 
 STOPSIGNAL SIGTERM
 
-ENTRYPOINT ["java","-XX:+AlwaysPreTouch","-XX:+UseG1GC","-XX:MaxGCPauseMillis=400","-server","-XX:InitialHeapSize=1792m","-XX:MaxHeapSize=1792m","-Xms1792M","-Xmx1792M","-jar","app.jar"]
+ENTRYPOINT ["java","-XX:+AlwaysPreTouch","-XX:+UseG1GC","-XX:MaxGCPauseMillis=400","-server","-Xms1500M","-Xmx1500M","-jar","app.jar"]
 
