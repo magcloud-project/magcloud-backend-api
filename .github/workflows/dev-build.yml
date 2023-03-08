@@ -8,7 +8,7 @@ on:
 env:
   AWS_REGION: ap-northeast-2
   ECR_REPOSITORY: magcloud-backend-dev
-  ECS_SERVICE: magcloud-backend-dev
+  ECS_SERVICE: magcloud-backend-api-dev
   ECS_CLUSTER: Bearus-Cluster
   ECS_TASK_DEFINITION: MagCloud-Backend-Dev
   CONTAINER_NAME: spring-dev
