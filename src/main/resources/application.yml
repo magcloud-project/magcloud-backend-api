@@ -4,6 +4,20 @@ spring:
     url: ${FLYWAY_URL}
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
+    hikari:
+      auto-commit: false
+      pool-name: magcloud-pool
+      minimum-idle: 3
+      maximum-pool-size: 5
+      connection-timeout: 60000
+      connection-test-query: select 1
+      max-lifetime: 1800000
+      idle-timeout: 60000
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
   jpa:
     hibernate:
       ddl-auto: none
