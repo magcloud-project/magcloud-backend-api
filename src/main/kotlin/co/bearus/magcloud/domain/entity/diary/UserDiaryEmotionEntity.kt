@@ -10,13 +10,14 @@ data class UserDiaryEmotionEntity(
     @ManyToOne
     @JoinColumn(name = "diary_id")
     var diary: UserDiaryEntity? = null,
+
     @Id
     @Enumerated(value = EnumType.STRING)
     var emotion: Emotion,
+
     @Column(name = "value")
     var value: Double
 ) {
-    constructor() : this(null, Emotion.ANGER, 0.0)
 
     override fun hashCode(): Int {
         return emotion.hashCode()

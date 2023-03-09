@@ -32,12 +32,12 @@ class SocialService(
         provider: LoginProvider,
         socialInfoDTO: co.bearus.magcloud.controller.dto.SocialInfoDTO
     ): UserEntity {
-        val user = UserEntity(
-            provider,
-            socialInfoDTO.id,
-            socialInfoDTO.email,
-            generateRandomPassword(),
-            socialInfoDTO.name
+        val user = UserEntity.createNewUser(
+            loginProvider = provider,
+            identifier = socialInfoDTO.id,
+            email = socialInfoDTO.email,
+            password = generateRandomPassword(),
+            name = socialInfoDTO.name,
         )
         return repository.save(user)
     }
