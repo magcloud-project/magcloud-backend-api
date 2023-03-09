@@ -32,7 +32,6 @@ class SpringWebConfig(
 
     @Bean
     fun objectMapper(): ObjectMapper {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         return jacksonObjectMapper()
             .registerModule(
                 KotlinModule.Builder()
