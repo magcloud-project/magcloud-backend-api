@@ -1,6 +1,9 @@
 package co.bearus.magcloud.domain.service.diary
 
 import co.bearus.magcloud.advice.SHA256
+import co.bearus.magcloud.controller.dto.response.APIResponse
+import co.bearus.magcloud.controller.dto.response.DiaryResponseDTO
+import co.bearus.magcloud.controller.dto.response.EmotionResponseDTO
 import co.bearus.magcloud.domain.exception.DomainException
 import co.bearus.magcloud.domain.exception.NotFoundException
 import co.bearus.magcloud.domain.entity.diary.UserDiaryEntity
@@ -21,7 +24,7 @@ class UserDiaryService(
         userId: Long,
         diaryDate: String,
         content: String
-    ): co.bearus.magcloud.controller.dto.response.APIResponse {
+    ): APIResponse {
         val user = findUser(userId)
 
         val date = LocalDate.parse(diaryDate, DateTimeFormatter.BASIC_ISO_DATE)
@@ -29,19 +32,19 @@ class UserDiaryService(
         if (previousDiaries != null) throw DomainException("이미 해당 날짜에 일기가 존재합니다")
 
         val userDiary = UserDiaryEntity(
-            content,
-            user,
-            date
+            date = date,
+            content = content,
+            contentHash = SHA256.encrypt(content),
+            user = user,
         )
         val requestedResult = diaryRepository.save(userDiary)
-      //  inferenceService.requestInference(requestedResult)
-        return co.bearus.magcloud.controller.dto.response.APIResponse.ok("일기가 추가되었습니다")
+        return APIResponse.ok("일기가 추가되었습니다")
     }
 
     fun patchDiary(
         userId: Long,
         dto: co.bearus.magcloud.controller.dto.request.DiaryPatchDTO
-    ): co.bearus.magcloud.controller.dto.response.APIResponse {
+    ): APIResponse {
         val date = LocalDate.parse(dto.date, DateTimeFormatter.BASIC_ISO_DATE)
         val previousDiaries =
             diaryRepository.getByUserIdAndDate(userId, date) ?: throw DomainException("일기가 존재하지 않습니다")
@@ -52,20 +55,19 @@ class UserDiaryService(
 
 
         diaryRepository.save(previousDiaries)
-    //    inferenceService.requestInference(previousDiaries)
-        return co.bearus.magcloud.controller.dto.response.APIResponse.ok("일기가 수정되었습니다.");
+        return APIResponse.ok("일기가 수정되었습니다.");
     }
 
-    fun getDiariesOfUser(userId: Long): List<co.bearus.magcloud.controller.dto.response.DiaryResponseDTO> {
+    fun getDiariesOfUser(userId: Long): List<DiaryResponseDTO> {
         val user = findUser(userId)
         return user.diaries.map {
-            co.bearus.magcloud.controller.dto.response.DiaryResponseDTO(
+            DiaryResponseDTO(
                 it.id!!,
                 it.content,
                 it.date.atStartOfDay(),
                 it.modifiedDate!!,
                 it.emotions.map { emotion ->
-                    co.bearus.magcloud.controller.dto.response.EmotionResponseDTO(
+                    EmotionResponseDTO(
                         emotion.emotion,
                         emotion.value
                     )
