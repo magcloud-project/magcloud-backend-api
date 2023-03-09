@@ -30,8 +30,6 @@ class SpringSecurityConfig(
     @Bean
     fun config(http: HttpSecurity): SecurityFilterChain? {
         return http
-            .authorizeHttpRequests().anyRequest().permitAll()
-            .and()
             .exceptionHandling().authenticationEntryPoint(authEntryPoint).accessDeniedHandler(webAccessDeniedHandler)
             .and()
             .headers().frameOptions().sameOrigin()
