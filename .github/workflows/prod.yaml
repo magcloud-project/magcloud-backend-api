@@ -6,7 +6,7 @@ on:
 env:
   JAVA_MODULE_NAME: config
   GITHUB_ENVIRONMENT_NAME: prod
-  ECR_REPOSITORY_NAME: magcloud-backend
+  ECR_REPOSITORY_NAME: magcloud-backend-api
   SPRING_PROFILE: prod
   ARGOCD_SERVICE_NAME: magcloud-backend-api
   ARGOCD_REPO_NAME: CChuYong/bsc-argocd-manifest
