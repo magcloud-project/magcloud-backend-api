@@ -1,0 +1,81 @@
+name: API 빌드 후 배포하기
+on:
+  push:
+    branches: [ 'master' ]
+
+env:
+  JAVA_MODULE_NAME: config
+  GITHUB_ENVIRONMENT_NAME: prod
+  ECR_REPOSITORY_NAME: magcloud-backend
+  SPRING_PROFILE: prod
+  ARGOCD_SERVICE_NAME: magcloud-backend-api
+  ARGOCD_REPO_NAME: CChuYong/bsc-argocd-manifest
+
+concurrency:
+  group: api
+
+jobs:
+  prepare-variables:
+    name: 환경변수 준비하기
+    runs-on: ubuntu-latest
+    outputs:
+      java-module-name: ${{ steps.setup-env.outputs.java-module-name }}
+      github-environment-name: ${{ steps.setup-env.outputs.github-environment-name }}
+      ecr-repository-name: ${{ steps.setup-env.outputs.ecr-repository-name }}
+      image-tag: ${{ steps.setup-env.outputs.image-tag }}
+      local-test: ${{ steps.setup-env.outputs.local-test }}
+      spring-profile: ${{ steps.setup-env.outputs.spring-profile }}
+      argocd-service-name: ${{ steps.setup-env.outputs.argocd-service-name }}
+      argocd-repo-name: ${{ steps.setup-env.outputs.argocd-repo-name }}
+    steps:
+      - name: GitHub 에서 레포 받아오기
+        uses: actions/checkout@v3
+
+      - name: 환경변수 출력하기
+        id: setup-env
+        run: |
+          echo "java-module-name=$JAVA_MODULE_NAME" >> $GITHUB_OUTPUT
+          echo "github-environment-name=$GITHUB_ENVIRONMENT_NAME" >> $GITHUB_OUTPUT
+          echo "ecr-repository-name=$ECR_REPOSITORY_NAME" >> $GITHUB_OUTPUT
+          echo "image-tag=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "local-test=$ACT" >> $GITHUB_OUTPUT
+          echo "spring-profile=$SPRING_PROFILE" >> $GITHUB_OUTPUT
+          echo "argocd-service-name=$ARGOCD_SERVICE_NAME" >> $GITHUB_OUTPUT
+          echo "argocd-repo-name=$ARGOCD_REPO_NAME" >> $GITHUB_OUTPUT
+
+  call-build-workflow:
+    if: github.event_name == 'push'
+    needs: [ prepare-variables ]
+    name: 이미지 빌드 & 푸쉬
+    uses: ./.github/workflows/build.yaml
+    permissions:
+      id-token: write
+      contents: read
+    with:
+      environment: ${{ needs.prepare-variables.outputs.github-environment-name }}
+      java-module-name: ${{ needs.prepare-variables.outputs.java-module-name }}
+      ecr-repository-name: ${{ needs.prepare-variables.outputs.ecr-repository-name }}
+      image-tag: ${{ needs.prepare-variables.outputs.image-tag }}
+      local: ${{ needs.prepare-variables.outputs.local-test != '' }} # 로컬 테스트인 경우 로컬 도커로 업로드
+      spring-profile: ${{ needs.prepare-variables.outputs.spring-profile }}
+    secrets:
+      AWS_ASSUME_ROLE_ARN: ${{ secrets.AWS_ASSUME_ROLE_ARN }}
+      AWS_ECR_REGISTRY_URL: ${{ secrets.AWS_ECR_REGISTRY_URL }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+
+  call-deploy-workflow:
+    needs: [ prepare-variables, call-build-workflow ]
+    name: ArgoCD로 배포하기
+    uses: ./.github/workflows/argocd.yaml
+    permissions:
+      contents: write
+    with:
+      argocd-repo-name: ${{ needs.prepare-variables.outputs.argocd-repo-name }}
+      overlay-name: ${{ needs.prepare-variables.outputs.spring-profile }}
+      service-name: ${{ needs.prepare-variables.outputs.argocd-service-name }}
+      image-name: '${{ needs.prepare-variables.outputs.ecr-repository-name }}:${{ needs.prepare-variables.outputs.image-tag }}'
+      environment: ${{ needs.prepare-variables.outputs.github-environment-name }}
+      release-tag: ${{ needs.prepare-variables.outputs.image-tag }}
+    secrets:
+      AWS_ECR_REGISTRY_URL: ${{ secrets.AWS_ECR_REGISTRY_URL }}
+      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}

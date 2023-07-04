@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter
 class UserDiaryService(
     private val userRepository: JPAUserRepository,
     private val diaryRepository: JPAUserDiaryRepository,
-    private val inferenceService: InferenceService
+  //  private val inferenceService: InferenceService
 ) {
     fun addDiary(
         userId: Long,
@@ -34,7 +34,7 @@ class UserDiaryService(
             date
         )
         val requestedResult = diaryRepository.save(userDiary)
-        inferenceService.requestInference(requestedResult)
+      //  inferenceService.requestInference(requestedResult)
         return co.bearus.magcloud.controller.dto.response.APIResponse.ok("일기가 추가되었습니다")
     }
 
@@ -52,7 +52,7 @@ class UserDiaryService(
 
 
         diaryRepository.save(previousDiaries)
-        inferenceService.requestInference(previousDiaries)
+    //    inferenceService.requestInference(previousDiaries)
         return co.bearus.magcloud.controller.dto.response.APIResponse.ok("일기가 수정되었습니다.");
     }
 

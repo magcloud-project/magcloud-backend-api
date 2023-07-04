@@ -14,9 +14,6 @@ logging:
   pattern:
     console: "[%level][%thread][%logger{0}:%line] - %msg%n"
 secret:
-  inference-url: ${INFERENCE_URL}
-  naver-client-id: ${NAVER_CLIENT_ID}
-  naver-client-secret: ${NAVER_CLIENT_SECRET}
   kakao-client-id: ${KAKAO_CLIENT_ID}
   kakao-redirect-url: ${KAKAO_REDIRECT_URL}
   apple-key-id: ${APPLE_KEY_ID}

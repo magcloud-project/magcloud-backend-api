@@ -8,6 +8,7 @@ plugins {
     kotlin("plugin.jpa") version "1.7.22"
     kotlin("plugin.allopen") version "1.7.22"
     kotlin("plugin.noarg") version "1.7.22"
+    id("com.google.cloud.tools.jib") version "3.3.2"
 }
 
 group = "hackathon"
@@ -61,5 +62,34 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+val activeProfile: String? = System.getProperty("spring.profiles.active")
+val repoURL: String? = System.getProperty("imageName")
+val imageTag: String? = System.getProperty("imageTag")
+
+jib {
+    from {
+        image = "amazoncorretto:17-alpine3.17-jdk"
+    }
+    to {
+        image = repoURL
+        tags = setOf(imageTag)
+    }
+    container {
+        jvmFlags = listOf(
+            "-Dspring.profiles.active=${activeProfile}",
+            "-Dserver.port=8080",
+            "-Djava.security.egd=file:/dev/./urandom",
+            "-Dfile.encoding=UTF-8",
+            "-XX:+UnlockExperimentalVMOptions",
+            "-XX:+UseContainerSupport",
+            "-Xms1G", //min
+            "-Xmx1G", //max
+            "-XX:+DisableExplicitGC", //System.gc() 방어
+            "-server",
+        )
+        ports = listOf("8080")
+    }
 }
 
