@@ -1,11 +1,11 @@
-package co.bearus.magcloud.service.user.social
+package co.bearus.magcloud.domain.service.user.social
 
 import co.bearus.magcloud.domain.type.LoginProvider
 import co.bearus.magcloud.domain.entity.user.UserEntity
 import co.bearus.magcloud.domain.repository.JPAUserRepository
 import co.bearus.magcloud.provider.PasswordProvider
 import co.bearus.magcloud.provider.TokenProvider
-import co.bearus.magcloud.service.user.UserService
+import co.bearus.magcloud.domain.service.user.UserService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
@@ -32,12 +32,12 @@ class SocialService(
         provider: LoginProvider,
         socialInfoDTO: co.bearus.magcloud.controller.dto.SocialInfoDTO
     ): UserEntity {
-        val user = UserEntity(
-            provider,
-            socialInfoDTO.id,
-            socialInfoDTO.email,
-            generateRandomPassword(),
-            socialInfoDTO.name
+        val user = UserEntity.createNewUser(
+            loginProvider = provider,
+            identifier = socialInfoDTO.id,
+            email = socialInfoDTO.email,
+            password = generateRandomPassword(),
+            name = socialInfoDTO.name,
         )
         return repository.save(user)
     }

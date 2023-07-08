@@ -1,4 +1,4 @@
-package co.bearus.magcloud.service
+package co.bearus.magcloud.domain.service
 
 import co.bearus.magcloud.domain.exception.DomainException
 import co.bearus.magcloud.domain.exception.NotFoundException
@@ -19,9 +19,9 @@ class TagService(private val repository: JPATagRepository) {
     }
 
     fun createNewTag(dto: co.bearus.magcloud.controller.dto.request.TagCreateDTO): co.bearus.magcloud.controller.dto.response.TagResponseDTO {
-        val previous = repository.getTagEntityByName(dto.name!!)
+        val previous = repository.getTagEntityByName(dto.name)
         if (previous != null) throw DomainException("같은 이름의 태그가 이미 존재합니다")
-        val newTag = TagEntity(dto.name)
+        val newTag = TagEntity(name = dto.name)
         val result = repository.save(newTag)
         return co.bearus.magcloud.controller.dto.response.TagResponseDTO(result.id!!, result.name)
     }

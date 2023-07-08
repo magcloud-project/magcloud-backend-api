@@ -9,10 +9,11 @@ class UserDeviceEntity(
     @ManyToOne
     @JoinColumn(name = "user_id")
     var user: UserEntity? = null,
+
     @Id
+    @Column(name = "fcm_token")
     var fcmToken: String
 ) {
-    constructor() : this(null, "")
 
     override fun hashCode(): Int {
         return fcmToken.hashCode()

@@ -1,4 +1,4 @@
-package co.bearus.magcloud.service.user
+package co.bearus.magcloud.domain.service.user
 
 import co.bearus.magcloud.domain.exception.DomainException
 import co.bearus.magcloud.domain.type.LoginProvider
@@ -32,12 +32,12 @@ class UserService(
     fun onRegisterRequest(authRegisterDTO: co.bearus.magcloud.controller.dto.request.AuthRegisterDTO): co.bearus.magcloud.controller.dto.response.APIResponse {
         val previousUser = getUserByEmail(authRegisterDTO.email)
         if (previousUser != null) throw DomainException("이미 존재하는 이메일입니다")
-        val user = UserEntity(
-            LoginProvider.LOCAL,
-            authRegisterDTO.email,
-            authRegisterDTO.email,
-            passwordProvider.encrypt(authRegisterDTO.password),
-            authRegisterDTO.name
+        val user = UserEntity.createNewUser(
+            loginProvider = LoginProvider.LOCAL,
+            email = authRegisterDTO.email,
+            identifier = authRegisterDTO.email,
+            password = passwordProvider.encrypt(authRegisterDTO.password),
+            name = authRegisterDTO.name
         )
         repository.save(user)
         return co.bearus.magcloud.controller.dto.response.APIResponse.ok("성공적으로 생성하였습니다")
