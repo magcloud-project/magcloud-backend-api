@@ -22,4 +22,18 @@ class UserSocialEntity private constructor(
 
     @Column(name = "user_id")
     val userId: String,
-) : Serializable, BaseAuditEntity()
+) : Serializable, BaseAuditEntity() {
+    companion object {
+        fun newInstance(
+            provider: LoginProvider,
+            socialIdentifier: String,
+            userId: String,
+        ): UserSocialEntity {
+            return UserSocialEntity(
+                provider = provider,
+                socialIdentifier = socialIdentifier,
+                userId = userId,
+            )
+        }
+    }
+}

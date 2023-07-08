@@ -27,7 +27,7 @@ class AppleNativeProviderService(
                 .setSigningKey(getKeyFromApple(parsedHeader.kid))
                 .build()
                 .parseClaimsJws(dto.accessToken)
-            return socialService.socialLogin(
+            return socialService.findUserByProviderInfo(
                 LoginProvider.APPLE,
                 co.bearus.magcloud.controller.dto.SocialInfoDTO(
                     dto.name ?: "apple",

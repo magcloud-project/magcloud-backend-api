@@ -1,46 +1,52 @@
 package co.bearus.magcloud.domain.service.user.social
 
+import co.bearus.magcloud.controller.dto.SocialInfoDTO
+import co.bearus.magcloud.controller.dto.request.AuthRegisterDTO
+import co.bearus.magcloud.controller.dto.response.LoginResponseDTO
 import co.bearus.magcloud.domain.entity.user.UserEntity
+import co.bearus.magcloud.domain.entity.user.UserSocialEntity
+import co.bearus.magcloud.domain.entity.user.UserSocialEntityKey
 import co.bearus.magcloud.domain.repository.JPAUserRepository
+import co.bearus.magcloud.domain.repository.JPAUserSocialRepository
 import co.bearus.magcloud.domain.service.user.UserService
 import co.bearus.magcloud.domain.type.LoginProvider
-import co.bearus.magcloud.provider.PasswordProvider
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class SocialService(
-    private val repository: JPAUserRepository,
+    private val userRepository: JPAUserRepository,
+    private val userSocialRepository: JPAUserSocialRepository,
     private val userService: UserService,
-    private val passwordProvider: PasswordProvider,
 ) {
-    fun socialLogin(
+    @Transactional
+    fun findUserByProviderInfo(
         provider: LoginProvider,
-        socialInfoDTO: co.bearus.magcloud.controller.dto.SocialInfoDTO
-    ): co.bearus.magcloud.controller.dto.response.LoginResponseDTO {
-        println(socialInfoDTO)
-        var previousUser = repository.getByProviderAndUserIdentifier(provider, socialInfoDTO.id)
-        if (previousUser == null) {
-            previousUser = socialLoginRegister(provider, socialInfoDTO)
-        }
+        socialInfoDTO: SocialInfoDTO
+    ): LoginResponseDTO {
+        val previousUser = userSocialRepository
+            .findById(UserSocialEntityKey(provider, socialInfoDTO.id))
+            .flatMap { userRepository.findById(it.userId) }
+            .orElse(socialLoginRegister(provider, socialInfoDTO))
         return userService.createToken(previousUser)
     }
 
-    fun socialLoginRegister(
+    private fun socialLoginRegister(
         provider: LoginProvider,
-        socialInfoDTO: co.bearus.magcloud.controller.dto.SocialInfoDTO
+        socialInfoDTO: SocialInfoDTO
     ): UserEntity {
-        val user = UserEntity.createNewUser(
-            loginProvider = provider,
-            identifier = socialInfoDTO.id,
-            email = socialInfoDTO.email,
-            password = generateRandomPassword(),
-            name = socialInfoDTO.name,
+        val user = userService.onRegisterRequest(
+            AuthRegisterDTO(
+                email = socialInfoDTO.email,
+                name = socialInfoDTO.name,
+            )
         )
-        return repository.save(user)
-    }
-
-    fun generateRandomPassword(): String {
-        return passwordProvider.encrypt(UUID.randomUUID().toString())
+        val socialEntity = UserSocialEntity.newInstance(
+            provider = provider,
+            socialIdentifier = socialInfoDTO.id,
+            userId = user.userId,
+        )
+        userSocialRepository.save(socialEntity)
+        return user
     }
 }

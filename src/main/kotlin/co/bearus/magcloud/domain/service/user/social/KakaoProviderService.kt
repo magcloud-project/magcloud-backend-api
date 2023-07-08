@@ -25,7 +25,7 @@ class KakaoProviderService(
         try {
             val accessToken = getAccessTokenByCode(dto.accessToken)
             val socialLoginDto = getUserInfoByAccessToken(accessToken)
-            return socialService.socialLogin(LoginProvider.KAKAO, socialLoginDto)
+            return socialService.findUserByProviderInfo(LoginProvider.KAKAO, socialLoginDto)
         } catch (e: Exception) {
             e.printStackTrace()
             throw DomainException()

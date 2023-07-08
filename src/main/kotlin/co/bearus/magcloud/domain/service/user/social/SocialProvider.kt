@@ -1,5 +1,8 @@
 package co.bearus.magcloud.domain.service.user.social
 
+import co.bearus.magcloud.controller.dto.request.SocialLoginDTO
+import co.bearus.magcloud.controller.dto.response.LoginResponseDTO
+
 interface SocialProvider {
-    fun login(dto: co.bearus.magcloud.controller.dto.request.SocialLoginDTO): co.bearus.magcloud.controller.dto.response.LoginResponseDTO
+    fun login(dto: SocialLoginDTO): LoginResponseDTO
 }

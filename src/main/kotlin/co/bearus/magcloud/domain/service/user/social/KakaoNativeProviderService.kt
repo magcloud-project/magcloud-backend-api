@@ -18,7 +18,7 @@ class KakaoNativeProviderService(
     override fun login(dto: co.bearus.magcloud.controller.dto.request.SocialLoginDTO): co.bearus.magcloud.controller.dto.response.LoginResponseDTO {
         try {
             val socialLoginDto = getUserInfoByAccessToken(dto)
-            return socialService.socialLogin(LoginProvider.KAKAO, socialLoginDto)
+            return socialService.findUserByProviderInfo(LoginProvider.KAKAO, socialLoginDto)
         } catch (e: Exception) {
             e.printStackTrace()
             throw DomainException()

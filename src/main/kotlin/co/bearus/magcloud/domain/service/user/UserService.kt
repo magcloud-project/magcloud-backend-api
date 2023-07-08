@@ -1,7 +1,6 @@
 package co.bearus.magcloud.domain.service.user
 
 import co.bearus.magcloud.controller.dto.request.AuthRegisterDTO
-import co.bearus.magcloud.controller.dto.response.APIResponse
 import co.bearus.magcloud.controller.dto.response.LoginResponseDTO
 import co.bearus.magcloud.controller.dto.response.UserDTO
 import co.bearus.magcloud.domain.entity.user.UserEntity
@@ -10,7 +9,6 @@ import co.bearus.magcloud.domain.exception.DomainException
 import co.bearus.magcloud.domain.exception.UserNotFoundException
 import co.bearus.magcloud.domain.repository.JPAUserRepository
 import co.bearus.magcloud.domain.repository.JPAUserTokenRepository
-import co.bearus.magcloud.domain.type.LoginProvider
 import co.bearus.magcloud.provider.TokenProvider
 import co.bearus.magcloud.util.RandomTagGenerator
 import co.bearus.magcloud.util.ULIDUtils
@@ -36,20 +34,15 @@ class UserService(
     }
 
     @Transactional
-    fun onRegisterRequest(authRegisterDTO: AuthRegisterDTO): APIResponse {
-        val previousUser = getUserByEmail(authRegisterDTO.email)
-        if (previousUser != null) throw DomainException("이미 존재하는 이메일입니다")
+    fun onRegisterRequest(authRegisterDTO: AuthRegisterDTO): UserEntity {
         val user = UserEntity.newInstance(
             userId = ULIDUtils.generate(),
             email = authRegisterDTO.email,
             name = authRegisterDTO.name,
             tag = RandomTagGenerator.generate(),
         )
-        repository.save(user)
-        return APIResponse.ok("성공적으로 생성하였습니다")
+        return repository.save(user)
     }
-
-    fun getUserByEmail(email: String) = repository.getByProviderAndUserIdentifier(LoginProvider.LOCAL, email)
 
 
     @Transactional
