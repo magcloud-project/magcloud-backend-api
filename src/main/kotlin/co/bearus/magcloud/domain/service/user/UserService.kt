@@ -49,7 +49,7 @@ class UserService(
     fun onTokenRefreshRequest(refreshToken: String): LoginResponseDTO {
         val userId = tokenProvider.getIdFromToken(refreshToken) ?: throw DomainException("토큰이 만료되었습니다")
         val user = repository.findById(userId).orElseThrow { throw DomainException("유저가 존재하지 않습니다") }
-        if (user.token?.refreshToken != refreshToken) throw DomainException("토큰이 일치하지 않습니다")
+        if (user.token?.any { it.refreshToken == refreshToken } != true) throw DomainException("토큰이 일치하지 않습니다")
         return createToken(user)
     }
 
@@ -57,12 +57,12 @@ class UserService(
     fun createToken(user: UserEntity): LoginResponseDTO {
         val accessToken = tokenProvider.createAccessToken(user)
         val refreshToken = tokenProvider.createRefreshToken(user)
-        val tokenEntity =
-            user.token?.apply { this.refreshToken = refreshToken } ?: UserTokenEntity.createNewToken(
-                userId = user.userId,
-                refreshToken = refreshToken
-            )
-        this.tokenRepository.save(tokenEntity)
+//        val tokenEntity =
+//            user.token?.tai { this.refreshToken = refreshToken } ?: UserTokenEntity.createNewToken(
+//                userId = user.userId,
+//                refreshToken = refreshToken
+//            )
+//        this.tokenRepository.save(tokenEntity)
         return LoginResponseDTO(
             accessToken = accessToken,
             refreshToken = refreshToken

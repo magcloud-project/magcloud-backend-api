@@ -19,14 +19,12 @@ class UserEntity private constructor(
     @Column(length = 4, name = "tag")
     var tag: String,
 
-    @OneToOne(cascade = [CascadeType.ALL], mappedBy = "user")
-    var token: UserTokenEntity? = null,
+    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    var token: MutableList<UserTokenEntity> = mutableListOf(),
 
-    @OneToMany(
-        mappedBy = "user",
-        cascade = [CascadeType.ALL],
-        orphanRemoval = true
-    )
+    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
+    @JoinColumn(name = "user_id")
     var devices: MutableSet<UserDeviceEntity> = mutableSetOf(),
 ) : Serializable, BaseAuditEntity() {
     companion object {

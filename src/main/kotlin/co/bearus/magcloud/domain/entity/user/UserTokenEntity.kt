@@ -4,8 +4,10 @@ import co.bearus.magcloud.domain.entity.BaseAuditEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
+import jakarta.persistence.IdClass
 import java.io.Serializable
 
+@IdClass(UserTokenEntityKey::class)
 @Entity(name = "user_token")
 class UserTokenEntity private constructor(
     @Id

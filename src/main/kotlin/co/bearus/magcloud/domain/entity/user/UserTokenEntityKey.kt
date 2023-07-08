@@ -2,7 +2,7 @@ package co.bearus.magcloud.domain.entity.user
 
 import java.io.Serializable
 
-data class UserDeviceKey(
+data class UserTokenEntityKey(
     val userId: String = "",
-    val deviceToken: String = "",
-) : Serializable
+    val refreshToken: String = "",
+): Serializable
