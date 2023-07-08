@@ -9,7 +9,7 @@ import java.io.Serializable
 @Entity(name = "user_token")
 class UserTokenEntity private constructor(
     @Id
-    @Column
+    @Column(name = "user_id")
     val userId: String,
 
     @Id

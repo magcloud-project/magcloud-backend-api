@@ -7,7 +7,7 @@ import java.io.Serializable
 @Entity(name = "user")
 class UserEntity private constructor(
     @Id
-    @Column(name = "id")
+    @Column(name = "user_id")
     val userId: String,
 
     @Column(length = 255, name = "email")

@@ -20,7 +20,7 @@ class DiaryEntity private constructor(
     @Column(name = "user_id")
     val userId: String,
 
-    @Column(name = "date")
+    @Column(name = "ymd")
     val date: LocalDate,
 
     @Column(name = "emotion")
