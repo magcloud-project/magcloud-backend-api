@@ -3,7 +3,6 @@ package co.bearus.magcloud.controller
 import co.bearus.magcloud.domain.exception.DomainException
 import co.bearus.magcloud.domain.service.user.UserService
 import co.bearus.magcloud.domain.service.user.social.*
-import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -17,11 +16,6 @@ class AuthController(
     private val nativeAppleService: AppleNativeProviderService,
     private val appleService: AppleProviderService
 ) {
-    @PostMapping
-    fun requestLogin(@RequestBody @Valid dto: co.bearus.magcloud.controller.dto.request.LoginDTO): ResponseEntity<co.bearus.magcloud.controller.dto.response.LoginResponseDTO> {
-        return ResponseEntity.ok(userService.onLoginRequest(dto))
-    }
-
     @PostMapping("/refresh")
     fun requestRefresh(@RequestBody body: co.bearus.magcloud.controller.dto.request.RefreshTokenRequestDTO): ResponseEntity<co.bearus.magcloud.controller.dto.response.LoginResponseDTO> {
         return ResponseEntity.ok(userService.onTokenRefreshRequest(body.refreshToken))

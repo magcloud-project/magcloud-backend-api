@@ -14,7 +14,7 @@ import java.io.IOException
 @Component
 class ApplicationFilter(
     private val objectMapper: ObjectMapper,
-): OncePerRequestFilter() {
+) : OncePerRequestFilter() {
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,

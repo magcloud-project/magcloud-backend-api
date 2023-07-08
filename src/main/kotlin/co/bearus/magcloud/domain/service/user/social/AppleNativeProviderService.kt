@@ -68,7 +68,7 @@ class AppleNativeProviderService(
     private final fun getKeyFromApple(kid: String): RSAPublicKey {
         val restTemplate = RestTemplate()
         val keyObj = restTemplate.getForObject("https://appleid.apple.com/auth/keys", KeyResponse::class.java)
-        val key = keyObj?.keys?.firstOrNull() { it.kid == kid } ?: throw DomainException("Invalid key")
+        val key = keyObj?.keys?.firstOrNull { it.kid == kid } ?: throw DomainException("Invalid key")
         return JWK.parse(ObjectMapper().writeValueAsString(key)).toRSAKey().toRSAPublicKey()
     }
 }

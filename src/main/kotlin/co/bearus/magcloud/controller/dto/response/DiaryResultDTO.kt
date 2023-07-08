@@ -6,5 +6,4 @@ data class DiaryResultDTO(
     val anxious: Float,
     val normal: Float,
     val lonely: Float
-) {
-}
+)

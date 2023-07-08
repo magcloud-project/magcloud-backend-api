@@ -1,7 +1,6 @@
 package co.bearus.magcloud.config.handler
 
 import co.bearus.magcloud.controller.dto.response.APIResponse
-import co.bearus.magcloud.domain.exception.DomainException
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

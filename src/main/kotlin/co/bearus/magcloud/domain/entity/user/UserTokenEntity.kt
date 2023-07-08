@@ -1,21 +1,25 @@
 package co.bearus.magcloud.domain.entity.user
 
+import co.bearus.magcloud.domain.entity.BaseAuditEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
-import jakarta.persistence.OneToOne
-import jakarta.persistence.PrimaryKeyJoinColumn
+import java.io.Serializable
 
 @Entity(name = "user_token")
-class UserTokenEntity(
+class UserTokenEntity private constructor(
     @Id
-    @Column(name = "id")
-    val id: Long? = null,
+    @Column
+    val userId: String,
 
-    @OneToOne
-    @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
-    var user: UserEntity? = null,
-
+    @Id
     @Column(name = "refresh_token")
-    var refreshToken: String
-)
+    var refreshToken: String,
+) : Serializable, BaseAuditEntity() {
+    companion object {
+        fun createNewToken(userId: String, refreshToken: String) = UserTokenEntity(
+            userId = userId,
+            refreshToken = refreshToken,
+        )
+    }
+}

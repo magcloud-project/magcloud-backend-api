@@ -1,8 +1,6 @@
 package co.bearus.magcloud.provider
 
 import co.bearus.magcloud.domain.entity.user.UserEntity
-import co.bearus.magcloud.domain.entity.user.UserTokenEntity
-import co.bearus.magcloud.domain.repository.JPAUserTokenRepository
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.beans.factory.annotation.Value
@@ -41,9 +39,10 @@ class TokenProvider(
             .signWith(signKey, SignatureAlgorithm.HS256)
             .compact()
     }
+
     private fun UserEntity.toPayLoad() =
         mapOf<String, Any>(
-            Pair("id", this.id!!)
+            Pair("id", this.userId)
         )
 
     private fun buildHeader() =
@@ -56,10 +55,10 @@ class TokenProvider(
     private fun generateAccessTokenExpiration() = Date(System.currentTimeMillis() + this.accessTokenExpiration * 1000)
     private fun generateRefreshTokenExpiration() = Date(System.currentTimeMillis() + this.refreshTokenExpiration * 1000)
 
-    fun getIdFromToken(token: String): Long? {
+    fun getIdFromToken(token: String): String? {
         return try {
-            (Jwts.parserBuilder().setSigningKey(signKey).build()
-                .parseClaimsJws(token).body["id"] as Int).toLong()
+            Jwts.parserBuilder().setSigningKey(signKey).build()
+                .parseClaimsJws(token).body["id"] as String
         } catch (e: Exception) {
             null
         }

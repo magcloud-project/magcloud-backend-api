@@ -1,15 +1,5 @@
 package co.bearus.magcloud.domain.service.diary
 
-import co.bearus.magcloud.domain.exception.DomainException
-import co.bearus.magcloud.domain.type.Emotion
-import co.bearus.magcloud.domain.entity.diary.UserDiaryEmotionEntity
-import co.bearus.magcloud.domain.entity.diary.UserDiaryEntity
-import co.bearus.magcloud.domain.repository.JPAUserDiaryEmotionRepository
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.scheduling.annotation.Async
-import org.springframework.stereotype.Service
-import org.springframework.web.client.RestTemplate
-
 //@Service
 //class InferenceService(
 //    @Value("\${secret.inference-url}") val inferenceUrl: String,

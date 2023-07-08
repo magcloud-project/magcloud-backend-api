@@ -1,11 +1,12 @@
 package co.bearus.magcloud.controller.dto.response
 
-import java.time.LocalDateTime
-
 data class DiaryResponseDTO(
-    val id: Long,
+    val diaryId: String,
+    val userId: String,
+    val date: String,
+    val emotion: String,
     val content: String,
-    val createdAt: LocalDateTime,
-    val updatedAt: LocalDateTime,
-    val result: List<co.bearus.magcloud.controller.dto.response.EmotionResponseDTO>
+    val contentHash: String,
+    val createdAt: Long,
+    val updatedAt: Long,
 )
