@@ -1,6 +1,7 @@
 package co.bearus.magcloud.config.filter
 
 import co.bearus.magcloud.domain.exception.DomainException
+import co.bearus.magcloud.domain.type.ContextLanguage
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -22,17 +23,20 @@ class ApplicationFilter(
     ) {
         val appKey = request.getHeader("X-SW-APP-KEY")
         val osVersion = request.getHeader("X-SW-OS-VERSION")
+        val appLanguage = request.getHeader("X-APP-LANGUAGE") ?: "KOR"
+        val contextLanguage = ContextLanguage.valueOf(appLanguage)
+        request.setAttribute("language", contextLanguage)
         filterChain.doFilter(request, response)
     }
 
-    @Throws(IOException::class)
-    private fun writeUpdateResponse(response: HttpServletResponse) {
-        response.status = HttpStatus.UNAUTHORIZED.value()
-        response.contentType = MediaType.APPLICATION_JSON_VALUE
-
-        response.outputStream.use { os ->
-            objectMapper.writeValue(os, DomainException())
-            os.flush()
-        }
-    }
+//    @Throws(IOException::class)
+//    private fun writeUpdateResponse(response: HttpServletResponse) {
+//        response.status = HttpStatus.UNAUTHORIZED.value()
+//        response.contentType = MediaType.APPLICATION_JSON_VALUE
+//
+//        response.outputStream.use { os ->
+//            objectMapper.writeValue(os, DomainException())
+//            os.flush()
+//        }
+//    }
 }

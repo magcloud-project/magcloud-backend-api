@@ -33,13 +33,8 @@ class AppleProviderService(
 ) : SocialProvider {
     val pKey: PrivateKey = getPrivateKey()
     override fun login(dto: co.bearus.magcloud.controller.dto.request.SocialLoginDTO): co.bearus.magcloud.controller.dto.response.LoginResponseDTO {
-        try {
-            val socialLoginDto = getUserInfoByClientSecret(dto)
-            return socialService.findUserByProviderInfo(LoginProvider.APPLE, socialLoginDto)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            throw DomainException()
-        }
+        val socialLoginDto = getUserInfoByClientSecret(dto)
+        return socialService.findUserByProviderInfo(LoginProvider.APPLE, socialLoginDto)
     }
 
     fun getUserInfoByClientSecret(dto: co.bearus.magcloud.controller.dto.request.SocialLoginDTO): co.bearus.magcloud.controller.dto.SocialInfoDTO {

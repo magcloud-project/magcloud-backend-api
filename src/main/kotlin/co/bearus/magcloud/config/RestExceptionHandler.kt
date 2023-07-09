@@ -1,8 +1,12 @@
 package co.bearus.magcloud.config
 
+import co.bearus.magcloud.controller.dto.response.ErrorResponse
 import co.bearus.magcloud.domain.exception.DomainException
-import co.bearus.magcloud.domain.exception.NotFoundException
-import co.bearus.magcloud.domain.exception.UnauthorizedException
+import co.bearus.magcloud.domain.exception.ErrorCode
+import co.bearus.magcloud.domain.exception.UnAuthenticatedException
+import co.bearus.magcloud.domain.exception.UnAuthorizedException
+import co.bearus.magcloud.domain.type.ContextLanguage
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -11,36 +15,70 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 @RestControllerAdvice
 class ControllerAdvice {
     @ExceptionHandler
-    fun userExHandle(e: NotFoundException): ResponseEntity<co.bearus.magcloud.controller.dto.response.APIResponse>? {
-        return ResponseEntity.notFound().build()
+    fun validationException(
+        exception: MethodArgumentNotValidException,
+        request: HttpServletRequest,
+    ): ResponseEntity<ErrorResponse> {
+        return ResponseEntity
+            .badRequest()
+            .body(
+                errorBody(ErrorCode.VALIDATION_EXCEPTION, request.getLanguage())
+            )
     }
 
-    @ExceptionHandler
-    fun validationException(e: MethodArgumentNotValidException): ResponseEntity<co.bearus.magcloud.controller.dto.response.APIResponse>? {
-        return ResponseEntity.badRequest()
+    @ExceptionHandler(value = [UnAuthenticatedException::class])
+    fun handleUnAuthenticated(
+        exception: UnAuthenticatedException,
+        request: HttpServletRequest,
+    ): ResponseEntity<ErrorResponse> {
+        return ResponseEntity
+            .status(401)
             .body(
-                co.bearus.magcloud.controller.dto.response.APIResponse.error(
-                    e.fieldErrors.firstOrNull()?.defaultMessage ?: "알 수 없는 오류입니다"
-                )
+                errorBody(exception.errorCode, request.getLanguage())
+            )
+    }
+
+    @ExceptionHandler(value = [UnAuthorizedException::class])
+    fun handleUnAuthorized(
+        exception: UnAuthorizedException,
+        request: HttpServletRequest,
+    ): ResponseEntity<ErrorResponse> {
+        return ResponseEntity
+            .status(403)
+            .body(
+                errorBody(exception.errorCode, request.getLanguage())
+            )
+    }
+
+    @ExceptionHandler(value = [DomainException::class])
+    fun handleDomainException(
+        exception: DomainException,
+        request: HttpServletRequest,
+    ): ResponseEntity<ErrorResponse> {
+        return ResponseEntity
+            .badRequest()
+            .body(
+                errorBody(exception.errorCode, request.getLanguage())
             )
     }
 
     @ExceptionHandler
-    fun unauthorized(e: UnauthorizedException): ResponseEntity<co.bearus.magcloud.controller.dto.response.APIResponse>? {
-        return ResponseEntity.status(401)
-            .body(co.bearus.magcloud.controller.dto.response.APIResponse.error("토큰이 만료되었거나 사용할 수 없습니다"))
+    fun unhandledException(
+        exception: Exception,
+        request: HttpServletRequest,
+    ): ResponseEntity<ErrorResponse> {
+        exception.printStackTrace()
+        return ResponseEntity
+            .badRequest()
+            .body(
+                errorBody(ErrorCode.UNKNOWN_EXCEPTION, request.getLanguage())
+            )
     }
 
-    @ExceptionHandler
-    fun userExHandle(e: DomainException): ResponseEntity<co.bearus.magcloud.controller.dto.response.APIResponse>? {
-        return ResponseEntity.badRequest()
-            .body(co.bearus.magcloud.controller.dto.response.APIResponse.error(e.message!!))
-    }
+    private fun errorBody(errorCode: ErrorCode, contextLanguage: ContextLanguage) = ErrorResponse(
+        code = errorCode.code,
+        message = errorCode.message[contextLanguage] ?: errorCode.code,
+    )
 
-    @ExceptionHandler
-    fun defaultHandle(e: RuntimeException): ResponseEntity<co.bearus.magcloud.controller.dto.response.APIResponse>? {
-        e.printStackTrace()
-        return ResponseEntity.badRequest()
-            .body(co.bearus.magcloud.controller.dto.response.APIResponse.error("알 수 없는 오류가 발생했습니다"))
-    }
+    private fun HttpServletRequest.getLanguage() = this.getAttribute("language") as ContextLanguage
 }

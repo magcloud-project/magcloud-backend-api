@@ -4,6 +4,7 @@ import co.bearus.magcloud.controller.dto.request.RefreshTokenRequestDTO
 import co.bearus.magcloud.controller.dto.request.SocialLoginDTO
 import co.bearus.magcloud.controller.dto.response.LoginResponseDTO
 import co.bearus.magcloud.domain.exception.DomainException
+import co.bearus.magcloud.domain.exception.ValidationException
 import co.bearus.magcloud.domain.service.user.UserService
 import co.bearus.magcloud.domain.service.user.social.*
 import org.springframework.http.ResponseEntity
@@ -50,7 +51,7 @@ class AuthController(
             "google" -> nativeGoogleService
             "apple" -> appleService
             "apple-native" -> nativeAppleService
-            else -> throw DomainException("Invalid provider")
+            else -> throw ValidationException()
         }
     }
 }

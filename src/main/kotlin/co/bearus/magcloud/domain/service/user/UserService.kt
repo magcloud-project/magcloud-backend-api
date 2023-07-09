@@ -5,6 +5,7 @@ import co.bearus.magcloud.controller.dto.response.UserDTO
 import co.bearus.magcloud.domain.entity.user.UserEntity
 import co.bearus.magcloud.domain.entity.user.UserTokenEntity
 import co.bearus.magcloud.domain.exception.DomainException
+import co.bearus.magcloud.domain.exception.TokenExpiredException
 import co.bearus.magcloud.domain.exception.UserNotFoundException
 import co.bearus.magcloud.domain.repository.JPAUserRepository
 import co.bearus.magcloud.domain.repository.JPAUserTokenRepository
@@ -49,9 +50,9 @@ class UserService(
 
     @Transactional
     fun onTokenRefreshRequest(refreshToken: String): TokenDTO {
-        val userId = tokenProvider.getIdFromToken(refreshToken) ?: throw DomainException("토큰이 만료되었습니다")
-        val user = userRepository.findById(userId).orElseThrow { throw DomainException("유저가 존재하지 않습니다") }
-        if (tokenRepository.existsByRefreshToken(refreshToken)) throw DomainException("토큰이 일치하지 않습니다")
+        val userId = tokenProvider.getIdFromToken(refreshToken) ?: throw TokenExpiredException()
+        val user = userRepository.findById(userId).orElseThrow { throw TokenExpiredException() }
+        if (tokenRepository.existsByRefreshToken(refreshToken)) throw TokenExpiredException()
         return createToken(user)
     }
 

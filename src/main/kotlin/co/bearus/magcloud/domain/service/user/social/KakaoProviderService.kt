@@ -22,14 +22,9 @@ class KakaoProviderService(
     @Value("\${secret.kakao-redirect-url}") val kakaoRedirectUrl: String,
 ) : SocialProvider {
     override fun login(dto: co.bearus.magcloud.controller.dto.request.SocialLoginDTO): co.bearus.magcloud.controller.dto.response.LoginResponseDTO {
-        try {
-            val accessToken = getAccessTokenByCode(dto.accessToken)
-            val socialLoginDto = getUserInfoByAccessToken(accessToken)
-            return socialService.findUserByProviderInfo(LoginProvider.KAKAO, socialLoginDto)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            throw DomainException()
-        }
+        val accessToken = getAccessTokenByCode(dto.accessToken)
+        val socialLoginDto = getUserInfoByAccessToken(accessToken)
+        return socialService.findUserByProviderInfo(LoginProvider.KAKAO, socialLoginDto)
     }
 
     fun getAccessTokenByCode(code: String): String {

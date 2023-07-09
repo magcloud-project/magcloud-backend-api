@@ -3,6 +3,7 @@ package co.bearus.magcloud.domain.service.user.social
 import co.bearus.magcloud.controller.dto.SocialInfoDTO
 import co.bearus.magcloud.controller.dto.request.SocialLoginDTO
 import co.bearus.magcloud.controller.dto.response.LoginResponseDTO
+import co.bearus.magcloud.domain.exception.AuthFailedException
 import co.bearus.magcloud.domain.exception.DomainException
 import co.bearus.magcloud.domain.type.LoginProvider
 import co.bearus.magcloud.util.MockNickGenerator
@@ -18,16 +19,11 @@ class GoogleNativeProviderService(
 ) : SocialProvider {
 
     override fun login(dto: SocialLoginDTO): LoginResponseDTO {
-        try {
-            val authResult = authenticate(dto.accessToken) ?: throw DomainException()
-            return socialService.findUserByProviderInfo(
-                LoginProvider.APPLE,
-                authResult
-            )
-        } catch (e: Exception) {
-            e.printStackTrace()
-            throw DomainException()
-        }
+        val authResult = authenticate(dto.accessToken) ?: throw AuthFailedException()
+        return socialService.findUserByProviderInfo(
+            LoginProvider.APPLE,
+            authResult
+        )
     }
 
     fun authenticate(token: String): SocialInfoDTO? {

@@ -16,13 +16,8 @@ class KakaoNativeProviderService(
     private val socialService: SocialService,
 ) : SocialProvider {
     override fun login(dto: co.bearus.magcloud.controller.dto.request.SocialLoginDTO): co.bearus.magcloud.controller.dto.response.LoginResponseDTO {
-        try {
-            val socialLoginDto = getUserInfoByAccessToken(dto)
-            return socialService.findUserByProviderInfo(LoginProvider.KAKAO, socialLoginDto)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            throw DomainException()
-        }
+        val socialLoginDto = getUserInfoByAccessToken(dto)
+        return socialService.findUserByProviderInfo(LoginProvider.KAKAO, socialLoginDto)
     }
 
     data class KakaoUserResponse(val id: Long, val connected_at: String, val kakao_account: KakaoEmailAccount?)

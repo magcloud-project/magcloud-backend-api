@@ -7,8 +7,7 @@ import co.bearus.magcloud.controller.dto.response.DiaryIntegrityResponseDTO
 import co.bearus.magcloud.controller.dto.response.DiaryResponseDTO
 import co.bearus.magcloud.domain.entity.diary.DiaryEntity
 import co.bearus.magcloud.domain.entity.user.UserEntity
-import co.bearus.magcloud.domain.exception.DomainException
-import co.bearus.magcloud.domain.exception.NotFoundException
+import co.bearus.magcloud.domain.exception.*
 import co.bearus.magcloud.domain.repository.JPAUserDiaryRepository
 import co.bearus.magcloud.domain.repository.JPAUserRepository
 import co.bearus.magcloud.domain.repository.QUserDiaryRepository
@@ -37,7 +36,7 @@ class UserDiaryService(
 
         val date = LocalDate.parse(diaryDate, DateTimeFormatter.BASIC_ISO_DATE)
         val previousDiaries = diaryRepository.getByUserIdAndDate(userId, date)
-        if (previousDiaries != null) throw DomainException("이미 해당 날짜에 일기가 존재합니다")
+        if (previousDiaries != null) throw IntegrityViolationException()
 
         val userDiary = DiaryEntity.createNewDiary(
             diaryId = ULIDUtils.generate(),
@@ -59,9 +58,9 @@ class UserDiaryService(
     ): APIResponse {
         val previousDiary = diaryRepository
             .findById(diaryId)
-            .orElseThrow { DomainException("일기가 존재하지 않습니다") }
+            .orElseThrow { DiaryNotFoundException() }
 
-        if (previousDiary.userId != userId) throw DomainException(" ???? ")
+        if (previousDiary.userId != userId) throw UnAuthorizedException()
 
         previousDiary.updateDiary(dto)
         diaryRepository.save(previousDiary)
@@ -70,19 +69,19 @@ class UserDiaryService(
 
     fun getDiaryByDate(userId: String, date: LocalDate): DiaryResponseDTO? {
         val diary = diaryRepository.getByUserIdAndDate(userId, date)
-            ?: throw NotFoundException()
+            ?: throw DiaryNotFoundException()
         return diary.toDto()
     }
 
     fun getDiaryById(userId: String, diaryId: String): DiaryResponseDTO? {
         val diary = diaryRepository.findById(diaryId)
-            .orElseThrow { NotFoundException() }
+            .orElseThrow { DiaryNotFoundException() }
         return diary.toDto()
     }
 
     fun getDiaryIntegrityById(diaryId: String): DiaryIntegrityResponseDTO {
         val diary = qDiaryRepository.getDiaryIntegrityProjection(diaryId)
-            ?: throw NotFoundException()
+            ?: throw DiaryNotFoundException()
         return DiaryIntegrityResponseDTO(
             diaryId = diary.diaryId,
             contentHash = diary.contentHash,
@@ -93,7 +92,7 @@ class UserDiaryService(
 
     private fun findUser(userId: String): UserEntity {
         val user = userRepository.findById(userId)
-        if (!user.isPresent) throw NotFoundException("그런 유저는 찾을 수 없습니다")
+        if (!user.isPresent) throw UserNotFoundException()
         return user.get()
     }
 }

@@ -2,6 +2,8 @@ package co.bearus.magcloud.controller
 
 import co.bearus.magcloud.advice.RequestUser
 import co.bearus.magcloud.advice.WebUser
+import co.bearus.magcloud.controller.dto.request.DeviceRegisterDTO
+import co.bearus.magcloud.controller.dto.response.APIResponse
 import co.bearus.magcloud.domain.service.notification.NotificationService
 import co.bearus.magcloud.domain.service.notification.UserDeviceService
 import org.springframework.http.ResponseEntity
@@ -19,9 +21,10 @@ class UserDeviceController(
     @PostMapping
     fun registerNewDevice(
         @RequestUser user: WebUser,
-        @RequestBody deviceRegisterDTO: co.bearus.magcloud.controller.dto.request.DeviceRegisterDTO,
-    ): ResponseEntity<co.bearus.magcloud.controller.dto.response.APIResponse> {
-        return ResponseEntity.ok(this.userDeviceService.registerDevice(user.userId, deviceRegisterDTO))
+        @RequestBody deviceRegisterDTO: DeviceRegisterDTO,
+    ): ResponseEntity<APIResponse> {
+        this.userDeviceService.registerDevice(user.userId, deviceRegisterDTO)
+        return ResponseEntity.ok(APIResponse.ok("등록 성공"))
     }
 
     @PostMapping("/noti")
