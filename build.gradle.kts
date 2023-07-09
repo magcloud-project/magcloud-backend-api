@@ -72,6 +72,9 @@ dependencies {
     implementation("org.flywaydb:flyway-mysql")
 
     implementation("com.github.f4b6a3:ulid-creator:5.2.0")
+
+    implementation(platform("software.amazon.awssdk:bom:2.20.56"))
+    implementation("software.amazon.awssdk:s3")
 }
 
 tasks.withType<KotlinCompile> {

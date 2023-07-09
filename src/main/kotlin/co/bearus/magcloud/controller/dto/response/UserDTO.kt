@@ -14,3 +14,7 @@ data class FriendDTO(
     val isDiaryShared: Boolean,
     val profileImageUrl: String,
 )
+
+data class ProfileImageUpdateRequest(
+    val profileImageUrl: String,
+)
