@@ -44,9 +44,10 @@ class KakaoNativeProviderService(
         val dat = restTemplate.postForObject(url, request, String::class.java)
         val response = Gson().fromJson(dat, KakaoUserResponse::class.java)
         return co.bearus.magcloud.controller.dto.SocialInfoDTO(
-            dto.name ?: "kakao",
+             "kakao",
             response.id.toString(),
-            response?.kakao_account?.email ?: "email-unavailable"
+            response?.kakao_account?.email ?: "email-unavailable",
+            provider = LoginProvider.KAKAO,
         )
     }
 }

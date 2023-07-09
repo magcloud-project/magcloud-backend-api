@@ -44,3 +44,15 @@ token:
   expiration:
     access: 86400
     refresh: 384000
+app:
+  aws:
+    region: ap-northeast-2
+    bucket-name: bsc-assets-public
+    upload-expiration: 100000 #100 Seconds
+  webclients:
+    apple-oauth:
+      baseUrl: https://appleid.apple.com/
+    kakao-oauth:
+      baseUrl: https://kapi.kakao.com/
+    google-oauth:
+      baseUrl: https://openidconnect.googleapis.com/

@@ -1,5 +1,7 @@
 package co.bearus.magcloud.controller
 
+import co.bearus.magcloud.controller.dto.request.SocialLoginDTO
+import co.bearus.magcloud.controller.dto.response.LoginResponseDTO
 import co.bearus.magcloud.domain.exception.DomainException
 import co.bearus.magcloud.domain.service.user.UserService
 import co.bearus.magcloud.domain.service.user.social.*
@@ -14,7 +16,8 @@ class AuthController(
     private val kakaoService: KakaoProviderService,
     private val nativeKakaoService: KakaoNativeProviderService,
     private val nativeAppleService: AppleNativeProviderService,
-    private val appleService: AppleProviderService
+    private val appleService: AppleProviderService,
+    private val nativeGoogleService: GoogleNativeProviderService,
 ) {
     @PostMapping("/refresh")
     fun requestRefresh(@RequestBody body: co.bearus.magcloud.controller.dto.request.RefreshTokenRequestDTO): ResponseEntity<co.bearus.magcloud.controller.dto.response.LoginResponseDTO> {
@@ -23,9 +26,9 @@ class AuthController(
 
     @PostMapping("/{provider}")
     fun requestSocialLogin(
-        @RequestBody token: co.bearus.magcloud.controller.dto.request.SocialLoginDTO,
+        @RequestBody token: SocialLoginDTO,
         @PathVariable provider: String
-    ): ResponseEntity<co.bearus.magcloud.controller.dto.response.LoginResponseDTO> {
+    ): ResponseEntity<LoginResponseDTO> {
         val currentProvider = parseProvider(provider)
         return ResponseEntity.ok(currentProvider.login(token))
     }
@@ -34,7 +37,7 @@ class AuthController(
         return when (provider.lowercase(Locale.getDefault())) {
             "kakao" -> kakaoService
             "kakao-native" -> nativeKakaoService
-            "google" -> appleService
+            "google" -> nativeGoogleService
             "apple" -> appleService
             "apple-native" -> nativeAppleService
             else -> throw DomainException("Invalid provider")

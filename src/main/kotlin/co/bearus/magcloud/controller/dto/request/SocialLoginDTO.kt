@@ -1,3 +1,8 @@
 package co.bearus.magcloud.controller.dto.request
 
-data class SocialLoginDTO(val accessToken: String, val name: String?)
+import co.bearus.magcloud.domain.type.LoginProvider
+
+data class SocialLoginDTO(
+    val provider: LoginProvider,
+    val accessToken: String,
+)

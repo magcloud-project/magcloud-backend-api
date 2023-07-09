@@ -35,12 +35,15 @@ class SocialService(
         provider: LoginProvider,
         socialInfoDTO: SocialInfoDTO
     ): UserEntity {
-        val user = userService.onRegisterRequest(
-            AuthRegisterDTO(
-                email = socialInfoDTO.email,
-                name = socialInfoDTO.name,
+        var user = userRepository.findByEmail(socialInfoDTO.email)
+        if(user == null) {
+            user = userService.onRegisterRequest(
+                AuthRegisterDTO(
+                    email = socialInfoDTO.email,
+                    name = socialInfoDTO.name,
+                )
             )
-        )
+        }
         val socialEntity = UserSocialEntity.newInstance(
             provider = provider,
             socialIdentifier = socialInfoDTO.id,

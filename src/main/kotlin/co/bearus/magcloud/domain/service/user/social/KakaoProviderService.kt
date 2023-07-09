@@ -72,7 +72,8 @@ class KakaoProviderService(
         return co.bearus.magcloud.controller.dto.SocialInfoDTO(
             "kakao",
             response.id.toString(),
-            response?.kakao_account?.email ?: "email-unavailable"
+            response?.kakao_account?.email ?: "email-unavailable",
+            provider = LoginProvider.KAKAO,
         )
     }
 }

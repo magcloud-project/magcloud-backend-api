@@ -19,10 +19,9 @@ import java.util.*
 
 
 @Service
-class AppleNativeProviderService(
-    @Qualifier("appleOAuthClient") private val webClient: WebClient,
+class GoogleNativeProviderService(
+    @Qualifier("googleOAuthClient") private val webClient: WebClient,
     private val socialService: SocialService,
-    private val objectMapper: ObjectMapper,
 ) : SocialProvider {
 
     override fun login(dto: SocialLoginDTO): LoginResponseDTO {
@@ -40,36 +39,25 @@ class AppleNativeProviderService(
 
     fun authenticate(token: String): SocialInfoDTO? {
         return webClient.get()
-            .uri("auth/keys")
+            .uri("/v1/userinfo")
             .headers {
-                it.set("Content-type", "application/x-www-form-urlencoded;charset=utf-8")
+                it.set("Authorization", "Bearer $token")
             }
             .retrieve()
-            .bodyToMono(KeyResponse::class.java)
+            .bodyToMono(GoogleUserInfo::class.java)
             .map {
-                val header = token.split("\\.".toRegex()).toTypedArray()[0]
-                val decodedHeader = String(Base64.getDecoder().decode(header))
-                val parsedHeader = objectMapper.readValue(decodedHeader, JWTTokenHeader::class.java)
-                val key = it?.keys?.first() { it.kid == parsedHeader.kid }
-                val keyData = JWK.parse(ObjectMapper().writeValueAsString(key)).toRSAKey().toRSAPublicKey()
-                val parsed = Jwts.parserBuilder()
-                    .setSigningKey(keyData)
-                    .build()
-                    .parseClaimsJws(token)
-
                 SocialInfoDTO(
-                    id = parsed.body["sub"] as String,
-                    email = parsed.body["email"] as String,
-                    provider = LoginProvider.APPLE,
-                    name = MockNickGenerator.generate(),
+                    id = it.sub,
+                    email = it.email,
+                    name = it.name ?: MockNickGenerator.generate(),
+                    provider = LoginProvider.GOOGLE,
                 )
             }.block()
     }
 
-    data class Key(val kty: String, val kid: String, val use: String, val alg: String, val n: String, val e: String)
-    data class KeyResponse(
-        val keys: List<Key>,
+    data class GoogleUserInfo(
+        val sub: String,
+        val name: String?,
+        val email: String,
     )
-
-    data class JWTTokenHeader(var kid: String, val alg: String)
 }

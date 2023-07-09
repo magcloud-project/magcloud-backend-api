@@ -65,7 +65,7 @@ class AppleProviderService(
         val decoded = String(Decoders.BASE64.decode(payload))
 
         val tokenPayload = Gson().fromJson(decoded, IdTokenPayload::class.java)
-        return co.bearus.magcloud.controller.dto.SocialInfoDTO(dto.name ?: "apple", tokenPayload.sub, "")
+        return co.bearus.magcloud.controller.dto.SocialInfoDTO( "apple", tokenPayload.sub, "",     provider = LoginProvider.APPLE,)
     }
 
     fun generateSecretKey(): String {
