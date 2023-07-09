@@ -10,7 +10,7 @@ import jakarta.persistence.IdClass
 import java.io.Serializable
 
 @IdClass(UserSocialEntityKey::class)
-@Entity(name = "user_social")
+@Entity(name = "social_user")
 class UserSocialEntity private constructor(
     @Id
     @Column(name = "provider")

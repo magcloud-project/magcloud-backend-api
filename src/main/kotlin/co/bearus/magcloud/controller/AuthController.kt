@@ -1,5 +1,6 @@
 package co.bearus.magcloud.controller
 
+import co.bearus.magcloud.controller.dto.request.RefreshTokenRequestDTO
 import co.bearus.magcloud.controller.dto.request.SocialLoginDTO
 import co.bearus.magcloud.controller.dto.response.LoginResponseDTO
 import co.bearus.magcloud.domain.exception.DomainException
@@ -20,17 +21,16 @@ class AuthController(
     private val nativeGoogleService: GoogleNativeProviderService,
 ) {
     @PostMapping("/refresh")
-    fun requestRefresh(@RequestBody body: co.bearus.magcloud.controller.dto.request.RefreshTokenRequestDTO): ResponseEntity<co.bearus.magcloud.controller.dto.response.LoginResponseDTO> {
+    fun requestRefresh(@RequestBody body: RefreshTokenRequestDTO): ResponseEntity<LoginResponseDTO> {
         return ResponseEntity.ok(userService.onTokenRefreshRequest(body.refreshToken))
     }
 
-    @PostMapping("/{provider}")
+    @PostMapping
     fun requestSocialLogin(
-        @RequestBody token: SocialLoginDTO,
-        @PathVariable provider: String
+        @RequestBody dto: SocialLoginDTO,
     ): ResponseEntity<LoginResponseDTO> {
-        val currentProvider = parseProvider(provider)
-        return ResponseEntity.ok(currentProvider.login(token))
+        val currentProvider = parseProvider(dto.provider)
+        return ResponseEntity.ok(currentProvider.login(dto))
     }
 
     private fun parseProvider(provider: String): SocialProvider {

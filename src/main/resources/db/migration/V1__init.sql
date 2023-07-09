@@ -11,16 +11,16 @@ CREATE TABLE user(
 CREATE UNIQUE INDEX user_uk1 ON user(email);
 CREATE UNIQUE INDEX user_uk2 ON user(name, tag);
 
-CREATE TABLE user_social(
+CREATE TABLE social_user(
     provider VARCHAR(64) NOT NULL COMMENT '제공자',
     identifier VARCHAR(128) NOT NULL COMMENT 'id',
     user_id CHAR(26) NOT NULL COMMENT '유저 아이디',
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_At DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY user_social_pk(provider, identifier)
+    PRIMARY KEY social_user_pk(provider, identifier)
 ) DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci COMMENT='유저';
-CREATE UNIQUE INDEX user_social_idx1 ON user_social(user_id);
+CREATE INDEX social_user_idx1 ON social_user(user_id);
 
 CREATE TABLE user_token(
     user_id CHAR(26) NOT NULL COMMENT '유저 아이디',

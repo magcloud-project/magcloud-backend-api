@@ -42,17 +42,20 @@ class DiaryController(
         return ResponseEntity.ok(result)
     }
 
-    @GetMapping("/diary")
+    @GetMapping
+    fun fetchTodayDiary(
+        @RequestUser user: WebUser,
+    ): ResponseEntity<DiaryResponseDTO> {
+        val result = userDiaryService.getDiaryByDate(user.userId, LocalDate.now())
+        return ResponseEntity.ok(result)
+    }
+
+    @GetMapping(params = ["date"])
     fun fetchDiary(
         @RequestUser user: WebUser,
-        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyyMMdd") date: LocalDate?
+        @RequestParam @DateTimeFormat(pattern = "yyyyMMdd") date: LocalDate,
     ): ResponseEntity<DiaryResponseDTO> {
-        return if (date == null) {
-            val result = userDiaryService.getDiaryByDate(user.userId, LocalDate.now())
-            ResponseEntity.ok(result)
-        } else {
-            val result = userDiaryService.getDiaryByDate(user.userId, date)
-            ResponseEntity.ok(result)
-        }
+        val result = userDiaryService.getDiaryByDate(user.userId, date)
+        return ResponseEntity.ok(result)
     }
 }

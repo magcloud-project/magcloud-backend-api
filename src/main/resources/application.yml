@@ -7,8 +7,8 @@ spring:
     hikari:
       auto-commit: false
       pool-name: magcloud-pool
-      minimum-idle: 3
-      maximum-pool-size: 5
+      minimum-idle: 10
+      maximum-pool-size: 20
       connection-timeout: 60000
       max-lifetime: 1800000
       idle-timeout: 60000
