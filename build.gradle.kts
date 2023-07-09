@@ -9,6 +9,7 @@ plugins {
     kotlin("plugin.jpa") version kotlinVersion
     kotlin("plugin.allopen") version kotlinVersion
     kotlin("plugin.noarg") version kotlinVersion
+    kotlin("kapt") version "1.3.61"
     id("com.google.cloud.tools.jib") version "3.3.2"
 }
 
@@ -38,8 +39,13 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    kapt("org.springframework.boot:spring-boot-configuration-processor")
 
     runtimeOnly("com.mysql:mysql-connector-j")
+
+    implementation("com.querydsl:querydsl-apt:5.0.0")
+    implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
+    kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.1")
