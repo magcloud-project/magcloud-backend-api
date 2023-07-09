@@ -4,6 +4,7 @@ import co.bearus.magcloud.controller.dto.request.AuthRegisterDTO
 import co.bearus.magcloud.controller.dto.response.LoginResponseDTO
 import co.bearus.magcloud.controller.dto.response.UserDTO
 import co.bearus.magcloud.domain.entity.user.UserEntity
+import co.bearus.magcloud.domain.entity.user.UserTokenEntity
 import co.bearus.magcloud.domain.exception.DomainException
 import co.bearus.magcloud.domain.exception.UserNotFoundException
 import co.bearus.magcloud.domain.repository.JPAUserRepository
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service
 @Service
 class UserService(
     private val userRepository: JPAUserRepository,
+    private val tokenRepository: JPAUserTokenRepository,
     private val tokenProvider: TokenProvider,
 ) {
     @Transactional
@@ -52,7 +54,7 @@ class UserService(
     fun onTokenRefreshRequest(refreshToken: String): LoginResponseDTO {
         val userId = tokenProvider.getIdFromToken(refreshToken) ?: throw DomainException("토큰이 만료되었습니다")
         val user = userRepository.findById(userId).orElseThrow { throw DomainException("유저가 존재하지 않습니다") }
-        if (user.token?.any { it.refreshToken == refreshToken } != true) throw DomainException("토큰이 일치하지 않습니다")
+        if (tokenRepository.existsByRefreshToken(refreshToken)) throw DomainException("토큰이 일치하지 않습니다")
         return createToken(user)
     }
 
@@ -60,15 +62,14 @@ class UserService(
     fun createToken(user: UserEntity): LoginResponseDTO {
         val accessToken = tokenProvider.createAccessToken(user)
         val refreshToken = tokenProvider.createRefreshToken(user)
-//        val tokenEntity =
-//            user.token?.tai { this.refreshToken = refreshToken } ?: UserTokenEntity.createNewToken(
-//                userId = user.userId,
-//                refreshToken = refreshToken
-//            )
-//        this.tokenRepository.save(tokenEntity)
+        val tokenEntity = UserTokenEntity.createNewToken(
+            userId = user.userId,
+            refreshToken = refreshToken,
+        )
+        this.tokenRepository.save(tokenEntity)
         return LoginResponseDTO(
             accessToken = accessToken,
-            refreshToken = refreshToken
+            refreshToken = refreshToken,
         )
     }
 }
