@@ -22,7 +22,14 @@ class AuthController(
 ) {
     @PostMapping("/refresh")
     fun requestRefresh(@RequestBody body: RefreshTokenRequestDTO): ResponseEntity<LoginResponseDTO> {
-        return ResponseEntity.ok(userService.onTokenRefreshRequest(body.refreshToken))
+        val refreshResult = userService.onTokenRefreshRequest(body.refreshToken);
+        return ResponseEntity.ok(
+            LoginResponseDTO(
+                accessToken = refreshResult.accessToken,
+                refreshToken = refreshResult.refreshToken,
+                isNewUser = false,
+            )
+        )
     }
 
     @PostMapping

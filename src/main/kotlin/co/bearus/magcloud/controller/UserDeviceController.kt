@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/v1/user/device")
+@RequestMapping("/v1/users/device")
 class UserDeviceController(
     private val userDeviceService: UserDeviceService,
     private val notificationService: NotificationService

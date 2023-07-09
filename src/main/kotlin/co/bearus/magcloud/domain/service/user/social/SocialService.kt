@@ -27,14 +27,21 @@ class SocialService(
         val previousUser = userSocialRepository
             .findById(UserSocialEntityKey(provider, socialInfoDTO.id))
             .flatMap { userRepository.findById(it.userId) }
+            .map { it to false }
             .orElse(socialLoginRegister(provider, socialInfoDTO))
-        return userService.createToken(previousUser)
+        val token = userService.createToken(previousUser.first)
+        return LoginResponseDTO(
+            accessToken = token.accessToken,
+            refreshToken = token.refreshToken,
+            isNewUser = previousUser.second,
+        )
     }
 
     private fun socialLoginRegister(
         provider: LoginProvider,
         socialInfoDTO: SocialInfoDTO
-    ): UserEntity {
+    ): Pair<UserEntity, Boolean> {
+        var isNewUser = false
         var user = userRepository.findByEmail(socialInfoDTO.email)
         if(user == null) {
             user = userService.onRegisterRequest(
@@ -43,6 +50,7 @@ class SocialService(
                     name = socialInfoDTO.name,
                 )
             )
+            isNewUser = true
         }
         val socialEntity = UserSocialEntity.newInstance(
             provider = provider,
@@ -50,6 +58,6 @@ class SocialService(
             userId = user.userId,
         )
         userSocialRepository.save(socialEntity)
-        return user
+        return user to isNewUser
     }
 }

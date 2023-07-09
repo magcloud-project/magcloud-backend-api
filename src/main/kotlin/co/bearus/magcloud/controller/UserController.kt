@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/v1/user")
+@RequestMapping("/v1/users")
 class UserController(
     private val userService: UserService,
 ) {
-    @GetMapping
+    @GetMapping("/me")
     fun getUser(@RequestUser user: WebUser): ResponseEntity<UserDTO> {
         val result = userService.getUserInfo(user.userId)
         return ResponseEntity.ok(result)

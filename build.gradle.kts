@@ -9,13 +9,15 @@ plugins {
     kotlin("plugin.jpa") version kotlinVersion
     kotlin("plugin.allopen") version kotlinVersion
     kotlin("plugin.noarg") version kotlinVersion
-    kotlin("kapt") version "1.3.61"
+    kotlin("kapt") version kotlinVersion
     id("com.google.cloud.tools.jib") version "3.3.2"
 }
 
 group = "co.bearus"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_17
+
+kapt.includeCompileClasspath = false
 
 allOpen {
     annotation("jakarta.persistence.Entity")
@@ -43,9 +45,11 @@ dependencies {
 
     runtimeOnly("com.mysql:mysql-connector-j")
 
-    implementation("com.querydsl:querydsl-apt:5.0.0")
     implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
     kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
+    kapt("com.querydsl:querydsl-kotlin-codegen:5.0.0")
+    kapt("jakarta.annotation:jakarta.annotation-api")
+    kapt("jakarta.persistence:jakarta.persistence-api")
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.1")
@@ -80,6 +84,7 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
 
 val activeProfile: String? = System.getProperty("spring.profiles.active")
 val repoURL: String? = System.getProperty("imageName")

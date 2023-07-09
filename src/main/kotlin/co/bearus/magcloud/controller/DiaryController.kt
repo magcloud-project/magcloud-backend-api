@@ -5,6 +5,7 @@ import co.bearus.magcloud.advice.WebUser
 import co.bearus.magcloud.controller.dto.request.DiaryCreateDTO
 import co.bearus.magcloud.controller.dto.request.DiaryPatchDTO
 import co.bearus.magcloud.controller.dto.response.APIResponse
+import co.bearus.magcloud.controller.dto.response.DiaryIntegrityResponseDTO
 import co.bearus.magcloud.controller.dto.response.DiaryResponseDTO
 import co.bearus.magcloud.domain.service.diary.UserDiaryService
 import jakarta.validation.Valid
@@ -47,6 +48,24 @@ class DiaryController(
         @RequestUser user: WebUser,
     ): ResponseEntity<DiaryResponseDTO> {
         val result = userDiaryService.getDiaryByDate(user.userId, LocalDate.now())
+        return ResponseEntity.ok(result)
+    }
+
+    @GetMapping("/{diaryId}")
+    fun getDiary(
+        @PathVariable diaryId: String,
+        @RequestUser user: WebUser,
+    ): ResponseEntity<DiaryResponseDTO> {
+        val result = userDiaryService.getDiaryById(diaryId, user.userId)
+        return ResponseEntity.ok(result)
+    }
+
+    @GetMapping("/{diaryId}/integrity")
+    fun getDiaryIntegrity(
+        @PathVariable diaryId: String,
+        @RequestUser user: WebUser,
+    ): ResponseEntity<DiaryIntegrityResponseDTO> {
+        val result = userDiaryService.getDiaryIntegrityById(diaryId)
         return ResponseEntity.ok(result)
     }
 

@@ -3,6 +3,7 @@ package co.bearus.magcloud.domain.service.diary
 import co.bearus.magcloud.advice.SHA256
 import co.bearus.magcloud.controller.dto.request.DiaryPatchDTO
 import co.bearus.magcloud.controller.dto.response.APIResponse
+import co.bearus.magcloud.controller.dto.response.DiaryIntegrityResponseDTO
 import co.bearus.magcloud.controller.dto.response.DiaryResponseDTO
 import co.bearus.magcloud.domain.entity.diary.DiaryEntity
 import co.bearus.magcloud.domain.entity.user.UserEntity
@@ -10,7 +11,9 @@ import co.bearus.magcloud.domain.exception.DomainException
 import co.bearus.magcloud.domain.exception.NotFoundException
 import co.bearus.magcloud.domain.repository.JPAUserDiaryRepository
 import co.bearus.magcloud.domain.repository.JPAUserRepository
+import co.bearus.magcloud.domain.repository.QUserDiaryRepository
 import co.bearus.magcloud.domain.type.Emotion
+import co.bearus.magcloud.util.DateUtils.Companion.toEpochMillis
 import co.bearus.magcloud.util.ULIDUtils
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
@@ -21,6 +24,7 @@ import java.time.format.DateTimeFormatter
 class UserDiaryService(
     private val userRepository: JPAUserRepository,
     private val diaryRepository: JPAUserDiaryRepository,
+    private val qDiaryRepository: QUserDiaryRepository,
 ) {
     @Transactional
     fun createDiary(
@@ -68,6 +72,23 @@ class UserDiaryService(
         val diary = diaryRepository.getByUserIdAndDate(userId, date)
             ?: throw NotFoundException()
         return diary.toDto()
+    }
+
+    fun getDiaryById(userId: String, diaryId: String): DiaryResponseDTO? {
+        val diary = diaryRepository.findById(diaryId)
+            .orElseThrow { NotFoundException() }
+        return diary.toDto()
+    }
+
+    fun getDiaryIntegrityById(diaryId: String): DiaryIntegrityResponseDTO {
+        val diary = qDiaryRepository.getDiaryIntegrityProjection(diaryId)
+            ?: throw NotFoundException()
+        return DiaryIntegrityResponseDTO(
+            diaryId = diary.diaryId,
+            contentHash = diary.contentHash,
+            createdAtTs = diary.createdAt.toEpochMillis(),
+            updatedAtTs = diary.updatedAt.toEpochMillis(),
+        )
     }
 
     private fun findUser(userId: String): UserEntity {

@@ -1,11 +1,12 @@
 CREATE TABLE user
 (
-    user_id    CHAR(26)     NOT NULL COMMENT '유저 아이디',
-    email      VARCHAR(255) NOT NULL COMMENT '이메일',
-    name       VARCHAR(128) NOT NULL COMMENT '이름',
-    tag        CHAR(4)      NOT NULL COMMENT '태그',
-    created_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_At DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    user_id           CHAR(26)     NOT NULL COMMENT '유저 아이디',
+    email             VARCHAR(255) NOT NULL COMMENT '이메일',
+    name              VARCHAR(128) NOT NULL COMMENT '이름',
+    tag               CHAR(4)      NOT NULL COMMENT '태그',
+    profile_image_url VARCHAR(255) NOT NULL COMMENT '프사URL',
+    created_at        DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_At        DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY user_pk(user_id)
 ) DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci COMMENT='유저';

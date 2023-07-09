@@ -45,8 +45,8 @@ class DiaryEntity private constructor(
         emotion = this.emotion,
         content = this.content,
         contentHash = this.contentHash,
-        createdAt = this.createdAt?.toEpochMillis() ?: 0,
-        updatedAt = this.updatedAt?.toEpochMillis() ?: 0,
+        createdAtTs = this.createdAt?.toEpochMillis() ?: 0,
+        updateAtTs = this.updatedAt?.toEpochMillis() ?: 0,
     )
 
     companion object {

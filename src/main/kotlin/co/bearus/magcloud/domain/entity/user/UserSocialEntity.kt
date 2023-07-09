@@ -3,10 +3,7 @@ package co.bearus.magcloud.domain.entity.user
 
 import co.bearus.magcloud.domain.entity.BaseAuditEntity
 import co.bearus.magcloud.domain.type.LoginProvider
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.IdClass
+import jakarta.persistence.*
 import java.io.Serializable
 
 @IdClass(UserSocialEntityKey::class)
@@ -14,6 +11,7 @@ import java.io.Serializable
 class UserSocialEntity private constructor(
     @Id
     @Column(name = "provider")
+    @Enumerated(EnumType.STRING)
     val provider: LoginProvider,
 
     @Id

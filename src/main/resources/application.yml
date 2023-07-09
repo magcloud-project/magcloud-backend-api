@@ -43,8 +43,10 @@ token:
   secret: ${AUTH_SECRET}
   expiration:
     access: 86400
-    refresh: 384000
+    refresh: 604800
 app:
+  headers:
+    authToken: X-AUTH-TOKEN
   aws:
     region: ap-northeast-2
     bucket-name: bsc-assets-public
