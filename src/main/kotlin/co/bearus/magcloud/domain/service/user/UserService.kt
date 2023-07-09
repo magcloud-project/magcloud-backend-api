@@ -1,7 +1,6 @@
 package co.bearus.magcloud.domain.service.user
 
 import co.bearus.magcloud.controller.dto.request.AuthRegisterDTO
-import co.bearus.magcloud.controller.dto.response.LoginResponseDTO
 import co.bearus.magcloud.controller.dto.response.UserDTO
 import co.bearus.magcloud.domain.entity.user.UserEntity
 import co.bearus.magcloud.domain.entity.user.UserTokenEntity

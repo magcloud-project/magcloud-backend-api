@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service
 @Service
 class UserDeviceService(
     val userRepository: JPAUserRepository,
-    val userDeviceRepository: JPAUserDeviceRepository
+    val userDeviceRepository: JPAUserDeviceRepository,
 ) {
     @Transactional
     fun registerDevice(
         userId: String,
-        dto: DeviceRegisterDTO
+        dto: DeviceRegisterDTO,
     ): APIResponse {
         val user = userRepository
             .findById(userId)

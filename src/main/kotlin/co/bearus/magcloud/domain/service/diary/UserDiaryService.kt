@@ -55,7 +55,7 @@ class UserDiaryService(
     fun updateDiary(
         diaryId: String,
         userId: String,
-        dto: DiaryPatchDTO
+        dto: DiaryPatchDTO,
     ): APIResponse {
         val previousDiary = diaryRepository
             .findById(diaryId)

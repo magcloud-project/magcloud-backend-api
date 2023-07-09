@@ -22,7 +22,7 @@ class SocialService(
     @Transactional
     fun findUserByProviderInfo(
         provider: LoginProvider,
-        socialInfoDTO: SocialInfoDTO
+        socialInfoDTO: SocialInfoDTO,
     ): LoginResponseDTO {
         val previousUser = userSocialRepository
             .findById(UserSocialEntityKey(provider, socialInfoDTO.id))
@@ -39,11 +39,11 @@ class SocialService(
 
     private fun socialLoginRegister(
         provider: LoginProvider,
-        socialInfoDTO: SocialInfoDTO
+        socialInfoDTO: SocialInfoDTO,
     ): Pair<UserEntity, Boolean> {
         var isNewUser = false
         var user = userRepository.findByEmail(socialInfoDTO.email)
-        if(user == null) {
+        if (user == null) {
             user = userService.onRegisterRequest(
                 AuthRegisterDTO(
                     email = socialInfoDTO.email,

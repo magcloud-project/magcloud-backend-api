@@ -6,16 +6,9 @@ import co.bearus.magcloud.controller.dto.response.LoginResponseDTO
 import co.bearus.magcloud.domain.exception.DomainException
 import co.bearus.magcloud.domain.type.LoginProvider
 import co.bearus.magcloud.util.MockNickGenerator
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.google.gson.Gson
-import com.nimbusds.jose.jwk.JWK
-import io.jsonwebtoken.Jwts
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
-import org.springframework.web.client.RestTemplate
 import org.springframework.web.reactive.function.client.WebClient
-import java.security.interfaces.RSAPublicKey
-import java.util.*
 
 
 @Service

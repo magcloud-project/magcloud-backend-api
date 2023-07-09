@@ -30,7 +30,7 @@ class AuthEntryPoint(
     override fun commence(
         request: HttpServletRequest?,
         response: HttpServletResponse,
-        authException: AuthenticationException?
+        authException: AuthenticationException?,
     ) {
         writeUnauthorized(response)
     }

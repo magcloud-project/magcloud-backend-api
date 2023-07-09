@@ -56,7 +56,7 @@ class KakaoProviderService(
         val email: String?,
         val email_needs_agreement: Boolean?,
         val is_email_valid: Boolean?,
-        val is_email_verified: Boolean?
+        val is_email_verified: Boolean?,
     )
 
     fun getUserInfoByAccessToken(accessToken: String): co.bearus.magcloud.controller.dto.SocialInfoDTO {

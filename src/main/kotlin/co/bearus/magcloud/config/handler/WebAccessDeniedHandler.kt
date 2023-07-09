@@ -29,7 +29,7 @@ class WebAccessDeniedHandler(
     override fun handle(
         request: HttpServletRequest?,
         response: HttpServletResponse,
-        accessDeniedException: org.springframework.security.access.AccessDeniedException?
+        accessDeniedException: org.springframework.security.access.AccessDeniedException?,
     ) {
         writeUnauthorized(response)
     }

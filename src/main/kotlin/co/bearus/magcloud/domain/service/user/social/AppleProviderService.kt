@@ -29,7 +29,7 @@ class AppleProviderService(
     @Value("\${secret.apple-key-id}") val appleKeyId: String,
     @Value("\${secret.apple-keyfile-value}") val appleKeyValue: String,
     @Value("\${secret.apple-team-id}") val appleTeamId: String,
-    @Value("\${secret.apple-client-id}") val appleClientId: String
+    @Value("\${secret.apple-client-id}") val appleClientId: String,
 ) : SocialProvider {
     val pKey: PrivateKey = getPrivateKey()
     override fun login(dto: co.bearus.magcloud.controller.dto.request.SocialLoginDTO): co.bearus.magcloud.controller.dto.response.LoginResponseDTO {
@@ -65,7 +65,12 @@ class AppleProviderService(
         val decoded = String(Decoders.BASE64.decode(payload))
 
         val tokenPayload = Gson().fromJson(decoded, IdTokenPayload::class.java)
-        return co.bearus.magcloud.controller.dto.SocialInfoDTO( "apple", tokenPayload.sub, "",     provider = LoginProvider.APPLE,)
+        return co.bearus.magcloud.controller.dto.SocialInfoDTO(
+            "apple",
+            tokenPayload.sub,
+            "",
+            provider = LoginProvider.APPLE,
+        )
     }
 
     fun generateSecretKey(): String {
@@ -85,7 +90,7 @@ class AppleProviderService(
         val token_type: String,
         val expires_in: Int,
         val refresh_token: String,
-        val id_token: String
+        val id_token: String,
     )
 
     data class IdTokenPayload(
@@ -96,7 +101,7 @@ class AppleProviderService(
         val sub: String,
         val at_hash: String,
         val auth_time: String,
-        val nonce_supported: Boolean
+        val nonce_supported: Boolean,
     )
 
     private final fun getPrivateKey(): PrivateKey {

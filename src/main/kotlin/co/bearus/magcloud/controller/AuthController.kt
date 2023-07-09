@@ -7,7 +7,10 @@ import co.bearus.magcloud.domain.exception.DomainException
 import co.bearus.magcloud.domain.service.user.UserService
 import co.bearus.magcloud.domain.service.user.social.*
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 @RestController
@@ -22,7 +25,7 @@ class AuthController(
 ) {
     @PostMapping("/refresh")
     fun requestRefresh(@RequestBody body: RefreshTokenRequestDTO): ResponseEntity<LoginResponseDTO> {
-        val refreshResult = userService.onTokenRefreshRequest(body.refreshToken);
+        val refreshResult = userService.onTokenRefreshRequest(body.refreshToken)
         return ResponseEntity.ok(
             LoginResponseDTO(
                 accessToken = refreshResult.accessToken,

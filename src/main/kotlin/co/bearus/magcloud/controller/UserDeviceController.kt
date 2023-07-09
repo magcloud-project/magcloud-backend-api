@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/v1/users/device")
 class UserDeviceController(
     private val userDeviceService: UserDeviceService,
-    private val notificationService: NotificationService
+    private val notificationService: NotificationService,
 ) {
     @PostMapping
     fun registerNewDevice(
         @RequestUser user: WebUser,
-        @RequestBody deviceRegisterDTO: co.bearus.magcloud.controller.dto.request.DeviceRegisterDTO
+        @RequestBody deviceRegisterDTO: co.bearus.magcloud.controller.dto.request.DeviceRegisterDTO,
     ): ResponseEntity<co.bearus.magcloud.controller.dto.response.APIResponse> {
         return ResponseEntity.ok(this.userDeviceService.registerDevice(user.userId, deviceRegisterDTO))
     }

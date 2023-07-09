@@ -6,5 +6,5 @@ data class SocialInfoDTO(
     val name: String,
     val id: String,
     val email: String,
-    val provider: LoginProvider
+    val provider: LoginProvider,
 )

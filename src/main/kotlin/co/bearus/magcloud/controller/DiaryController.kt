@@ -22,7 +22,7 @@ class DiaryController(
     @PostMapping
     fun createDiary(
         @RequestBody @Valid dto: DiaryCreateDTO,
-        @RequestUser user: WebUser
+        @RequestUser user: WebUser,
     ): ResponseEntity<APIResponse> {
         val result = userDiaryService.createDiary(
             userId = user.userId,

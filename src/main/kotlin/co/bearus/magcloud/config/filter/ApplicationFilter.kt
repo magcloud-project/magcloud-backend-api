@@ -18,7 +18,7 @@ class ApplicationFilter(
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        filterChain: FilterChain
+        filterChain: FilterChain,
     ) {
         val appKey = request.getHeader("X-SW-APP-KEY")
         val osVersion = request.getHeader("X-SW-OS-VERSION")

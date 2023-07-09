@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate
 
 @Service
 class KakaoNativeProviderService(
-    private val socialService: SocialService
+    private val socialService: SocialService,
 ) : SocialProvider {
     override fun login(dto: co.bearus.magcloud.controller.dto.request.SocialLoginDTO): co.bearus.magcloud.controller.dto.response.LoginResponseDTO {
         try {
@@ -30,7 +30,7 @@ class KakaoNativeProviderService(
         val email: String?,
         val email_needs_agreement: Boolean?,
         val is_email_valid: Boolean?,
-        val is_email_verified: Boolean?
+        val is_email_verified: Boolean?,
     )
 
     fun getUserInfoByAccessToken(dto: co.bearus.magcloud.controller.dto.request.SocialLoginDTO): co.bearus.magcloud.controller.dto.SocialInfoDTO {
@@ -44,7 +44,7 @@ class KakaoNativeProviderService(
         val dat = restTemplate.postForObject(url, request, String::class.java)
         val response = Gson().fromJson(dat, KakaoUserResponse::class.java)
         return co.bearus.magcloud.controller.dto.SocialInfoDTO(
-             "kakao",
+            "kakao",
             response.id.toString(),
             response?.kakao_account?.email ?: "email-unavailable",
             provider = LoginProvider.KAKAO,

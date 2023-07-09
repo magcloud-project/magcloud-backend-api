@@ -19,7 +19,7 @@ class RequestUserArgumentResolver(private val tokenService: TokenProvider) : Han
         parameter: MethodParameter,
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
-        binderFactory: WebDataBinderFactory?
+        binderFactory: WebDataBinderFactory?,
     ): Any {
         val token = webRequest.getHeader("X-AUTH-TOKEN")
         val userId =

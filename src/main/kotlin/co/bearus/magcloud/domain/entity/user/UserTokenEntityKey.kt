@@ -5,4 +5,4 @@ import java.io.Serializable
 data class UserTokenEntityKey(
     val userId: String = "",
     val refreshToken: String = "",
-): Serializable
+) : Serializable

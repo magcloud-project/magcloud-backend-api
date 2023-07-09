@@ -7,14 +7,11 @@ import co.bearus.magcloud.domain.exception.DomainException
 import co.bearus.magcloud.domain.type.LoginProvider
 import co.bearus.magcloud.util.MockNickGenerator
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.google.gson.Gson
 import com.nimbusds.jose.jwk.JWK
 import io.jsonwebtoken.Jwts
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
-import org.springframework.web.client.RestTemplate
 import org.springframework.web.reactive.function.client.WebClient
-import java.security.interfaces.RSAPublicKey
 import java.util.*
 
 
@@ -50,7 +47,7 @@ class AppleNativeProviderService(
                 val header = token.split("\\.".toRegex()).toTypedArray()[0]
                 val decodedHeader = String(Base64.getDecoder().decode(header))
                 val parsedHeader = objectMapper.readValue(decodedHeader, JWTTokenHeader::class.java)
-                val key = it?.keys?.first() { it.kid == parsedHeader.kid }
+                val key = it?.keys?.first { it.kid == parsedHeader.kid }
                 val keyData = JWK.parse(ObjectMapper().writeValueAsString(key)).toRSAKey().toRSAPublicKey()
                 val parsed = Jwts.parserBuilder()
                     .setSigningKey(keyData)

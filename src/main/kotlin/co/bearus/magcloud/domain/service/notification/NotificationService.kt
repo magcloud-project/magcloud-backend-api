@@ -16,7 +16,7 @@ import java.util.*
 @Service
 class NotificationService(
     @Value("\${secret.google-firebase-secret-value}") val secretValue: String,
-    val userDeviceRepository: JPAUserDeviceRepository
+    val userDeviceRepository: JPAUserDeviceRepository,
 ) {
     init {
         val credentials = ByteArrayInputStream(Base64.getDecoder().decode(secretValue))
