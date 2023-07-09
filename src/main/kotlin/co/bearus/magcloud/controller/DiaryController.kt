@@ -7,6 +7,7 @@ import co.bearus.magcloud.controller.dto.request.DiaryPatchDTO
 import co.bearus.magcloud.controller.dto.response.APIResponse
 import co.bearus.magcloud.controller.dto.response.DiaryIntegrityResponseDTO
 import co.bearus.magcloud.controller.dto.response.DiaryResponseDTO
+import co.bearus.magcloud.domain.exception.UnAuthorizedException
 import co.bearus.magcloud.domain.service.diary.UserDiaryService
 import jakarta.validation.Valid
 import org.springframework.format.annotation.DateTimeFormat
@@ -23,7 +24,7 @@ class DiaryController(
     fun createDiary(
         @RequestBody @Valid dto: DiaryCreateDTO,
         @RequestUser user: WebUser,
-    ): ResponseEntity<APIResponse> {
+    ): ResponseEntity<DiaryResponseDTO> {
         val result = userDiaryService.createDiary(
             userId = user.userId,
             diaryDate = dto.date,
@@ -38,7 +39,7 @@ class DiaryController(
         @PathVariable diaryId: String,
         @RequestBody @Valid dto: DiaryPatchDTO,
         @RequestUser user: WebUser,
-    ): ResponseEntity<APIResponse> {
+    ): ResponseEntity<DiaryResponseDTO> {
         val result = userDiaryService.updateDiary(diaryId, user.userId, dto)
         return ResponseEntity.ok(result)
     }
@@ -56,7 +57,8 @@ class DiaryController(
         @PathVariable diaryId: String,
         @RequestUser user: WebUser,
     ): ResponseEntity<DiaryResponseDTO> {
-        val result = userDiaryService.getDiaryById(diaryId, user.userId)
+        val result = userDiaryService.getDiaryById(diaryId = diaryId)
+        if (result.userId != user.userId) throw UnAuthorizedException()
         return ResponseEntity.ok(result)
     }
 

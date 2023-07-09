@@ -18,6 +18,7 @@ class QUserDiaryRepository(
             QDiaryIntegrityProjection(
                 diaryId = diaryEntity.diaryId,
                 contentHash = diaryEntity.contentHash,
+                emotion = diaryEntity.emotion,
                 createdAt = diaryEntity.createdAt,
                 updatedAt = diaryEntity.updatedAt,
             )

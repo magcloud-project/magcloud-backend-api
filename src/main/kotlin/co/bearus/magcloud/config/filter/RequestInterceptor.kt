@@ -31,14 +31,19 @@ class RequestInterceptor : HandlerInterceptor {
         handler: Any,
         ex: Exception?,
     ) {
-        if (request.requestURI.equals("/api/health-check")) return
+        if (request.requestURI == "/api/health-check") return
         val startTime = request.getAttribute(START_TIME_ATTR_NAME) as Long
         val endTime = System.currentTimeMillis()
         val origin = request.getHeader("X-Forwarded-For") ?: request.remoteAddr
         val executionTime = endTime - startTime
 
+        val appVersion = request.getHeader("X-APP-VERSION") ?: "UNKNOWN VERSION"
+        val osVersion = request.getHeader("X-OS-VERSION") ?: "UNKNOWN OS"
+
         log.info(
-            "{} {} {} {} {}ms",
+            "[{}] [{}] {} {} {} {} {}ms",
+            appVersion,
+            osVersion,
             request.method,
             request.requestURI,
             response.status,

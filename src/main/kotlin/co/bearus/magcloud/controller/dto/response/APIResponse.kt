@@ -1,16 +1,17 @@
 package co.bearus.magcloud.controller.dto.response
 
+import co.bearus.magcloud.controller.dto.ResponseMessage
+import co.bearus.magcloud.domain.type.ContextLanguage
 import com.fasterxml.jackson.annotation.JsonInclude
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-data class APIResponse(val success: Boolean, val message: String, val data: Any? = null) {
+data class APIResponse(
+    val success: Boolean,
+    val message: String
+) {
     companion object {
         fun ok(message: String) = APIResponse(true, message)
-        fun ok(message: String, data: Any?) =
-            APIResponse(true, message, data)
-
         fun error(message: String) = APIResponse(false, message)
-        fun error(message: String, data: Any?) =
-            APIResponse(false, message, data)
+        fun ok(language: ContextLanguage, message: ResponseMessage) = APIResponse(true, message.message[language] ?: "")
     }
 }

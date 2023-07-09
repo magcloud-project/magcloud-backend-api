@@ -71,7 +71,7 @@ CREATE TABLE friend
     is_diary_allowed BOOLEAN  NOT NULL COMMENT '일기 공개 여부',
     created_at       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_At       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY friend_pk(from_friend_id, to_friend_id)
+    PRIMARY KEY friend_pk(from_user_id, to_user_id)
 ) DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci COMMENT='친구';
 
@@ -81,7 +81,7 @@ CREATE TABLE friend_request
     to_user_id     CHAR(26) NOT NULL COMMENT '친구B 아이디',
     created_at       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_At       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY friend_request_pk(from_friend_id, to_friend_id)
+    PRIMARY KEY friend_request_pk(from_user_id, to_user_id)
 ) DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci COMMENT='친구요청';
-CREATE INDEX friend_request_idx1 ON friend_request (to_friend_id);
+CREATE INDEX friend_request_idx1 ON friend_request (to_user_id);

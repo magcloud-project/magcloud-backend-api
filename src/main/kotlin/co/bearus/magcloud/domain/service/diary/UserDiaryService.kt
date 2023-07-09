@@ -31,7 +31,7 @@ class UserDiaryService(
         diaryDate: String,
         content: String,
         emotion: Emotion,
-    ): APIResponse {
+    ): DiaryResponseDTO {
         val user = findUser(userId)
 
         val date = LocalDate.parse(diaryDate, DateTimeFormatter.BASIC_ISO_DATE)
@@ -46,8 +46,7 @@ class UserDiaryService(
             content = content,
             contentHash = SHA256.encrypt(content),
         )
-        diaryRepository.save(userDiary)
-        return APIResponse.ok("일기가 추가되었습니다")
+        return diaryRepository.save(userDiary).toDto()
     }
 
     @Transactional
@@ -55,7 +54,7 @@ class UserDiaryService(
         diaryId: String,
         userId: String,
         dto: DiaryPatchDTO,
-    ): APIResponse {
+    ): DiaryResponseDTO {
         val previousDiary = diaryRepository
             .findById(diaryId)
             .orElseThrow { DiaryNotFoundException() }
@@ -63,19 +62,19 @@ class UserDiaryService(
         if (previousDiary.userId != userId) throw UnAuthorizedException()
 
         previousDiary.updateDiary(dto)
-        diaryRepository.save(previousDiary)
-        return APIResponse.ok("일기가 수정되었습니다.")
+        return diaryRepository.save(previousDiary).toDto()
     }
 
     fun getDiaryByDate(userId: String, date: LocalDate): DiaryResponseDTO? {
         val diary = diaryRepository.getByUserIdAndDate(userId, date)
-            ?: throw DiaryNotFoundException()
+            ?: throw DiaryNotExistsException()
         return diary.toDto()
     }
 
-    fun getDiaryById(userId: String, diaryId: String): DiaryResponseDTO? {
-        val diary = diaryRepository.findById(diaryId)
-            .orElseThrow { DiaryNotFoundException() }
+    fun getDiaryById(diaryId: String): DiaryResponseDTO {
+        val diary = diaryRepository
+            .findById(diaryId)
+            .orElseThrow { DiaryNotExistsException() }
         return diary.toDto()
     }
 
@@ -85,6 +84,7 @@ class UserDiaryService(
         return DiaryIntegrityResponseDTO(
             diaryId = diary.diaryId,
             contentHash = diary.contentHash,
+            emotion = diary.emotion,
             createdAtTs = diary.createdAt.toEpochMillis(),
             updatedAtTs = diary.updatedAt.toEpochMillis(),
         )

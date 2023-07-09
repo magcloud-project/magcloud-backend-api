@@ -45,6 +45,12 @@ class UserService(
         return userRepository.save(newUser)
     }
 
+    fun getUserByTag(tag: String): UserEntity {
+        val splitted = tag.split("#")
+        if (splitted.size < 2) throw UserNotFoundException()
+        return userRepository.findByNameAndTag(splitted[0], splitted[1]) ?: throw UserNotFoundException()
+    }
+
     private fun isUserExists(name: String, tag: String) = userRepository.findByNameAndTag(name, tag) != null
 
 

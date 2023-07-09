@@ -5,6 +5,7 @@ import co.bearus.magcloud.controller.dto.request.DiaryPatchDTO
 import co.bearus.magcloud.controller.dto.response.DiaryResponseDTO
 import co.bearus.magcloud.domain.entity.BaseAuditEntity
 import co.bearus.magcloud.util.DateUtils.Companion.toEpochMillis
+import co.bearus.magcloud.util.DateUtils.Companion.toSimpleYmdFormat
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
@@ -41,12 +42,12 @@ class DiaryEntity private constructor(
     fun toDto() = DiaryResponseDTO(
         diaryId = this.diaryId,
         userId = this.userId,
-        date = this.date.toString(),
+        date = this.date.toSimpleYmdFormat(),
         emotion = this.emotion,
         content = this.content,
         contentHash = this.contentHash,
         createdAtTs = this.createdAt?.toEpochMillis() ?: 0,
-        updateAtTs = this.updatedAt?.toEpochMillis() ?: 0,
+        updatedAtTs = this.updatedAt?.toEpochMillis() ?: 0,
     )
 
     companion object {

@@ -1,10 +1,7 @@
 package co.bearus.magcloud.config
 
 import co.bearus.magcloud.controller.dto.response.ErrorResponse
-import co.bearus.magcloud.domain.exception.DomainException
-import co.bearus.magcloud.domain.exception.ErrorCode
-import co.bearus.magcloud.domain.exception.UnAuthenticatedException
-import co.bearus.magcloud.domain.exception.UnAuthorizedException
+import co.bearus.magcloud.domain.exception.*
 import co.bearus.magcloud.domain.type.ContextLanguage
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.ResponseEntity
@@ -48,6 +45,16 @@ class ControllerAdvice {
             .body(
                 errorBody(exception.errorCode, request.getLanguage())
             )
+    }
+
+    @ExceptionHandler(value = [NotFoundDomainException::class])
+    fun handleNotFound(
+        exception: NotFoundDomainException,
+        request: HttpServletRequest,
+    ): ResponseEntity<ErrorResponse> {
+        return ResponseEntity
+            .notFound()
+            .build()
     }
 
     @ExceptionHandler(value = [DomainException::class])

@@ -21,8 +21,6 @@ class ApplicationFilter(
         response: HttpServletResponse,
         filterChain: FilterChain,
     ) {
-        val appKey = request.getHeader("X-SW-APP-KEY")
-        val osVersion = request.getHeader("X-SW-OS-VERSION")
         val appLanguage = request.getHeader("X-APP-LANGUAGE") ?: "KOR"
         val contextLanguage = ContextLanguage.valueOf(appLanguage)
         request.setAttribute("language", contextLanguage)
