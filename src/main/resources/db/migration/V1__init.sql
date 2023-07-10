@@ -74,6 +74,8 @@ CREATE TABLE diary
   COLLATE=utf8mb4_unicode_ci COMMENT='일기';
 CREATE UNIQUE INDEX diary_uk1 ON diary (user_id, ymd);
 CREATE INDEX diary_idx1 ON diary (ymd);
+CREATE INDEX diary_idx2 ON diary (ymd, emotion);
+CREATE INDEX diary_idx3 ON diary (emotion);
 
 CREATE TABLE friend
 (

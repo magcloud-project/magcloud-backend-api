@@ -17,8 +17,14 @@ class UserController(
     private val userProfileImageService: UserProfileImageService,
 ) {
     @GetMapping("/me")
-    fun getUser(@RequestUser user: WebUser): ResponseEntity<UserDTO> {
+    fun getMe(@RequestUser user: WebUser): ResponseEntity<UserDTO> {
         val result = userService.getUserInfo(user.userId)
+        return ResponseEntity.ok(result)
+    }
+
+    @GetMapping("/{userId}")
+    fun getUser(@PathVariable userId: String): ResponseEntity<UserDTO> {
+        val result = userService.getUserInfo(userId)
         return ResponseEntity.ok(result)
     }
 

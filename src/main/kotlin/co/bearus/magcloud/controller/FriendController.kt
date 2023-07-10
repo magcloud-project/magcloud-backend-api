@@ -6,10 +6,7 @@ import co.bearus.magcloud.advice.WebUser
 import co.bearus.magcloud.controller.dto.ResponseMessage
 import co.bearus.magcloud.controller.dto.request.FriendAcceptDTO
 import co.bearus.magcloud.controller.dto.request.FriendRequestDTO
-import co.bearus.magcloud.controller.dto.response.APIResponse
-import co.bearus.magcloud.controller.dto.response.DailyUserDTO
-import co.bearus.magcloud.controller.dto.response.FriendDTO
-import co.bearus.magcloud.controller.dto.response.UserDTO
+import co.bearus.magcloud.controller.dto.response.*
 import co.bearus.magcloud.domain.service.friend.FriendService
 import co.bearus.magcloud.domain.service.notification.NotificationService
 import co.bearus.magcloud.domain.service.user.UserService
@@ -95,6 +92,13 @@ class FriendController(
         @RequestUser user: WebUser,
     ): List<UserDTO> {
         return friendService.getFriendRequests(user.userId)
+    }
+
+    @GetMapping("/requests/count")
+    fun getFriendRequestsCount(
+        @RequestUser user: WebUser,
+    ): CountResponse {
+        return CountResponse(friendService.countFriendRequests(user.userId))
     }
 
     @GetMapping("/requests/sent")

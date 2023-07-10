@@ -118,6 +118,8 @@ class FriendService(
             .map { it.toDto() }
     }
 
+    fun countFriendRequests(userId: String) = friendRequestRepository.countByToUserId(userId)
+
     fun isFriend(fromUserId: String, toUserId: String) =
         friendRepository.existsById(FriendEntityKey(fromUserId, toUserId))
 

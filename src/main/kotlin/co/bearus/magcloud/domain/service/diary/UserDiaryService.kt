@@ -2,7 +2,6 @@ package co.bearus.magcloud.domain.service.diary
 
 import co.bearus.magcloud.advice.SHA256
 import co.bearus.magcloud.controller.dto.request.DiaryPatchDTO
-import co.bearus.magcloud.controller.dto.response.APIResponse
 import co.bearus.magcloud.controller.dto.response.DiaryIntegrityResponseDTO
 import co.bearus.magcloud.controller.dto.response.DiaryResponseDTO
 import co.bearus.magcloud.domain.entity.diary.DiaryEntity
@@ -69,6 +68,21 @@ class UserDiaryService(
         val diary = diaryRepository.getByUserIdAndDate(userId, date)
             ?: throw DiaryNotExistsException()
         return diary.toDto()
+    }
+
+    fun getStatisticsByYearMonth(userId: String, year: Int, month: Int): Map<Int, String> {
+        val diary = qDiaryRepository.getUserMonthlyStatistics(userId, year, month)
+        return diary.associate { it.date.dayOfMonth to it.emotion }
+    }
+
+    fun getStatisticsByYear(userId: String, year: Int): Map<Int, String> {
+        val diary = qDiaryRepository.getUserYearlyStatistics(userId, year)
+        return diary
+            .groupBy { it.month }
+            .mapValues {
+                print(it.value)
+                it.value.maxBy { elements -> elements.count }.emotion
+            }
     }
 
     fun getDiaryById(diaryId: String): DiaryResponseDTO {

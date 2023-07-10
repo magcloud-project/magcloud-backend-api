@@ -39,6 +39,14 @@ class UserDeviceService(
         userDeviceRepository.save(device)
     }
 
+    @Transactional
+    fun deleteDevice(
+        userId: String,
+        dto: DeviceRegisterDTO,
+    ) {
+        userDeviceRepository.deleteById(UserDeviceKey(userId, dto.deviceToken))
+    }
+
     private fun checkUserHasDevice(userId: String, fcmToken: String): Boolean {
         val device = userDeviceRepository.findById(UserDeviceKey(userId, fcmToken))
         return device.isPresent

@@ -2,6 +2,8 @@ package co.bearus.magcloud.domain.repository
 
 import co.bearus.magcloud.domain.entity.diary.QDiaryEntity.Companion.diaryEntity
 import co.bearus.magcloud.domain.projection.QDiaryIntegrityProjection
+import co.bearus.magcloud.domain.projection.QMonthlyEmotionProjection
+import co.bearus.magcloud.domain.projection.QYearlyEmotionProjection
 import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.stereotype.Repository
 
@@ -24,4 +26,42 @@ class QUserDiaryRepository(
             )
         )
         .fetchOne()
+
+    fun getUserMonthlyStatistics(
+        userId: String,
+        year: Int,
+        month: Int,
+    ) = queryFactory
+        .selectFrom(diaryEntity)
+        .where(
+            diaryEntity.userId.eq(userId),
+            diaryEntity.date.year().eq(year),
+            diaryEntity.date.month().eq(month),
+        )
+        .select(
+            QMonthlyEmotionProjection(
+                date = diaryEntity.date,
+                emotion = diaryEntity.emotion,
+            )
+        )
+        .fetch()
+
+    fun getUserYearlyStatistics(
+        userId: String,
+        year: Int,
+    ) = queryFactory
+        .selectFrom(diaryEntity)
+        .where(
+            diaryEntity.userId.eq(userId),
+            diaryEntity.date.year().eq(year),
+        )
+        .select(
+            QYearlyEmotionProjection(
+                month = diaryEntity.date.month(),
+                emotion = diaryEntity.emotion,
+                count = diaryEntity.emotion.count()
+            )
+        )
+        .groupBy(diaryEntity.date.month(), diaryEntity.emotion)
+        .fetch()
 }
