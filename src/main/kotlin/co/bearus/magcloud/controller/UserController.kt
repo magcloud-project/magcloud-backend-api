@@ -2,6 +2,7 @@ package co.bearus.magcloud.controller
 
 import co.bearus.magcloud.advice.RequestUser
 import co.bearus.magcloud.advice.WebUser
+import co.bearus.magcloud.controller.dto.request.UserNotificationConfigDTO
 import co.bearus.magcloud.controller.dto.response.ProfileImageUpdateRequest
 import co.bearus.magcloud.controller.dto.response.UserDTO
 import co.bearus.magcloud.domain.service.user.UserProfileImageService
@@ -32,6 +33,26 @@ class UserController(
         userProfileImageService.changeProfileImage(
             userId = user.userId,
             imageUrl = request.profileImageUrl,
+        )
+    }
+
+    @PatchMapping("/notification")
+    fun updateNotificationConfig(
+        @RequestUser user: WebUser,
+        @RequestBody request: UserNotificationConfigDTO,
+    ): UserNotificationConfigDTO {
+        return userService.updateNotificationConfig(
+            userId = user.userId,
+            request = request,
+        )
+    }
+
+    @GetMapping("/notification")
+    fun getNotificationConfig(
+        @RequestUser user: WebUser,
+    ): UserNotificationConfigDTO {
+        return userService.getNotificationConfig(
+            userId = user.userId,
         )
     }
 }

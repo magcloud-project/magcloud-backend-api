@@ -1,12 +1,15 @@
 package co.bearus.magcloud.domain.service.user
 
 import co.bearus.magcloud.controller.dto.request.AuthRegisterDTO
+import co.bearus.magcloud.controller.dto.request.UserNotificationConfigDTO
 import co.bearus.magcloud.controller.dto.response.UserDTO
 import co.bearus.magcloud.domain.entity.user.UserEntity
+import co.bearus.magcloud.domain.entity.user.UserNotificationConfigEntity
 import co.bearus.magcloud.domain.entity.user.UserTokenEntity
 import co.bearus.magcloud.domain.exception.DomainException
 import co.bearus.magcloud.domain.exception.TokenExpiredException
 import co.bearus.magcloud.domain.exception.UserNotFoundException
+import co.bearus.magcloud.domain.repository.JPAUserNotificationConfigRepository
 import co.bearus.magcloud.domain.repository.JPAUserRepository
 import co.bearus.magcloud.domain.repository.JPAUserTokenRepository
 import co.bearus.magcloud.domain.service.dto.TokenDTO
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Service
 class UserService(
     private val userRepository: JPAUserRepository,
     private val tokenRepository: JPAUserTokenRepository,
+    private val userNotificationConfigRepository: JPAUserNotificationConfigRepository,
     private val tokenProvider: TokenProvider,
 ) {
     @Transactional
@@ -42,8 +46,38 @@ class UserService(
                 profileImageUrl = "https://bsc-assets-public.s3.ap-northeast-2.amazonaws.com/default_profile.jpeg",
             )
         } while (isUserExists(newUser.name, newUser.tag))
+        val notificationConfig = UserNotificationConfigEntity.newInstance(
+            userId = newUser.userId,
+            socialEnabled = true,
+            appEnabled = true,
+        )
+        userNotificationConfigRepository.save(notificationConfig)
         return userRepository.save(newUser)
     }
+
+    @Transactional
+    fun updateNotificationConfig(userId: String, request: UserNotificationConfigDTO): UserNotificationConfigDTO {
+        val config = userNotificationConfigRepository
+            .findById(userId)
+            .orElseThrow { throw UserNotFoundException() }
+        config.appEnabled = request.app
+        config.socialEnabled = request.social
+        val saveResult = userNotificationConfigRepository.save(config)
+        return UserNotificationConfigDTO(
+            app = saveResult.appEnabled,
+            social = saveResult.socialEnabled,
+        )
+    }
+
+    fun getNotificationConfig(userId: String) = userNotificationConfigRepository
+        .findById(userId)
+        .map {
+            UserNotificationConfigDTO(
+                app = it.appEnabled,
+                social = it.socialEnabled,
+            )
+        }
+        .orElseThrow { throw UserNotFoundException() }
 
     fun getUserByTag(tag: String): UserEntity {
         val splitted = tag.split("#")

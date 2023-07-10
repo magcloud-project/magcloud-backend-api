@@ -14,6 +14,7 @@ enum class ErrorCode(
     TOKEN_EXPIRED("CM0006", simpleMessage("토큰이 만료되었습니다", "Token expired")),
     AUTH_FAILED("CM0007", simpleMessage("인증에 실패했습니다", "Authentication failed")),
     GENERIC_NOT_FOUND("CM0008", simpleMessage("찾을 수 없습니다", "Not found")),
+    APP_VERSION_EXCEPTION("CM0010", simpleMessage("사용할 수 없는 버전입니다", "App Version Not Available")),
 
     USER_NOT_FOUND("UE0001", simpleMessage("사용자를 찾을 수 없습니다", "User not found")),
 

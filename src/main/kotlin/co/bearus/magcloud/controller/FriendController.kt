@@ -11,8 +11,10 @@ import co.bearus.magcloud.controller.dto.response.DailyUserDTO
 import co.bearus.magcloud.controller.dto.response.FriendDTO
 import co.bearus.magcloud.controller.dto.response.UserDTO
 import co.bearus.magcloud.domain.service.friend.FriendService
+import co.bearus.magcloud.domain.service.notification.NotificationService
 import co.bearus.magcloud.domain.service.user.UserService
 import co.bearus.magcloud.domain.type.ContextLanguage
+import co.bearus.magcloud.domain.type.NotificationType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController
 class FriendController(
     private val userService: UserService,
     private val friendService: FriendService,
+    private val notificationService: NotificationService,
 ) {
     @GetMapping
     fun getFriends(
@@ -76,8 +79,14 @@ class FriendController(
         @RequestBody body: FriendRequestDTO,
         @RequestLanguage language: ContextLanguage,
     ): APIResponse {
+        val sender = userService.getUserInfo(user.userId)
         val receiver = userService.getUserByTag(body.tag)
         friendService.requestFriend(user.userId, receiver.userId)
+        notificationService.sendMessageToUser(
+            notificationType = NotificationType.SOCIAL,
+            userId = receiver.userId,
+            description = "${sender.name}님께서 친구 요청을 보내셨습니다",
+        )
         return APIResponse.ok(language, ResponseMessage.SENT_FRIEND_REQUEST)
     }
 
@@ -101,7 +110,14 @@ class FriendController(
         @RequestBody body: FriendAcceptDTO,
         @RequestLanguage language: ContextLanguage,
     ): APIResponse {
+        val sender = userService.getUserInfo(user.userId)
+        val receiver = userService.getUserInfo(body.userId)
         friendService.acceptFriendRequest(user.userId, body.userId)
+        notificationService.sendMessageToUser(
+            notificationType = NotificationType.SOCIAL,
+            userId = receiver.userId,
+            description = "${sender.name}님께서 친구 요청을 수락하셨습니다",
+        )
         return APIResponse.ok(language, ResponseMessage.ACCEPTED_FRIEND_REQUEST)
     }
 

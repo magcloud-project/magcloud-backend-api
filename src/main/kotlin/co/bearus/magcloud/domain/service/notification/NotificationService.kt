@@ -1,13 +1,15 @@
 package co.bearus.magcloud.domain.service.notification
 
 import co.bearus.magcloud.domain.repository.JPAUserDeviceRepository
+import co.bearus.magcloud.domain.repository.JPAUserNotificationConfigRepository
+import co.bearus.magcloud.domain.type.NotificationType
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
-import com.google.firebase.messaging.FirebaseMessaging
-import com.google.firebase.messaging.Message
-import com.google.firebase.messaging.Notification
+import com.google.firebase.messaging.*
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.data.repository.findByIdOrNull
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import java.io.ByteArrayInputStream
 import java.util.*
@@ -17,6 +19,7 @@ import java.util.*
 class NotificationService(
     @Value("\${secret.google-firebase-secret-value}") val secretValue: String,
     val userDeviceRepository: JPAUserDeviceRepository,
+    private val userNotificationConfigRepository: JPAUserNotificationConfigRepository,
 ) {
     init {
         val credentials = ByteArrayInputStream(Base64.getDecoder().decode(secretValue))
@@ -42,22 +45,29 @@ class NotificationService(
         }
     }
 
-//    fun sendMessageToUser(userEntity: UserEntity, title: String, description: String) {
-//        userEntity.devices.forEach { device ->
-//            try {
-//                val message = Message.builder()
-//                    .setNotification(Notification.builder().setTitle(title).setBody(description).build())
-//                    .setToken(device.fcmToken)
-//                    .build()
-//                FirebaseMessaging.getInstance().send(message)
-//            } catch (e: FirebaseMessagingException) {
-//                if (e.messagingErrorCode == MessagingErrorCode.UNREGISTERED) {
-//                    userDeviceRepository.delete(device)
-//                    println("Device unregistered due to fcm token invalidation")
-//                } else {
-//                    e.printStackTrace()
-//                }
-//            }
-//        }
-//    }
+    @Async
+    fun sendMessageToUser(notificationType: NotificationType, userId: String, description: String) {
+        val devices = userDeviceRepository.findAllByUserId(userId)
+        if (devices.isEmpty()) return
+
+        val config = userNotificationConfigRepository.findByIdOrNull(userId) ?: return
+        if (notificationType == NotificationType.SOCIAL && !config.socialEnabled) return
+        if (notificationType == NotificationType.APPLICATION && !config.appEnabled) return
+
+        val message: MulticastMessage = MulticastMessage.builder()
+            .setNotification(
+                Notification.builder()
+                    .setTitle(notificationType.displayName)
+                    .setBody(description)
+                    .build()
+            )
+            .addAllTokens(devices.map { it.deviceToken })
+            .setApnsConfig(ApnsConfig.builder().setAps(Aps.builder().setSound("default").build()).build())
+            .build()
+        try {
+            FirebaseMessaging.getInstance().sendMulticastAsync(message)
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+    }
 }

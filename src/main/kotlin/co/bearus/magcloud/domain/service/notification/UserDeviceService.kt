@@ -20,7 +20,7 @@ class UserDeviceService(
     fun registerDevice(
         userId: String,
         dto: DeviceRegisterDTO,
-    ){
+    ) {
         val user = userRepository
             .findById(userId)
             .orElseThrow { throw UserNotFoundException() }

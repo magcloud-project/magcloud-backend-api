@@ -52,7 +52,7 @@ class AppleNativeProviderService(
 
                 SocialInfoDTO(
                     id = parsed.body["sub"] as String,
-                    email = parsed.body["email"] as String,
+                    email = parsed.body["email"] as? String ?: "",
                     provider = LoginProvider.APPLE,
                     name = MockNickGenerator.generate(),
                 )

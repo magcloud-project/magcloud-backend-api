@@ -32,5 +32,5 @@ object MockNickGenerator {
         "테스트"
     )
 
-    fun generate() = "${prefix.random()} ${suffix.random()}"
+    fun generate() = "${prefix.random()}${suffix.random()}"
 }
