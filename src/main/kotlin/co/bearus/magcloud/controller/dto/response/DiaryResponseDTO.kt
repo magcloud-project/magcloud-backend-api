@@ -13,6 +13,7 @@ data class DiaryResponseDTO(
 
 data class DiaryIntegrityResponseDTO(
     val diaryId: String,
+    val date: String,
     val emotion: String,
     val contentHash: String,
     val createdAtTs: Long,

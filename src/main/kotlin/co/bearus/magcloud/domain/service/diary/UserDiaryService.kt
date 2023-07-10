@@ -12,6 +12,7 @@ import co.bearus.magcloud.domain.repository.JPAUserRepository
 import co.bearus.magcloud.domain.repository.QUserDiaryRepository
 import co.bearus.magcloud.domain.type.Emotion
 import co.bearus.magcloud.util.DateUtils.Companion.toEpochMillis
+import co.bearus.magcloud.util.DateUtils.Companion.toSimpleYmdFormat
 import co.bearus.magcloud.util.ULIDUtils
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
@@ -99,9 +100,25 @@ class UserDiaryService(
             diaryId = diary.diaryId,
             contentHash = diary.contentHash,
             emotion = diary.emotion,
+            date = diary.date.toSimpleYmdFormat(),
             createdAtTs = diary.createdAt.toEpochMillis(),
             updatedAtTs = diary.updatedAt.toEpochMillis(),
         )
+    }
+
+    fun getMonthlyIntegrityById(userId: String, year: Int, month: Int): List<DiaryIntegrityResponseDTO> {
+        return qDiaryRepository
+            .getMonthlyDiaryIntegrity(userId, year, month)
+            .map { diary ->
+                DiaryIntegrityResponseDTO(
+                    diaryId = diary.diaryId,
+                    contentHash = diary.contentHash,
+                    emotion = diary.emotion,
+                    date = diary.date.toSimpleYmdFormat(),
+                    createdAtTs = diary.createdAt.toEpochMillis(),
+                    updatedAtTs = diary.updatedAt.toEpochMillis(),
+                )
+            }
     }
 
     private fun findUser(userId: String): UserEntity {

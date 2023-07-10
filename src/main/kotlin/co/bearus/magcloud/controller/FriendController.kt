@@ -37,7 +37,9 @@ class FriendController(
     fun getDailyFriends(
         @RequestUser user: WebUser,
     ): List<DailyUserDTO> {
-        return friendService.getDailyFriends(user.userId)
+        return friendService
+            .getDailyFriends(user.userId)
+            .sortedBy { it.updatedAtTs }
     }
 
     @PatchMapping("/shareable")

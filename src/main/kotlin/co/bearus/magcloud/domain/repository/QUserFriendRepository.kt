@@ -43,6 +43,8 @@ class QUserFriendRepository(
                 tag = userEntity.tag,
                 profileImageUrl = userEntity.profileImageUrl,
                 emotion = diaryEntity.emotion,
+                isDiaryAllowed = friendEntity.isDiaryAllowed,
+                updatedAt = diaryEntity.updatedAt,
             )
         )
         .leftJoin(userEntity).on(friendEntity.fromUserId.eq(userEntity.userId))
@@ -53,8 +55,6 @@ class QUserFriendRepository(
         )
         .where(
             friendEntity.toUserId.eq(userId)
-                .and(friendEntity.isDiaryAllowed.eq(true))
-                .and(diaryEntity.isNotNull)
         )
         .fetch()
 

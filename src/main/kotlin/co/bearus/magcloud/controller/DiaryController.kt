@@ -71,6 +71,16 @@ class DiaryController(
         return ResponseEntity.ok(result)
     }
 
+    @GetMapping("/integrity", params = ["year", "month"])
+    fun getMonthlyDiaryIntegrity(
+        @RequestParam year: Int,
+        @RequestParam month: Int,
+        @RequestUser user: WebUser,
+    ): ResponseEntity<List<DiaryIntegrityResponseDTO>> {
+        val result = userDiaryService.getMonthlyIntegrityById(user.userId, year, month)
+        return ResponseEntity.ok(result)
+    }
+
     @GetMapping(params = ["date"])
     fun fetchDiary(
         @RequestUser user: WebUser,

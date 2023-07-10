@@ -23,9 +23,33 @@ class QUserDiaryRepository(
                 emotion = diaryEntity.emotion,
                 createdAt = diaryEntity.createdAt,
                 updatedAt = diaryEntity.updatedAt,
+                date = diaryEntity.date,
             )
         )
         .fetchOne()
+
+    fun getMonthlyDiaryIntegrity(
+        userId: String,
+        year: Int,
+        month: Int,
+    ) = queryFactory
+        .selectFrom(diaryEntity)
+        .where(
+            diaryEntity.userId.eq(userId),
+            diaryEntity.date.year().eq(year),
+            diaryEntity.date.month().eq(month),
+        )
+        .select(
+            QDiaryIntegrityProjection(
+                diaryId = diaryEntity.diaryId,
+                contentHash = diaryEntity.contentHash,
+                emotion = diaryEntity.emotion,
+                createdAt = diaryEntity.createdAt,
+                updatedAt = diaryEntity.updatedAt,
+                date = diaryEntity.date,
+            )
+        )
+        .fetch()
 
     fun getUserMonthlyStatistics(
         userId: String,

@@ -21,6 +21,7 @@ data class DailyUserDTO(
     val nameTag: String,
     val profileImageUrl: String,
     val emotion: String,
+    val updatedAtTs: Long,
 )
 
 data class ProfileImageUpdateRequest(
