@@ -22,6 +22,7 @@ enum class ErrorCode(
     ALREADY_FRIEND("FE0001", simpleMessage("이미 친구입니다", "Already friend")),
     ALREADY_FRIEND_REQUESTED("FE0002", simpleMessage("이미 친구 요청을 보냈습니다", "Already friend requested")),
     FRIEND_REQUEST_NOT_FOUND("FE0003", simpleMessage("친구 요청을 받지 않았습니다", "Friend request not received")),
+    NOT_FRIEND("FE0004", simpleMessage("친구가 아닙니다", "Not friend")),
 }
 
 private fun simpleMessage(kor: String, eng: String) = mapOf(

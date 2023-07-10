@@ -1,5 +1,6 @@
 package co.bearus.magcloud.config
 
+import co.bearus.magcloud.advice.ContextLanguageArgumentResolver
 import co.bearus.magcloud.advice.RequestUserArgumentResolver
 import co.bearus.magcloud.config.filter.RequestInterceptor
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 @Configuration
 class SpringWebConfig(
     private val resolver: RequestUserArgumentResolver,
+    private val contextLanguageResolver: ContextLanguageArgumentResolver,
     private val interceptor: RequestInterceptor,
 ) : WebMvcConfigurer {
 
@@ -28,6 +30,7 @@ class SpringWebConfig(
 
     override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver>) {
         resolvers.add(resolver)
+        resolvers.add(contextLanguageResolver)
     }
 
     @Bean

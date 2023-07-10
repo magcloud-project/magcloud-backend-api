@@ -49,7 +49,7 @@ class AuthController(
             "kakao" -> kakaoService
             "kakao-native" -> nativeKakaoService
             "google" -> nativeGoogleService
-            "apple" -> appleService
+            "apple" -> nativeAppleService
             "apple-native" -> nativeAppleService
             else -> throw ValidationException()
         }

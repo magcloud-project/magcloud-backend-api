@@ -1,10 +1,14 @@
 package co.bearus.magcloud.domain.repository
 
 import co.bearus.magcloud.domain.entity.user.QUserEntity.Companion.userEntity
+import co.bearus.magcloud.domain.entity.diary.QDiaryEntity.Companion.diaryEntity
 import co.bearus.magcloud.domain.entity.friend.QFriendEntity.Companion.friendEntity
+import co.bearus.magcloud.domain.entity.friend.QFriendRequestEntity.Companion.friendRequestEntity
+import co.bearus.magcloud.domain.projection.QDailyUserProjection
 import co.bearus.magcloud.domain.projection.QFriendUserProjection
 import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.stereotype.Repository
+import java.time.LocalDate
 
 @Repository
 class QUserFriendRepository(
@@ -25,5 +29,54 @@ class QUserFriendRepository(
             )
         )
         .where(friendEntity.fromUserId.eq(userId))
+        .fetch()
+
+    fun getDailyFriends(
+        userId: String,
+        date: LocalDate,
+    ) = queryFactory
+        .selectFrom(friendEntity)
+        .select(
+            QDailyUserProjection(
+                userId = userEntity.userId,
+                name = userEntity.name,
+                tag = userEntity.tag,
+                profileImageUrl = userEntity.profileImageUrl,
+                emotion = diaryEntity.emotion,
+            )
+        )
+        .leftJoin(userEntity).on(friendEntity.fromUserId.eq(userEntity.userId))
+        .leftJoin(diaryEntity).on(
+            friendEntity.fromUserId.eq(diaryEntity.userId).and(
+                diaryEntity.date.eq(date)
+            )
+        )
+        .where(
+            friendEntity.toUserId.eq(userId)
+                .and(friendEntity.isDiaryAllowed.eq(true))
+                .and(diaryEntity.isNotNull)
+        )
+        .fetch()
+
+    fun getFriendRequests(
+        userId: String,
+    ) = queryFactory
+        .selectFrom(friendRequestEntity)
+        .leftJoin(userEntity).on(friendRequestEntity.fromUserId.eq(userEntity.userId))
+        .select(
+            userEntity
+        )
+        .where(friendRequestEntity.toUserId.eq(userId))
+        .fetch()
+
+    fun getSentFriendRequests(
+        userId: String,
+    ) = queryFactory
+        .selectFrom(friendRequestEntity)
+        .leftJoin(userEntity).on(friendRequestEntity.toUserId.eq(userEntity.userId))
+        .select(
+            userEntity
+        )
+        .where(friendRequestEntity.fromUserId.eq(userId))
         .fetch()
 }

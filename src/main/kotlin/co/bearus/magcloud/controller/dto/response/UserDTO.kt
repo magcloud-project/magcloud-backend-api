@@ -15,6 +15,14 @@ data class FriendDTO(
     val profileImageUrl: String,
 )
 
+data class DailyUserDTO(
+    val userId: String,
+    val name: String,
+    val nameTag: String,
+    val profileImageUrl: String,
+    val emotion: String,
+)
+
 data class ProfileImageUpdateRequest(
     val profileImageUrl: String,
 )
