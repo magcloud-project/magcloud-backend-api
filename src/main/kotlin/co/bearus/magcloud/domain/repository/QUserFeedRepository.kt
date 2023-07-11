@@ -21,7 +21,7 @@ class QUserFeedRepository(
         .selectFrom(friendEntity)
         .leftJoin(userEntity).on(friendEntity.fromUserId.eq(userEntity.userId))
         .leftJoin(diaryEntity).on(friendEntity.fromUserId.eq(diaryEntity.userId))
-        .where(*feedCondition(userId, baseId))
+        .where(feedCondition(userId, baseId))
         .select(
             QFeedProjection(
                 userId = userEntity.userId,
@@ -69,12 +69,13 @@ class QUserFeedRepository(
         return list.toTypedArray()
     }
 
-    private fun feedCondition(userId: String, baseId: String?): Array<BooleanExpression> {
-        val list = mutableListOf<BooleanExpression>()
-        list.add(friendEntity.toUserId.eq(userId))
-        list.add(friendEntity.isDiaryAllowed.eq(true))
-        if (baseId != null) list.add(diaryEntity.diaryId.lt(baseId))
-        return list.toTypedArray()
+    private fun feedCondition(userId: String, baseId: String?): BooleanExpression {
+        val exp = if (baseId == null)
+            friendEntity.toUserId.eq(userId).and(friendEntity.isDiaryAllowed.eq(true))
+        else
+            friendEntity.toUserId.eq(userId)
+                .and(friendEntity.isDiaryAllowed.eq(true).and(diaryEntity.diaryId.lt(baseId)))
+        return diaryEntity.userId.eq(userId).or(exp)
     }
 
 }
