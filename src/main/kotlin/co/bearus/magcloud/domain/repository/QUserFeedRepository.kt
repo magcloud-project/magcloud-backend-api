@@ -17,26 +17,41 @@ class QUserFeedRepository(
         userId: String,
         baseId: String?,
         size: Int,
-    ): List<FeedProjection> = queryFactory
-        .selectFrom(friendEntity)
-        .leftJoin(userEntity).on(friendEntity.fromUserId.eq(userEntity.userId))
-        .leftJoin(diaryEntity).on(friendEntity.fromUserId.eq(diaryEntity.userId))
-        .where(feedCondition(userId, baseId))
-        .select(
-            QFeedProjection(
-                userId = userEntity.userId,
-                userName = userEntity.name,
-                profileImageUrl = userEntity.profileImageUrl,
-                diaryId = diaryEntity.diaryId,
-                mood = diaryEntity.emotion,
-                ymd = diaryEntity.date,
-                content = diaryEntity.content,
-                createdAt = diaryEntity.createdAt,
+    ): List<FeedProjection> {
+        val friendIds = queryFactory
+            .selectFrom(friendEntity)
+            .select(friendEntity.fromUserId)
+            .where(friendEntity.toUserId.eq(userId).and(friendEntity.isDiaryAllowed.eq(true)))
+            .fetch()
+            .toMutableList()
+        friendIds.add(userId)
+
+        val predicate =
+            if (baseId == null)
+                diaryEntity.userId.`in`(friendIds)
+            else
+                diaryEntity.userId.`in`(friendIds).and(diaryEntity.diaryId.lt(baseId))
+
+        return queryFactory
+            .selectFrom(diaryEntity)
+            .leftJoin(userEntity).on(diaryEntity.userId.eq(userEntity.userId))
+            .where(predicate)
+            .select(
+                QFeedProjection(
+                    userId = userEntity.userId,
+                    userName = userEntity.name,
+                    profileImageUrl = userEntity.profileImageUrl,
+                    diaryId = diaryEntity.diaryId,
+                    mood = diaryEntity.emotion,
+                    ymd = diaryEntity.date,
+                    content = diaryEntity.content,
+                    createdAt = diaryEntity.createdAt,
+                )
             )
-        )
-        .orderBy(diaryEntity.diaryId.desc())
-        .limit(size.toLong())
-        .fetch()
+            .orderBy(diaryEntity.diaryId.desc())
+            .limit(size.toLong())
+            .fetch()
+    }
 
     fun getFriendFeed(
         baseId: String?,
@@ -67,15 +82,6 @@ class QUserFeedRepository(
         list.add(diaryEntity.userId.eq(friendId))
         if (baseId != null) list.add(diaryEntity.diaryId.lt(baseId))
         return list.toTypedArray()
-    }
-
-    private fun feedCondition(userId: String, baseId: String?): BooleanExpression {
-        val exp = if (baseId == null)
-            friendEntity.toUserId.eq(userId).and(friendEntity.isDiaryAllowed.eq(true))
-        else
-            friendEntity.toUserId.eq(userId)
-                .and(friendEntity.isDiaryAllowed.eq(true).and(diaryEntity.diaryId.lt(baseId)))
-        return diaryEntity.userId.eq(userId).or(exp)
     }
 
 }
