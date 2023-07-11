@@ -87,6 +87,8 @@ CREATE TABLE friend
     PRIMARY KEY friend_pk(from_user_id, to_user_id)
 ) DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci COMMENT='친구';
+CREATE INDEX friend_idx1 ON friend (to_user_id);
+CREATE INDEX friend_idx2 ON friend (to_user_id, is_diary_allowed);
 
 CREATE TABLE friend_request
 (

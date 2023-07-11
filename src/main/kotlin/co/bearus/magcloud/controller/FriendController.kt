@@ -39,7 +39,7 @@ class FriendController(
     ): List<DailyUserDTO> {
         return friendService
             .getDailyFriends(user.userId)
-            .sortedBy { it.updatedAtTs }
+            .sortedByDescending { it.updatedAtTs }
     }
 
     @PatchMapping("/shareable")

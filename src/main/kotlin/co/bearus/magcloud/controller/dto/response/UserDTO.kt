@@ -27,3 +27,14 @@ data class DailyUserDTO(
 data class ProfileImageUpdateRequest(
     val profileImageUrl: String,
 )
+
+data class FeedDTO(
+    val userId: String,
+    val userName: String,
+    val profileImageUrl: String,
+    val diaryId: String,
+    val mood: String,
+    val ymd: String,
+    val content: String,
+    val createdAtTs: Long,
+)
