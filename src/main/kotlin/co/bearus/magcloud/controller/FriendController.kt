@@ -7,6 +7,7 @@ import co.bearus.magcloud.controller.dto.ResponseMessage
 import co.bearus.magcloud.controller.dto.request.FriendAcceptDTO
 import co.bearus.magcloud.controller.dto.request.FriendRequestDTO
 import co.bearus.magcloud.controller.dto.response.*
+import co.bearus.magcloud.domain.exception.CannotRequestToMyselfException
 import co.bearus.magcloud.domain.service.friend.FriendService
 import co.bearus.magcloud.domain.service.notification.NotificationService
 import co.bearus.magcloud.domain.service.user.UserService
@@ -80,6 +81,9 @@ class FriendController(
     ): APIResponse {
         val sender = userService.getUserInfo(user.userId)
         val receiver = userService.getUserByTag(body.tag)
+
+        if (sender.userId == receiver.userId) throw CannotRequestToMyselfException()
+
         friendService.requestFriend(user.userId, receiver.userId)
         notificationService.sendMessageToUser(
             notificationType = NotificationType.SOCIAL,
