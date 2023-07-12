@@ -24,6 +24,10 @@ data class DailyUserDTO(
     val updatedAtTs: Long,
 )
 
+data class ChangeNameRequest(
+    val name: String,
+)
+
 data class ProfileImageUpdateRequest(
     val profileImageUrl: String,
 )

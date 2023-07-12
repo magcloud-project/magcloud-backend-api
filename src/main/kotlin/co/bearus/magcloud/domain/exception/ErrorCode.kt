@@ -17,6 +17,7 @@ enum class ErrorCode(
     APP_VERSION_EXCEPTION("CM0010", simpleMessage("사용할 수 없는 버전입니다", "App Version Not Available")),
 
     USER_NOT_FOUND("UE0001", simpleMessage("사용자를 찾을 수 없습니다", "User not found")),
+    USER_NICKNAME_TOO_LONG("UE0002", simpleMessage("닉네임은 12자 이하로 입력해주세요", "Nickname must be less than 12 characters")),
 
     DIARY_NOT_FOUND("DE0001", simpleMessage("다이어리를 찾을 수 없습니다", "Diary not found")),
 

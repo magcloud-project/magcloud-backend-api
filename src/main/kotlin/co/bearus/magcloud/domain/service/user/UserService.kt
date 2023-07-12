@@ -35,6 +35,15 @@ class UserService(
     }
 
     @Transactional
+    fun changeName(userId: String, newName: String): UserDTO {
+        val user = userRepository
+            .findById(userId)
+            .orElseThrow { UserNotFoundException() }
+        user.name = newName
+        return userRepository.save(user).toDto()
+    }
+
+    @Transactional
     fun onRegisterRequest(authRegisterDTO: AuthRegisterDTO): UserEntity {
         var newUser: UserEntity
         do {

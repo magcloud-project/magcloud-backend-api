@@ -3,8 +3,10 @@ package co.bearus.magcloud.controller
 import co.bearus.magcloud.advice.RequestUser
 import co.bearus.magcloud.advice.WebUser
 import co.bearus.magcloud.controller.dto.request.UserNotificationConfigDTO
+import co.bearus.magcloud.controller.dto.response.ChangeNameRequest
 import co.bearus.magcloud.controller.dto.response.ProfileImageUpdateRequest
 import co.bearus.magcloud.controller.dto.response.UserDTO
+import co.bearus.magcloud.domain.exception.UserNameTooLongException
 import co.bearus.magcloud.domain.service.user.UserProfileImageService
 import co.bearus.magcloud.domain.service.user.UserService
 import org.springframework.http.ResponseEntity
@@ -39,6 +41,18 @@ class UserController(
         userProfileImageService.changeProfileImage(
             userId = user.userId,
             imageUrl = request.profileImageUrl,
+        )
+    }
+
+    @PostMapping("/me/name")
+    fun updateName(
+        @RequestUser user: WebUser,
+        @RequestBody request: ChangeNameRequest
+    ): UserDTO {
+        if (request.name.length > 12) throw UserNameTooLongException()
+        return userService.changeName(
+            userId = user.userId,
+            newName = request.name,
         )
     }
 
