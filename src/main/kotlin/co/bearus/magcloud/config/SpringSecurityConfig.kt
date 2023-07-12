@@ -36,6 +36,7 @@ class SpringSecurityConfig(
                 requests
                     .requestMatchers("/v1/auth/**").permitAll()
                     .requestMatchers("/health-check").permitAll()
+                    .requestMatchers("/actuator/**").permitAll()
                     .anyRequest().authenticated()
             }
             .csrf {

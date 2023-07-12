@@ -53,4 +53,9 @@ class ApplicationFilter(
             os.flush()
         }
     }
+
+    override fun shouldNotFilter(request: HttpServletRequest): Boolean {
+        val path = request.servletPath
+        return path == "/health-check" || path.startsWith("/actuator/") || path.startsWith("/v1/auth")
+    }
 }
