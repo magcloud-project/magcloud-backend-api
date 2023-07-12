@@ -15,16 +15,21 @@ class UserNotificationConfigEntity private constructor(
 
     @Column(name = "app_enabled")
     var appEnabled: Boolean,
+
+    @Column(name = "feed_enabled")
+    var feedEnabled: Boolean,
 ) : Serializable, BaseAuditEntity() {
     companion object {
         fun newInstance(
             userId: String,
             socialEnabled: Boolean,
             appEnabled: Boolean,
+            feedEnabled: Boolean,
         ) = UserNotificationConfigEntity(
             userId = userId,
             socialEnabled = socialEnabled,
             appEnabled = appEnabled,
+            feedEnabled = feedEnabled,
         )
     }
 }

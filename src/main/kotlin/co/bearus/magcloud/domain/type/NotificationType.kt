@@ -5,4 +5,5 @@ enum class NotificationType(
 ) {
     SOCIAL("매지구름 소셜 알림"),
     APPLICATION("매지구름"),
+    FEED("매지구름"),
 }

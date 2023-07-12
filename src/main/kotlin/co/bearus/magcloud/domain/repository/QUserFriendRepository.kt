@@ -4,6 +4,7 @@ import co.bearus.magcloud.domain.entity.user.QUserEntity.Companion.userEntity
 import co.bearus.magcloud.domain.entity.diary.QDiaryEntity.Companion.diaryEntity
 import co.bearus.magcloud.domain.entity.friend.QFriendEntity.Companion.friendEntity
 import co.bearus.magcloud.domain.entity.friend.QFriendRequestEntity.Companion.friendRequestEntity
+import co.bearus.magcloud.domain.entity.user.QUserNotificationConfigEntity.Companion.userNotificationConfigEntity
 import co.bearus.magcloud.domain.projection.QDailyUserProjection
 import co.bearus.magcloud.domain.projection.QFriendUserProjection
 import com.querydsl.jpa.impl.JPAQueryFactory
@@ -79,4 +80,17 @@ class QUserFriendRepository(
         )
         .where(friendRequestEntity.fromUserId.eq(userId))
         .fetch()
+
+    fun getFeedNotificationEnabledFriends(
+        userId: String,
+    ) = queryFactory
+        .selectFrom(friendEntity)
+        .leftJoin(userEntity).on(friendEntity.toUserId.eq(userEntity.userId))
+        .leftJoin(userNotificationConfigEntity).on(userNotificationConfigEntity.userId.eq(friendEntity.toUserId))
+        .select(
+            userEntity.userId
+        )
+        .where(friendEntity.fromUserId.eq(userId).and(userNotificationConfigEntity.feedEnabled.eq(true)))
+        .fetch()
+
 }

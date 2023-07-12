@@ -85,6 +85,7 @@ class FriendController(
             notificationType = NotificationType.SOCIAL,
             userId = receiver.userId,
             description = "${sender.name}님께서 친구 요청을 보내셨습니다",
+            routePath = "/friends/requests"
         )
         return APIResponse.ok(language, ResponseMessage.SENT_FRIEND_REQUEST)
     }
@@ -123,6 +124,7 @@ class FriendController(
             notificationType = NotificationType.SOCIAL,
             userId = receiver.userId,
             description = "${sender.name}님께서 친구 요청을 수락하셨습니다",
+            routePath = "/friend/${sender.userId}"
         )
         return APIResponse.ok(language, ResponseMessage.ACCEPTED_FRIEND_REQUEST)
     }

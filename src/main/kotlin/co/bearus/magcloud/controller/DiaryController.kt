@@ -9,6 +9,7 @@ import co.bearus.magcloud.controller.dto.response.DiaryIntegrityResponseDTO
 import co.bearus.magcloud.controller.dto.response.DiaryResponseDTO
 import co.bearus.magcloud.domain.exception.UnAuthorizedException
 import co.bearus.magcloud.domain.service.diary.UserDiaryService
+import co.bearus.magcloud.domain.service.notification.NotificationService
 import jakarta.validation.Valid
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.ResponseEntity
@@ -19,6 +20,7 @@ import java.time.LocalDate
 @RequestMapping("/v1/diaries")
 class DiaryController(
     private val userDiaryService: UserDiaryService,
+    private val notificationService: NotificationService,
 ) {
     @PostMapping
     fun createDiary(
@@ -31,6 +33,7 @@ class DiaryController(
             content = dto.content,
             emotion = dto.emotion,
         )
+        notificationService.sendDiaryCreateNotification(result)
         return ResponseEntity.ok(result)
     }
 

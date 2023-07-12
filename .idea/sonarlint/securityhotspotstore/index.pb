@@ -55,8 +55,6 @@ Jsrc/main/kotlin/co/bearus/magcloud/domain/entity/friend/FriendEntityKey.kt,6/4
 Qsrc/main/kotlin/co/bearus/magcloud/domain/entity/friend/FriendRequestEntityKey.kt,d/2/d2b3ef9f5b9dfabc959617a0bb493183edd6cd5b
 q
 Asrc/main/kotlin/co/bearus/magcloud/domain/service/dto/TokenDTO.kt,3/d/3d27991ffbe89d99c1bcd630c86918256c1771cd
-r
-Bsrc/main/kotlin/co/bearus/magcloud/domain/service/dto/Minecraft.kt,b/5/b54f354bf8b703f508d380446952f7cabb01db3e
 {
 Ksrc/main/kotlin/co/bearus/magcloud/domain/repository/JPAFriendRepository.kt,9/4/9495b8b82cfdd3b557443a6be073789b0580234b
 x
@@ -132,16 +130,10 @@ Isrc/main/kotlin/co/bearus/magcloud/domain/entity/user/UserDeviceEntity.kt,0/6/
 Osrc/main/kotlin/co/bearus/magcloud/domain/repository/JPAUserDeviceRepository.kt,3/b/3b3cc41e3209460b1691ac8e37d928b850cfb458
 s
 Csrc/main/kotlin/co/bearus/magcloud/domain/entity/user/UserEntity.kt,6/1/614871da3da8887753c435ab89037e20be82da8a
-…
-Usrc/main/kotlin/co/bearus/magcloud/domain/entity/user/UserNotificationConfigEntity.kt,2/7/27ec5b0df707c41ca046f7ea737222b9d7eb4ae6
 ‹
 [src/main/kotlin/co/bearus/magcloud/domain/repository/JPAUserNotificationConfigRepository.kt,9/6/9627465b9e816e84e6073e72f9ff02d4c476ccfb
 y
 Isrc/main/kotlin/co/bearus/magcloud/domain/repository/JPAUserRepository.kt,a/5/a54b50de079151dcaeb8b116744e43dd124db6f9
-r
-Bsrc/main/kotlin/co/bearus/magcloud/domain/type/NotificationType.kt,c/5/c525c9b1d65d1de3c229fba789e5e6e855d2fd55
-…
-Usrc/main/kotlin/co/bearus/magcloud/domain/service/notification/NotificationService.kt,7/2/720fa731d64750b1d0e3306fd9497a494f893a3c
 p
 @src/main/kotlin/co/bearus/magcloud/config/WebClientProperties.kt,b/2/b26f84b9faa24bee3f728efb0cb786f3bc18deea
 {
@@ -152,8 +144,6 @@ Ssrc/main/kotlin/co/bearus/magcloud/controller/dto/request/RefreshTokenRequestDT
 Msrc/main/kotlin/co/bearus/magcloud/controller/dto/request/FriendRequestDTO.kt,d/2/d297994c24d7a3403876eb7cffc713075516a59c
 |
 Lsrc/main/kotlin/co/bearus/magcloud/controller/dto/request/AuthRegisterDTO.kt,e/8/e87ebeab47c53ef9c7617f67b894a05986da5c42
-†
-Vsrc/main/kotlin/co/bearus/magcloud/controller/dto/request/UserNotificationConfigDTO.kt,7/1/710a753435935ab1f9e213cd4855f8eefff3d862
 r
 Bsrc/main/kotlin/co/bearus/magcloud/controller/dto/SocialInfoDTO.kt,5/f/5fa5d165585aee55b8af97c335a0887f0457bee7
 ‹
@@ -176,11 +166,7 @@ Ksrc/main/kotlin/co/bearus/magcloud/controller/dto/response/CountResponse.kt,e/
 Psrc/main/kotlin/co/bearus/magcloud/domain/projection/MonthlyEmotionProjection.kt,6/7/67976c1ee3d0d36449b1b83488aab586c5a54200
 
 Osrc/main/kotlin/co/bearus/magcloud/domain/projection/YearlyEmotionProjection.kt,f/8/f855a84deca334a040452dcd6a39c7b38cb4a763
-p
-@src/main/kotlin/co/bearus/magcloud/controller/DiaryController.kt,c/7/c7042235b28b996810c94dd1e61323d2658f4fc9
 ~
 Nsrc/main/kotlin/co/bearus/magcloud/controller/dto/response/DiaryResponseDTO.kt,c/3/c3b02d76c2b38485ef4457877280797dadcf6706
 €
 Psrc/main/kotlin/co/bearus/magcloud/domain/projection/DiaryIntegrityProjection.kt,b/9/b99257da46bfa02a79fb08444e03efb0b220a989
-{
-Ksrc/main/kotlin/co/bearus/magcloud/domain/service/diary/UserDiaryService.kt,9/9/993c622b9d149ff9c4315d315969e8560082947f

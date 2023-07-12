@@ -50,6 +50,7 @@ class UserService(
             userId = newUser.userId,
             socialEnabled = true,
             appEnabled = true,
+            feedEnabled = true,
         )
         userNotificationConfigRepository.save(notificationConfig)
         return userRepository.save(newUser)
@@ -62,10 +63,12 @@ class UserService(
             .orElseThrow { throw UserNotFoundException() }
         config.appEnabled = request.app
         config.socialEnabled = request.social
+        config.feedEnabled = request.feed
         val saveResult = userNotificationConfigRepository.save(config)
         return UserNotificationConfigDTO(
             app = saveResult.appEnabled,
             social = saveResult.socialEnabled,
+            feed = saveResult.feedEnabled,
         )
     }
 
@@ -75,6 +78,7 @@ class UserService(
             UserNotificationConfigDTO(
                 app = it.appEnabled,
                 social = it.socialEnabled,
+                feed = it.feedEnabled,
             )
         }
         .orElseThrow { throw UserNotFoundException() }
