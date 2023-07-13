@@ -8,6 +8,7 @@ import co.bearus.magcloud.controller.dto.response.DiaryIntegrityResponseDTO
 import co.bearus.magcloud.controller.dto.response.DiaryResponseDTO
 import co.bearus.magcloud.controller.dto.response.FeedDTO
 import co.bearus.magcloud.domain.exception.DiaryNotFoundException
+import co.bearus.magcloud.domain.exception.DiaryTooOldException
 import co.bearus.magcloud.domain.exception.UnAuthorizedException
 import co.bearus.magcloud.domain.repository.QUserFeedRepository
 import co.bearus.magcloud.domain.service.diary.UserDiaryService
@@ -17,6 +18,7 @@ import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @RestController
 @RequestMapping("/v1/diaries")
@@ -30,6 +32,10 @@ class DiaryController(
         @RequestBody @Valid dto: DiaryCreateDTO,
         @RequestUser user: WebUser,
     ): ResponseEntity<DiaryResponseDTO> {
+        val date = LocalDate.now();
+        val diaryDate = LocalDate.parse(dto.date, DateTimeFormatter.BASIC_ISO_DATE)
+        val gap = date.toEpochDay() - diaryDate.toEpochDay()
+        if (diaryDate.isAfter(date) || gap > 2) throw DiaryTooOldException()
         val result = userDiaryService.createDiary(
             userId = user.userId,
             diaryDate = dto.date,

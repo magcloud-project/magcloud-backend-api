@@ -67,6 +67,11 @@ class UserDiaryService(
 
         if (previousDiary.userId != userId) throw UnAuthorizedException()
 
+        val date = LocalDate.now();
+        val diaryDate = previousDiary.date
+        val gap = date.toEpochDay() - diaryDate.toEpochDay()
+        if (diaryDate.isAfter(date) || gap > 2) throw DiaryTooOldException()
+
         previousDiary.updateDiary(dto)
         return diaryRepository.save(previousDiary).toDto()
     }
