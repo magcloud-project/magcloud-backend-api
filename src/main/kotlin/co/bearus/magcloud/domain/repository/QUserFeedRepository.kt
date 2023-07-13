@@ -14,6 +14,29 @@ import org.springframework.stereotype.Repository
 class QUserFeedRepository(
     private val queryFactory: JPAQueryFactory,
 ) {
+    fun getFeedByDiaryId(diaryId: String, userId: String,): FeedProjection? {
+        return queryFactory
+            .selectFrom(diaryEntity)
+            .leftJoin(userEntity).on(diaryEntity.userId.eq(userEntity.userId))
+            .leftJoin(diaryLikeEntity).on(diaryEntity.diaryId.eq(diaryLikeEntity.diaryId).and(diaryLikeEntity.userId.eq(userId)))
+            .where(diaryEntity.diaryId.eq(diaryId))
+            .select(
+                QFeedProjection(
+                    userId = userEntity.userId,
+                    userName = userEntity.name,
+                    profileImageUrl = userEntity.profileImageUrl,
+                    diaryId = diaryEntity.diaryId,
+                    mood = diaryEntity.emotion,
+                    ymd = diaryEntity.date,
+                    content = diaryEntity.content,
+                    likeCount = diaryEntity.likeCount,
+                    likedAt = diaryLikeEntity.createdAt,
+                    createdAt = diaryEntity.createdAt,
+                )
+            )
+            .fetchOne()
+    }
+
     fun getUserFeed(
         userId: String,
         baseId: String?,

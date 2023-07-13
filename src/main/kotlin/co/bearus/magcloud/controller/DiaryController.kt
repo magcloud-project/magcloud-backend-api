@@ -7,7 +7,10 @@ import co.bearus.magcloud.controller.dto.request.DiaryPatchDTO
 import co.bearus.magcloud.controller.dto.response.APIResponse
 import co.bearus.magcloud.controller.dto.response.DiaryIntegrityResponseDTO
 import co.bearus.magcloud.controller.dto.response.DiaryResponseDTO
+import co.bearus.magcloud.controller.dto.response.FeedDTO
+import co.bearus.magcloud.domain.exception.DiaryNotFoundException
 import co.bearus.magcloud.domain.exception.UnAuthorizedException
+import co.bearus.magcloud.domain.repository.QUserFeedRepository
 import co.bearus.magcloud.domain.service.diary.UserDiaryService
 import co.bearus.magcloud.domain.service.notification.NotificationService
 import jakarta.validation.Valid
@@ -21,6 +24,7 @@ import java.time.LocalDate
 class DiaryController(
     private val userDiaryService: UserDiaryService,
     private val notificationService: NotificationService,
+    private val feedRepository: QUserFeedRepository,
 ) {
     @PostMapping
     fun createDiary(
@@ -51,18 +55,20 @@ class DiaryController(
     fun likeDiary(
         @PathVariable diaryId: String,
         @RequestUser user: WebUser,
-    ): ResponseEntity<DiaryResponseDTO> {
-        val result = userDiaryService.likeDiary(diaryId, user.userId)
-        return ResponseEntity.ok(result)
+    ): ResponseEntity<FeedDTO> {
+        userDiaryService.likeDiary(diaryId, user.userId)
+        val feed = feedRepository.getFeedByDiaryId(diaryId, user.userId) ?: throw DiaryNotFoundException()
+        return ResponseEntity.ok(feed.toDto())
     }
 
     @PostMapping("/{diaryId}/unlike")
     fun unlikeDiary(
         @PathVariable diaryId: String,
         @RequestUser user: WebUser,
-    ): ResponseEntity<DiaryResponseDTO> {
-        val result = userDiaryService.unLikeDiary(diaryId, user.userId)
-        return ResponseEntity.ok(result)
+    ): ResponseEntity<FeedDTO> {
+        userDiaryService.unLikeDiary(diaryId, user.userId)
+        val feed = feedRepository.getFeedByDiaryId(diaryId, user.userId) ?: throw DiaryNotFoundException()
+        return ResponseEntity.ok(feed.toDto())
     }
 
 
