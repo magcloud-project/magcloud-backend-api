@@ -36,6 +36,7 @@ data class FeedDTO(
     val userId: String,
     val userName: String,
     val profileImageUrl: String,
+    val imageUrl: String?,
     val diaryId: String,
     val mood: String,
     val ymd: String,

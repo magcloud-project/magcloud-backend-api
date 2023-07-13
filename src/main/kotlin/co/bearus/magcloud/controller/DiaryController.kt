@@ -4,7 +4,6 @@ import co.bearus.magcloud.advice.RequestUser
 import co.bearus.magcloud.advice.WebUser
 import co.bearus.magcloud.controller.dto.request.DiaryCreateDTO
 import co.bearus.magcloud.controller.dto.request.DiaryPatchDTO
-import co.bearus.magcloud.controller.dto.response.APIResponse
 import co.bearus.magcloud.controller.dto.response.DiaryIntegrityResponseDTO
 import co.bearus.magcloud.controller.dto.response.DiaryResponseDTO
 import co.bearus.magcloud.controller.dto.response.FeedDTO
@@ -36,6 +35,7 @@ class DiaryController(
             diaryDate = dto.date,
             content = dto.content,
             emotion = dto.emotion,
+            imageUrl = dto.imageUrl,
         )
         notificationService.sendDiaryCreateNotification(result)
         return ResponseEntity.ok(result)

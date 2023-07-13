@@ -30,6 +30,7 @@ class QUserFeedRepository(
                     ymd = diaryEntity.date,
                     content = diaryEntity.content,
                     likeCount = diaryEntity.likeCount,
+                    imageUrl = diaryEntity.imageUrl,
                     likedAt = diaryLikeEntity.createdAt,
                     createdAt = diaryEntity.createdAt,
                 )
@@ -70,6 +71,7 @@ class QUserFeedRepository(
                     mood = diaryEntity.emotion,
                     ymd = diaryEntity.date,
                     content = diaryEntity.content,
+                    imageUrl = diaryEntity.imageUrl,
                     likeCount = diaryEntity.likeCount,
                     likedAt = diaryLikeEntity.createdAt,
                     createdAt = diaryEntity.createdAt,
@@ -100,6 +102,7 @@ class QUserFeedRepository(
                 ymd = diaryEntity.date,
                 content = diaryEntity.content,
                 likeCount = diaryEntity.likeCount,
+                imageUrl = diaryEntity.imageUrl,
                 likedAt = diaryLikeEntity.createdAt,
                 createdAt = diaryEntity.createdAt,
             )

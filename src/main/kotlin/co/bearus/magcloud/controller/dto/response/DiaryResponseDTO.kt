@@ -8,6 +8,7 @@ data class DiaryResponseDTO(
     val content: String,
     val contentHash: String,
     val likeCount: Int,
+    val imageUrl: String?,
     val createdAtTs: Long,
     val updatedAtTs: Long,
 )

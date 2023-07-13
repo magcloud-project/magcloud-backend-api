@@ -35,6 +35,7 @@ class UserDiaryService(
         diaryDate: String,
         content: String,
         emotion: Emotion,
+        imageUrl: String?,
     ): DiaryResponseDTO {
         val user = findUser(userId)
 
@@ -47,6 +48,7 @@ class UserDiaryService(
             userId = user.userId,
             emotion = emotion.name,
             date = date,
+            imageUrl = imageUrl,
             content = content,
             contentHash = SHA256.encrypt(content),
         )
