@@ -7,6 +7,7 @@ data class DiaryResponseDTO(
     val emotion: String,
     val content: String,
     val contentHash: String,
+    val likeCount: Int,
     val createdAtTs: Long,
     val updatedAtTs: Long,
 )

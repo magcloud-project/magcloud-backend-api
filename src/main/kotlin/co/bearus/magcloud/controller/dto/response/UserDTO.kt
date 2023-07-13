@@ -40,5 +40,7 @@ data class FeedDTO(
     val mood: String,
     val ymd: String,
     val content: String,
+    val isLiked: Boolean,
+    val likeCount: Int,
     val createdAtTs: Long,
 )

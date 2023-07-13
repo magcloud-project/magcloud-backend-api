@@ -15,6 +15,8 @@ data class FeedProjection @QueryProjection constructor(
     val mood: String,
     val ymd: LocalDate,
     val content: String,
+    val likedAt: LocalDateTime?,
+    val likeCount: Int,
     val createdAt: LocalDateTime,
 ) {
     fun toDto() = FeedDTO(
@@ -25,6 +27,8 @@ data class FeedProjection @QueryProjection constructor(
         mood = mood,
         ymd = ymd.toSimpleYmdFormat(),
         content = content,
+        likeCount = likeCount,
+        isLiked = likedAt != null,
         createdAtTs = createdAt.toEpochMillis(),
     )
 }

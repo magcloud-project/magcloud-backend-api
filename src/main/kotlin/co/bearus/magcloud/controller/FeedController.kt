@@ -34,9 +34,9 @@ class FeedController(
         @RequestParam userId: String,
         @RequestParam(required = false) baseId: String?,
     ): List<FeedDTO> {
-        if(!friendService.isDiaryReadable(user.userId, userId) && user.userId != userId) return emptyList();
+        if (!friendService.isDiaryReadable(user.userId, userId) && user.userId != userId) return emptyList();
         return qUserFeedRepository
-            .getFriendFeed(baseId, size, userId)
+            .getFriendFeed(baseId, size, user.userId, userId)
             .map { it.toDto() }
     }
 }

@@ -47,6 +47,25 @@ class DiaryController(
         return ResponseEntity.ok(result)
     }
 
+    @PostMapping("/{diaryId}/like")
+    fun likeDiary(
+        @PathVariable diaryId: String,
+        @RequestUser user: WebUser,
+    ): ResponseEntity<DiaryResponseDTO> {
+        val result = userDiaryService.likeDiary(diaryId, user.userId)
+        return ResponseEntity.ok(result)
+    }
+
+    @PostMapping("/{diaryId}/unlike")
+    fun unlikeDiary(
+        @PathVariable diaryId: String,
+        @RequestUser user: WebUser,
+    ): ResponseEntity<DiaryResponseDTO> {
+        val result = userDiaryService.unLikeDiary(diaryId, user.userId)
+        return ResponseEntity.ok(result)
+    }
+
+
     @GetMapping
     fun fetchTodayDiary(
         @RequestUser user: WebUser,

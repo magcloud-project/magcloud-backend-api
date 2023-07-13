@@ -5,8 +5,11 @@ import co.bearus.magcloud.controller.dto.request.DiaryPatchDTO
 import co.bearus.magcloud.controller.dto.response.DiaryIntegrityResponseDTO
 import co.bearus.magcloud.controller.dto.response.DiaryResponseDTO
 import co.bearus.magcloud.domain.entity.diary.DiaryEntity
+import co.bearus.magcloud.domain.entity.diary.DiaryLikeEntity
+import co.bearus.magcloud.domain.entity.diary.DiaryLikeEntityKey
 import co.bearus.magcloud.domain.entity.user.UserEntity
 import co.bearus.magcloud.domain.exception.*
+import co.bearus.magcloud.domain.repository.JPADiaryLikeRepository
 import co.bearus.magcloud.domain.repository.JPAUserDiaryRepository
 import co.bearus.magcloud.domain.repository.JPAUserRepository
 import co.bearus.magcloud.domain.repository.QUserDiaryRepository
@@ -23,6 +26,7 @@ import java.time.format.DateTimeFormatter
 class UserDiaryService(
     private val userRepository: JPAUserRepository,
     private val diaryRepository: JPAUserDiaryRepository,
+    private val diaryLikeRepository: JPADiaryLikeRepository,
     private val qDiaryRepository: QUserDiaryRepository,
 ) {
     @Transactional
@@ -63,6 +67,50 @@ class UserDiaryService(
 
         previousDiary.updateDiary(dto)
         return diaryRepository.save(previousDiary).toDto()
+    }
+
+    @Transactional
+    fun likeDiary(
+        diaryId: String,
+        userId: String,
+    ): DiaryResponseDTO {
+        val diary = diaryRepository
+            .findById(diaryId)
+            .orElseThrow { DiaryNotFoundException() }
+
+        val diaryLike = diaryLikeRepository
+            .findById(DiaryLikeEntityKey(diaryId, userId))
+            .orElse(null)
+
+        if (diaryLike == null) {
+            diaryLikeRepository.save(
+                DiaryLikeEntity.of(diaryId, userId)
+            )
+            diary.likeCount = diaryLikeRepository.countByDiaryId(diaryId).toInt()
+            return diaryRepository.save(diary).toDto()
+        }
+        return diary.toDto()
+    }
+
+    @Transactional
+    fun unLikeDiary(
+        diaryId: String,
+        userId: String,
+    ): DiaryResponseDTO {
+        val diary = diaryRepository
+            .findById(diaryId)
+            .orElseThrow { DiaryNotFoundException() }
+
+        val diaryLike = diaryLikeRepository
+            .findById(DiaryLikeEntityKey(diaryId, userId))
+            .orElse(null)
+
+        if (diaryLike != null) {
+            diaryLikeRepository.delete(diaryLike)
+            diary.likeCount = diaryLikeRepository.countByDiaryId(diaryId).toInt()
+            return diaryRepository.save(diary).toDto()
+        }
+        return diary.toDto()
     }
 
     fun getDiaryByDate(userId: String, date: LocalDate): DiaryResponseDTO? {

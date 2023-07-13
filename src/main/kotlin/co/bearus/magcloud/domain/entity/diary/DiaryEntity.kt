@@ -27,6 +27,9 @@ class DiaryEntity private constructor(
     @Column(name = "emotion")
     var emotion: String,
 
+    @Column(name = "like_count")
+    var likeCount: Int,
+
     @Column(length = 50000)
     var content: String,
 
@@ -46,6 +49,7 @@ class DiaryEntity private constructor(
         emotion = this.emotion,
         content = this.content,
         contentHash = this.contentHash,
+        likeCount = this.likeCount,
         createdAtTs = this.createdAt?.toEpochMillis() ?: 0,
         updatedAtTs = this.updatedAt?.toEpochMillis() ?: 0,
     )
@@ -63,6 +67,7 @@ class DiaryEntity private constructor(
             userId = userId,
             date = date,
             emotion = emotion,
+            likeCount = 0,
             content = content,
             contentHash = contentHash,
         )

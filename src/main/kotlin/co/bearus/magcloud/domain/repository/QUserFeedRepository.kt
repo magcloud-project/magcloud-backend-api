@@ -1,6 +1,7 @@
 package co.bearus.magcloud.domain.repository
 
 import co.bearus.magcloud.domain.entity.diary.QDiaryEntity.Companion.diaryEntity
+import co.bearus.magcloud.domain.entity.diary.QDiaryLikeEntity.Companion.diaryLikeEntity
 import co.bearus.magcloud.domain.entity.friend.QFriendEntity.Companion.friendEntity
 import co.bearus.magcloud.domain.entity.user.QUserEntity.Companion.userEntity
 import co.bearus.magcloud.domain.projection.FeedProjection
@@ -35,6 +36,7 @@ class QUserFeedRepository(
         return queryFactory
             .selectFrom(diaryEntity)
             .leftJoin(userEntity).on(diaryEntity.userId.eq(userEntity.userId))
+            .leftJoin(diaryLikeEntity).on(diaryEntity.diaryId.eq(diaryLikeEntity.diaryId).and(diaryLikeEntity.userId.eq(userId)))
             .where(predicate)
             .select(
                 QFeedProjection(
@@ -45,6 +47,8 @@ class QUserFeedRepository(
                     mood = diaryEntity.emotion,
                     ymd = diaryEntity.date,
                     content = diaryEntity.content,
+                    likeCount = diaryEntity.likeCount,
+                    likedAt = diaryLikeEntity.createdAt,
                     createdAt = diaryEntity.createdAt,
                 )
             )
@@ -56,10 +60,12 @@ class QUserFeedRepository(
     fun getFriendFeed(
         baseId: String?,
         size: Int,
+        myId: String,
         friendId: String,
     ): List<FeedProjection> = queryFactory
         .selectFrom(diaryEntity)
         .leftJoin(userEntity).on(diaryEntity.userId.eq(userEntity.userId))
+        .leftJoin(diaryLikeEntity).on(diaryEntity.diaryId.eq(diaryLikeEntity.diaryId).and(diaryLikeEntity.userId.eq(myId)))
         .where(*friendFeedCondition(baseId, friendId))
         .select(
             QFeedProjection(
@@ -70,6 +76,8 @@ class QUserFeedRepository(
                 mood = diaryEntity.emotion,
                 ymd = diaryEntity.date,
                 content = diaryEntity.content,
+                likeCount = diaryEntity.likeCount,
+                likedAt = diaryLikeEntity.createdAt,
                 createdAt = diaryEntity.createdAt,
             )
         )
