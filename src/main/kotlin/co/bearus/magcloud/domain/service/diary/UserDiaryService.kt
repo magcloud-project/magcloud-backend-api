@@ -14,6 +14,7 @@ import co.bearus.magcloud.domain.repository.JPAUserDiaryRepository
 import co.bearus.magcloud.domain.repository.JPAUserRepository
 import co.bearus.magcloud.domain.repository.QUserDiaryRepository
 import co.bearus.magcloud.domain.type.Emotion
+import co.bearus.magcloud.util.DateUtils
 import co.bearus.magcloud.util.DateUtils.Companion.toEpochMillis
 import co.bearus.magcloud.util.DateUtils.Companion.toSimpleYmdFormat
 import co.bearus.magcloud.util.ULIDUtils
@@ -66,6 +67,11 @@ class UserDiaryService(
             .orElseThrow { DiaryNotFoundException() }
 
         if (previousDiary.userId != userId) throw UnAuthorizedException()
+
+        val date = DateUtils.dateAtSeoul()
+        val diaryDate = previousDiary.date
+        val gap = date.toEpochDay() - diaryDate.toEpochDay()
+        if (gap < 0 || gap > 2) throw DiaryTooOldException()
 
         previousDiary.updateDiary(dto)
         return diaryRepository.save(previousDiary).toDto()

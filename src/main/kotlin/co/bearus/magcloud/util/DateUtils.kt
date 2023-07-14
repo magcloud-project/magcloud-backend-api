@@ -9,5 +9,6 @@ class DateUtils {
         val simpleYmdFormat = DateTimeFormatter.ofPattern("yyyyMMdd")
         fun LocalDate.toSimpleYmdFormat() = this.format(simpleYmdFormat)
         fun LocalDateTime.toEpochMillis() = this.atZone(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli()
+        fun dateAtSeoul() = LocalDate.now(java.time.ZoneId.of("Asia/Seoul"))
     }
 }
