@@ -1,14 +1,18 @@
 package co.bearus.magcloud.controller
 
+import co.bearus.magcloud.advice.RequestLanguage
 import co.bearus.magcloud.advice.RequestUser
 import co.bearus.magcloud.advice.WebUser
+import co.bearus.magcloud.controller.dto.ResponseMessage
 import co.bearus.magcloud.controller.dto.request.UserNotificationConfigDTO
+import co.bearus.magcloud.controller.dto.response.APIResponse
 import co.bearus.magcloud.controller.dto.response.ChangeNameRequest
 import co.bearus.magcloud.controller.dto.response.ProfileImageUpdateRequest
 import co.bearus.magcloud.controller.dto.response.UserDTO
 import co.bearus.magcloud.domain.exception.UserNameTooLongException
 import co.bearus.magcloud.domain.service.user.UserProfileImageService
 import co.bearus.magcloud.domain.service.user.UserService
+import co.bearus.magcloud.domain.type.ContextLanguage
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -22,6 +26,15 @@ class UserController(
     fun getMe(@RequestUser user: WebUser): ResponseEntity<UserDTO> {
         val result = userService.getUserInfo(user.userId)
         return ResponseEntity.ok(result)
+    }
+
+    @PostMapping("/leave")
+    fun leaveMagCloud(
+        @RequestUser user: WebUser,
+        @RequestLanguage language: ContextLanguage,
+    ): APIResponse {
+        userService.leaveMagCloud(user.userId)
+        return APIResponse.ok(language, ResponseMessage.LEAVED_MAGCLOUD)
     }
 
     @GetMapping("/{userId}")

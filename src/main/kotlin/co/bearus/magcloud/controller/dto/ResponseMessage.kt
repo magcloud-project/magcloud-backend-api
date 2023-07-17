@@ -12,6 +12,7 @@ enum class ResponseMessage(
     CANCELLED_FRIEND_REQUEST(simpleMessage("친구 요청을 취소했습니다", "Cancelled a friend request")),
     SHARED_DIARY(simpleMessage("다이어리를 공유했습니다", "Shared a diary")),
     HIDE_DIARY(simpleMessage("다이어리를 비공개했습니다", "Hid a diary")),
+    LEAVED_MAGCLOUD(simpleMessage("매지구름을 탈퇴했습니다", "Leaved MagCloud")),
 }
 
 private fun simpleMessage(kor: String, eng: String) = mapOf(

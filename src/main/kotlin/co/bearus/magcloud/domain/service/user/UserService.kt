@@ -9,9 +9,7 @@ import co.bearus.magcloud.domain.entity.user.UserTokenEntity
 import co.bearus.magcloud.domain.exception.DomainException
 import co.bearus.magcloud.domain.exception.TokenExpiredException
 import co.bearus.magcloud.domain.exception.UserNotFoundException
-import co.bearus.magcloud.domain.repository.JPAUserNotificationConfigRepository
-import co.bearus.magcloud.domain.repository.JPAUserRepository
-import co.bearus.magcloud.domain.repository.JPAUserTokenRepository
+import co.bearus.magcloud.domain.repository.*
 import co.bearus.magcloud.domain.service.dto.TokenDTO
 import co.bearus.magcloud.provider.TokenProvider
 import co.bearus.magcloud.util.RandomTagGenerator
@@ -23,7 +21,9 @@ import org.springframework.stereotype.Service
 class UserService(
     private val userRepository: JPAUserRepository,
     private val tokenRepository: JPAUserTokenRepository,
+    private val userSocialRepository: JPAUserSocialRepository,
     private val userNotificationConfigRepository: JPAUserNotificationConfigRepository,
+    private val jpaFriendRepository: JPAFriendRepository,
     private val tokenProvider: TokenProvider,
 ) {
     @Transactional
@@ -41,6 +41,20 @@ class UserService(
             .orElseThrow { UserNotFoundException() }
         user.name = newName
         return userRepository.save(user).toDto()
+    }
+
+    @Transactional
+    fun leaveMagCloud(userId: String) {
+        val user = userRepository
+            .findById(userId)
+            .orElseThrow { UserNotFoundException() }
+        user.email = "-${user.email}"
+        userSocialRepository.deleteAllByUserId(user.userId)
+
+        jpaFriendRepository.deleteAllByFromUserId(user.userId)
+        jpaFriendRepository.deleteAllByToUserId(user.userId)
+
+        userRepository.save(user)
     }
 
     @Transactional
