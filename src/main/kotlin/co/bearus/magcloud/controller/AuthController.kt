@@ -46,7 +46,7 @@ class AuthController(
 
     private fun parseProvider(provider: String): SocialProvider {
         return when (provider.lowercase(Locale.getDefault())) {
-            "kakao" -> kakaoService
+            "kakao" -> nativeKakaoService
             "kakao-native" -> nativeKakaoService
             "google" -> nativeGoogleService
             "apple" -> nativeAppleService
