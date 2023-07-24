@@ -10,3 +10,16 @@ data class DiaryCreateDTO(
     val emotion: Emotion = Emotion.NEUTRAL,
     val imageUrl: String? = null,
 )
+
+data class DiaryCommentCreateDTO(
+    val content: String,
+)
+
+data class DiaryCommentDTO(
+    val commentId: String,
+    val diaryId: String,
+    val userId: String,
+    val content: String,
+    val createdAtTs: Long,
+    val updatedAtTs: Long,
+)
