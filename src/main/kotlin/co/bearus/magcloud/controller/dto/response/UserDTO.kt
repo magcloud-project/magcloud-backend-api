@@ -43,5 +43,6 @@ data class FeedDTO(
     val content: String,
     val isLiked: Boolean,
     val likeCount: Int,
+    val commentCount: Int,
     val createdAtTs: Long,
 )

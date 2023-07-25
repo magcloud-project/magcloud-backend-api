@@ -45,6 +45,8 @@ class DiaryCommentEntity private constructor(
         commentId = this.commentId,
         diaryId = this.diaryId,
         userId = this.userId,
+        username = "",
+        profileImageUrl = "",
         content = this.content,
         createdAtTs = this.createdAt!!.toEpochMillis(),
         updatedAtTs = this.updatedAt!!.toEpochMillis(),

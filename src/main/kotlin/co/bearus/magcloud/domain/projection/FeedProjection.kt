@@ -18,6 +18,7 @@ data class FeedProjection @QueryProjection constructor(
     val imageUrl: String?,
     val likedAt: LocalDateTime?,
     val likeCount: Int,
+    val commentCount: Int,
     val createdAt: LocalDateTime,
 ) {
     fun toDto() = FeedDTO(
@@ -30,6 +31,7 @@ data class FeedProjection @QueryProjection constructor(
         content = content,
         imageUrl = imageUrl,
         likeCount = likeCount,
+        commentCount = commentCount,
         isLiked = likedAt != null,
         createdAtTs = createdAt.toEpochMillis(),
     )

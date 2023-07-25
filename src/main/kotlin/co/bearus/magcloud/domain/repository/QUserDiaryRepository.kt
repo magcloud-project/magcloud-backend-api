@@ -1,6 +1,9 @@
 package co.bearus.magcloud.domain.repository
 
+import co.bearus.magcloud.domain.entity.diary.QDiaryCommentEntity.Companion.diaryCommentEntity
 import co.bearus.magcloud.domain.entity.diary.QDiaryEntity.Companion.diaryEntity
+import co.bearus.magcloud.domain.entity.user.QUserEntity.Companion.userEntity
+import co.bearus.magcloud.domain.projection.QDiaryCommentProjection
 import co.bearus.magcloud.domain.projection.QDiaryIntegrityProjection
 import co.bearus.magcloud.domain.projection.QMonthlyEmotionProjection
 import co.bearus.magcloud.domain.projection.QYearlyEmotionProjection
@@ -87,5 +90,25 @@ class QUserDiaryRepository(
             )
         )
         .groupBy(diaryEntity.date.month(), diaryEntity.emotion)
+        .fetch()
+
+    fun getDiaryComments(
+        diaryId: String,
+    ) = queryFactory
+        .selectFrom(diaryCommentEntity)
+        .leftJoin(userEntity).on(diaryCommentEntity.userId.eq(userEntity.userId))
+        .where(diaryCommentEntity.diaryId.eq(diaryId))
+        .select(
+            QDiaryCommentProjection(
+                commentId = diaryCommentEntity.commentId,
+                diaryId = diaryCommentEntity.diaryId,
+                userId = diaryCommentEntity.userId,
+                content = diaryCommentEntity.content,
+                createdAt = diaryCommentEntity.createdAt,
+                updatedAt = diaryCommentEntity.updatedAt,
+                username = userEntity.name,
+                profileImageUrl = userEntity.profileImageUrl,
+            )
+        )
         .fetch()
 }

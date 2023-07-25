@@ -6,6 +6,7 @@ import co.bearus.magcloud.controller.dto.request.DiaryCommentCreateDTO
 import co.bearus.magcloud.controller.dto.request.DiaryCommentDTO
 import co.bearus.magcloud.domain.entity.diary.DiaryCommentEntity
 import co.bearus.magcloud.domain.repository.JPADiaryCommentRepository
+import co.bearus.magcloud.domain.repository.QUserDiaryRepository
 import co.bearus.magcloud.domain.service.diary.UserDiaryService
 import co.bearus.magcloud.util.ULIDUtils
 import org.springframework.transaction.annotation.Transactional
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController
 class DiaryCommentController(
     private val diaryCommentRepository: JPADiaryCommentRepository,
     private val diaryService: UserDiaryService,
+    private val qUserDiaryRepository: QUserDiaryRepository,
 ) {
     @Transactional
     @PostMapping
@@ -43,6 +45,6 @@ class DiaryCommentController(
     fun getComments(
         @PathVariable diaryId: String,
     ): List<DiaryCommentDTO> {
-        return diaryCommentRepository.findAllByDiaryId(diaryId).map { it.toDto() }
+        return qUserDiaryRepository.getDiaryComments(diaryId).map { it.toDto() }
     }
 }

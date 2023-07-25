@@ -1,5 +1,6 @@
 package co.bearus.magcloud.domain.repository
 
+import co.bearus.magcloud.domain.entity.diary.QDiaryCommentEntity.Companion.diaryCommentEntity
 import co.bearus.magcloud.domain.entity.diary.QDiaryEntity.Companion.diaryEntity
 import co.bearus.magcloud.domain.entity.diary.QDiaryLikeEntity.Companion.diaryLikeEntity
 import co.bearus.magcloud.domain.entity.friend.QFriendEntity.Companion.friendEntity
@@ -19,6 +20,7 @@ class QUserFeedRepository(
             .selectFrom(diaryEntity)
             .leftJoin(userEntity).on(diaryEntity.userId.eq(userEntity.userId))
             .leftJoin(diaryLikeEntity).on(diaryEntity.diaryId.eq(diaryLikeEntity.diaryId).and(diaryLikeEntity.userId.eq(userId)))
+            .leftJoin(diaryCommentEntity).on(diaryEntity.diaryId.eq(diaryCommentEntity.diaryId))
             .where(diaryEntity.diaryId.eq(diaryId))
             .select(
                 QFeedProjection(
@@ -30,11 +32,13 @@ class QUserFeedRepository(
                     ymd = diaryEntity.date,
                     content = diaryEntity.content,
                     likeCount = diaryEntity.likeCount,
+                    commentCount = diaryCommentEntity.count().intValue(),
                     imageUrl = diaryEntity.imageUrl,
                     likedAt = diaryLikeEntity.createdAt,
                     createdAt = diaryEntity.createdAt,
                 )
             )
+            .groupBy(diaryEntity.diaryId)
             .fetchOne()
     }
 
@@ -61,6 +65,7 @@ class QUserFeedRepository(
             .selectFrom(diaryEntity)
             .leftJoin(userEntity).on(diaryEntity.userId.eq(userEntity.userId))
             .leftJoin(diaryLikeEntity).on(diaryEntity.diaryId.eq(diaryLikeEntity.diaryId).and(diaryLikeEntity.userId.eq(userId)))
+            .leftJoin(diaryCommentEntity).on(diaryEntity.diaryId.eq(diaryCommentEntity.diaryId))
             .where(predicate)
             .select(
                 QFeedProjection(
@@ -73,10 +78,12 @@ class QUserFeedRepository(
                     content = diaryEntity.content,
                     imageUrl = diaryEntity.imageUrl,
                     likeCount = diaryEntity.likeCount,
+                    commentCount = diaryCommentEntity.count().intValue(),
                     likedAt = diaryLikeEntity.createdAt,
                     createdAt = diaryEntity.createdAt,
                 )
             )
+            .groupBy(diaryEntity.diaryId)
             .orderBy(diaryEntity.diaryId.desc())
             .limit(size.toLong())
             .fetch()
@@ -91,6 +98,7 @@ class QUserFeedRepository(
         .selectFrom(diaryEntity)
         .leftJoin(userEntity).on(diaryEntity.userId.eq(userEntity.userId))
         .leftJoin(diaryLikeEntity).on(diaryEntity.diaryId.eq(diaryLikeEntity.diaryId).and(diaryLikeEntity.userId.eq(myId)))
+        .leftJoin(diaryCommentEntity).on(diaryEntity.diaryId.eq(diaryCommentEntity.diaryId))
         .where(*friendFeedCondition(baseId, friendId))
         .select(
             QFeedProjection(
@@ -102,11 +110,13 @@ class QUserFeedRepository(
                 ymd = diaryEntity.date,
                 content = diaryEntity.content,
                 likeCount = diaryEntity.likeCount,
+                commentCount = diaryCommentEntity.count().intValue(),
                 imageUrl = diaryEntity.imageUrl,
                 likedAt = diaryLikeEntity.createdAt,
                 createdAt = diaryEntity.createdAt,
             )
         )
+        .groupBy(diaryEntity.diaryId)
         .orderBy(diaryEntity.diaryId.desc())
         .limit(size.toLong())
         .fetch()

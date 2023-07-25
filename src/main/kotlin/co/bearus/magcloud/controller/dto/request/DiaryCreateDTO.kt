@@ -19,6 +19,8 @@ data class DiaryCommentDTO(
     val commentId: String,
     val diaryId: String,
     val userId: String,
+    val username: String,
+    val profileImageUrl: String,
     val content: String,
     val createdAtTs: Long,
     val updatedAtTs: Long,
