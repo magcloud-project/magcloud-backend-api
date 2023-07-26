@@ -13,6 +13,8 @@ enum class ResponseMessage(
     SHARED_DIARY(simpleMessage("다이어리를 공유했습니다", "Shared a diary")),
     HIDE_DIARY(simpleMessage("다이어리를 비공개했습니다", "Hid a diary")),
     LEAVED_MAGCLOUD(simpleMessage("매지구름을 탈퇴했습니다", "Leaved MagCloud")),
+    NO_PERMISSION(simpleMessage("권한이 없습니다", "No permission")),
+    SUCCESSFULLY_DELETED(simpleMessage("성공적으로 삭제되었습니다", "Successfully deleted")),
 }
 
 private fun simpleMessage(kor: String, eng: String) = mapOf(
