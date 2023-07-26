@@ -98,7 +98,7 @@ class UserDiaryService(
             )
             diary.likeCount = diaryLikeRepository.countByDiaryId(diaryId).toInt()
 
-            if(userId != diary.userId) notificationService.sendDiaryLikedNotification(diaryId)
+            if (userId != diary.userId) notificationService.sendDiaryLikedNotification(diaryId)
             return diaryRepository.save(diary).toDto()
         }
         return diary.toDto()

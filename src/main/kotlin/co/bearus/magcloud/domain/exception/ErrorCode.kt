@@ -20,7 +20,10 @@ enum class ErrorCode(
     USER_NICKNAME_TOO_LONG("UE0002", simpleMessage("닉네임은 12자 이하로 입력해주세요", "Nickname must be less than 12 characters")),
 
     DIARY_NOT_FOUND("DE0001", simpleMessage("다이어리를 찾을 수 없습니다", "Diary not found")),
-    CANNOT_UPDATE_MORE_THAN_TWO_DAYS("DE0002", simpleMessage("2일 이상 지난 일기는 편집할 수 없어요", "Cannot edit diary older than 2 days")),
+    CANNOT_UPDATE_MORE_THAN_TWO_DAYS(
+        "DE0002",
+        simpleMessage("2일 이상 지난 일기는 편집할 수 없어요", "Cannot edit diary older than 2 days")
+    ),
 
     ALREADY_FRIEND("FE0001", simpleMessage("이미 친구입니다", "Already friend")),
     ALREADY_FRIEND_REQUESTED("FE0002", simpleMessage("이미 친구 요청을 보냈습니다", "Already friend requested")),

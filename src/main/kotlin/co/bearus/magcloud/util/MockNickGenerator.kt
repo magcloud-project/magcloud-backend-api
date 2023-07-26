@@ -1,7 +1,7 @@
 package co.bearus.magcloud.util
 
 object MockNickGenerator {
-    val prefix = listOf("멋있는", "맛있는", "대단한", "엄청난", "위대한", "행복한", "즐거운", "새로운")
+    val prefix = listOf("멋있는", "맛있는", "대단한", "엄청난", "위대한", "행복한", "즐거운", "새로운", "작은", "신기한", "재밌는")
     val suffix = listOf(
         "식사",
         "과일",
@@ -29,7 +29,8 @@ object MockNickGenerator {
         "프로그래밍",
         "개발",
         "코딩",
-        "테스트"
+        "테스트",
+        "보안"
     )
 
     fun generate() = "${prefix.random()}${suffix.random()}"

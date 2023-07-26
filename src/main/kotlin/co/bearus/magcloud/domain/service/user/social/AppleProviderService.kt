@@ -1,6 +1,5 @@
 package co.bearus.magcloud.domain.service.user.social
 
-import co.bearus.magcloud.domain.exception.DomainException
 import co.bearus.magcloud.domain.type.LoginProvider
 import com.google.gson.Gson
 import io.jsonwebtoken.JwsHeader

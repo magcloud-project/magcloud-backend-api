@@ -1,6 +1,8 @@
 package co.bearus.magcloud.domain.entity
 
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
 import java.io.Serializable
 
 @Entity(name = "app_info")

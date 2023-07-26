@@ -1,6 +1,5 @@
 package co.bearus.magcloud.config.filter
 
-import co.bearus.magcloud.domain.service.AppInfoService
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
@@ -8,7 +7,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.servlet.HandlerInterceptor
 
 @Component
-class RequestInterceptor: HandlerInterceptor {
+class RequestInterceptor : HandlerInterceptor {
 
     companion object {
         const val START_TIME_ATTR_NAME = "startTime"

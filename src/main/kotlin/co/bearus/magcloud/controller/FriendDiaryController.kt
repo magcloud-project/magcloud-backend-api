@@ -5,16 +5,11 @@ import co.bearus.magcloud.advice.WebUser
 import co.bearus.magcloud.controller.dto.response.DiaryResponseDTO
 import co.bearus.magcloud.domain.exception.DiaryNotExistsException
 import co.bearus.magcloud.domain.exception.IntegrityViolationException
-import co.bearus.magcloud.domain.exception.ValidationException
 import co.bearus.magcloud.domain.service.diary.UserDiaryService
 import co.bearus.magcloud.domain.service.friend.FriendService
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
 
 @RestController

@@ -6,7 +6,6 @@ import co.bearus.magcloud.controller.dto.response.UserDTO
 import co.bearus.magcloud.domain.entity.user.UserEntity
 import co.bearus.magcloud.domain.entity.user.UserNotificationConfigEntity
 import co.bearus.magcloud.domain.entity.user.UserTokenEntity
-import co.bearus.magcloud.domain.exception.DomainException
 import co.bearus.magcloud.domain.exception.TokenExpiredException
 import co.bearus.magcloud.domain.exception.UserNotFoundException
 import co.bearus.magcloud.domain.repository.*

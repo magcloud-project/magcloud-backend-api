@@ -19,7 +19,7 @@ data class DailyUserProjection @QueryProjection constructor(
         name = name,
         nameTag = "${name}#${tag}",
         profileImageUrl = profileImageUrl,
-        emotion = if(emotion == null || !isDiaryAllowed) "unselected" else emotion,
+        emotion = if (emotion == null || !isDiaryAllowed) "unselected" else emotion,
         updatedAtTs = updatedAt?.toEpochMillis() ?: 0L,
     )
 }

@@ -1,7 +1,6 @@
 package co.bearus.magcloud.domain.projection
 
 import co.bearus.magcloud.controller.dto.request.DiaryCommentDTO
-import co.bearus.magcloud.controller.dto.response.DailyUserDTO
 import co.bearus.magcloud.util.DateUtils.Companion.toEpochMillis
 import com.querydsl.core.annotations.QueryProjection
 import java.time.LocalDateTime

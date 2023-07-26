@@ -1,9 +1,9 @@
 package co.bearus.magcloud.domain.repository
 
-import co.bearus.magcloud.domain.entity.user.QUserEntity.Companion.userEntity
 import co.bearus.magcloud.domain.entity.diary.QDiaryEntity.Companion.diaryEntity
 import co.bearus.magcloud.domain.entity.friend.QFriendEntity.Companion.friendEntity
 import co.bearus.magcloud.domain.entity.friend.QFriendRequestEntity.Companion.friendRequestEntity
+import co.bearus.magcloud.domain.entity.user.QUserEntity.Companion.userEntity
 import co.bearus.magcloud.domain.entity.user.QUserNotificationConfigEntity.Companion.userNotificationConfigEntity
 import co.bearus.magcloud.domain.projection.QDailyUserProjection
 import co.bearus.magcloud.domain.projection.QFriendUserProjection

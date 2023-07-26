@@ -1,7 +1,9 @@
 package co.bearus.magcloud.domain.entity.user
 
 import co.bearus.magcloud.domain.entity.BaseAuditEntity
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
 import java.io.Serializable
 
 @Entity(name = "user_notification_config")

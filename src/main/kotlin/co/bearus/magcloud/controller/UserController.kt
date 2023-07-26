@@ -49,7 +49,7 @@ class UserController(
     @PostMapping("/me/profile-image")
     fun updateProfileImage(
         @RequestUser user: WebUser,
-        @RequestBody request: ProfileImageUpdateRequest
+        @RequestBody request: ProfileImageUpdateRequest,
     ) {
         userProfileImageService.changeProfileImage(
             userId = user.userId,
@@ -60,7 +60,7 @@ class UserController(
     @PostMapping("/me/name")
     fun updateName(
         @RequestUser user: WebUser,
-        @RequestBody request: ChangeNameRequest
+        @RequestBody request: ChangeNameRequest,
     ): UserDTO {
         if (request.name.length > 12) throw UserNameTooLongException()
         return userService.changeName(

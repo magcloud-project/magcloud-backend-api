@@ -15,11 +15,12 @@ import org.springframework.stereotype.Repository
 class QUserFeedRepository(
     private val queryFactory: JPAQueryFactory,
 ) {
-    fun getFeedByDiaryId(diaryId: String, userId: String,): FeedProjection? {
+    fun getFeedByDiaryId(diaryId: String, userId: String): FeedProjection? {
         return queryFactory
             .selectFrom(diaryEntity)
             .leftJoin(userEntity).on(diaryEntity.userId.eq(userEntity.userId))
-            .leftJoin(diaryLikeEntity).on(diaryEntity.diaryId.eq(diaryLikeEntity.diaryId).and(diaryLikeEntity.userId.eq(userId)))
+            .leftJoin(diaryLikeEntity)
+            .on(diaryEntity.diaryId.eq(diaryLikeEntity.diaryId).and(diaryLikeEntity.userId.eq(userId)))
             .leftJoin(diaryCommentEntity).on(diaryEntity.diaryId.eq(diaryCommentEntity.diaryId))
             .where(diaryEntity.diaryId.eq(diaryId))
             .select(
@@ -64,7 +65,8 @@ class QUserFeedRepository(
         return queryFactory
             .selectFrom(diaryEntity)
             .leftJoin(userEntity).on(diaryEntity.userId.eq(userEntity.userId))
-            .leftJoin(diaryLikeEntity).on(diaryEntity.diaryId.eq(diaryLikeEntity.diaryId).and(diaryLikeEntity.userId.eq(userId)))
+            .leftJoin(diaryLikeEntity)
+            .on(diaryEntity.diaryId.eq(diaryLikeEntity.diaryId).and(diaryLikeEntity.userId.eq(userId)))
             .leftJoin(diaryCommentEntity).on(diaryEntity.diaryId.eq(diaryCommentEntity.diaryId))
             .where(predicate)
             .select(

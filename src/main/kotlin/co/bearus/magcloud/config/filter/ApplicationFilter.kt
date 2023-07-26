@@ -1,7 +1,6 @@
 package co.bearus.magcloud.config.filter
 
 import co.bearus.magcloud.controller.dto.response.ErrorResponse
-import co.bearus.magcloud.domain.exception.DomainException
 import co.bearus.magcloud.domain.exception.ErrorCode
 import co.bearus.magcloud.domain.service.AppInfoService
 import co.bearus.magcloud.domain.type.ContextLanguage
@@ -46,10 +45,12 @@ class ApplicationFilter(
         response.contentType = MediaType.APPLICATION_JSON_VALUE
 
         response.outputStream.use { os ->
-            objectMapper.writeValue(os, ErrorResponse(
+            objectMapper.writeValue(
+                os, ErrorResponse(
                     code = ErrorCode.APP_VERSION_EXCEPTION.code,
                     message = ErrorCode.APP_VERSION_EXCEPTION.message[language] ?: "",
-                ))
+                )
+            )
             os.flush()
         }
     }

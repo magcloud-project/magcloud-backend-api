@@ -1,10 +1,8 @@
 package co.bearus.magcloud.domain.service.notification
 
 import co.bearus.magcloud.controller.dto.request.DeviceRegisterDTO
-import co.bearus.magcloud.controller.dto.response.APIResponse
 import co.bearus.magcloud.domain.entity.user.UserDeviceEntity
 import co.bearus.magcloud.domain.entity.user.UserDeviceKey
-import co.bearus.magcloud.domain.exception.DomainException
 import co.bearus.magcloud.domain.exception.UserNotFoundException
 import co.bearus.magcloud.domain.repository.JPAUserDeviceRepository
 import co.bearus.magcloud.domain.repository.JPAUserRepository

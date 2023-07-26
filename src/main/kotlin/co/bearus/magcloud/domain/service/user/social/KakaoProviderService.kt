@@ -1,6 +1,5 @@
 package co.bearus.magcloud.domain.service.user.social
 
-import co.bearus.magcloud.domain.exception.DomainException
 import co.bearus.magcloud.domain.type.LoginProvider
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper

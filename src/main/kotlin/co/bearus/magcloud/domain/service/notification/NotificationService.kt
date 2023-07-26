@@ -34,10 +34,6 @@ class NotificationService(
         FirebaseApp.initializeApp(options)
     }
 
-    fun broadcastMessage(title: String, description: String) {
-        this.sendMessageToTopic("all", title, description)
-    }
-
     fun sendMessageToTopic(topic: String, title: String, description: String) {
         try {
             val message = Message.builder()
@@ -80,7 +76,7 @@ class NotificationService(
     fun sendCommentCreateNotification(comment: DiaryCommentDTO) {
         val diary = diaryRepository.findByIdOrNull(comment.diaryId) ?: return
         val writer = userRepository.findByIdOrNull(comment.userId) ?: return
-        if(comment.userId != diary.userId)
+        if (comment.userId != diary.userId)
             sendMessageToUser(
                 notificationType = NotificationType.SOCIAL,
                 userId = diary.userId,
@@ -112,7 +108,12 @@ class NotificationService(
     }
 
     @Async
-    fun sendMessageToUser(notificationType: NotificationType, userId: String, description: String, routePath: String = "") {
+    fun sendMessageToUser(
+        notificationType: NotificationType,
+        userId: String,
+        description: String,
+        routePath: String = "",
+    ) {
         val devices = userDeviceRepository.findAllByUserId(userId)
         if (devices.isEmpty()) return
 
@@ -130,7 +131,9 @@ class NotificationService(
                     .build()
             )
             .addAllTokens(devices.map { it.deviceToken })
-            .setApnsConfig(ApnsConfig.builder().setAps(Aps.builder().setSound("default").setContentAvailable(true).build()).build())
+            .setApnsConfig(
+                ApnsConfig.builder().setAps(Aps.builder().setSound("default").setContentAvailable(true).build()).build()
+            )
             .build()
         try {
             FirebaseMessaging.getInstance().sendMulticastAsync(message)
