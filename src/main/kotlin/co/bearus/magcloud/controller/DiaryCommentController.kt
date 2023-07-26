@@ -11,6 +11,7 @@ import co.bearus.magcloud.domain.entity.diary.DiaryCommentEntity
 import co.bearus.magcloud.domain.repository.JPADiaryCommentRepository
 import co.bearus.magcloud.domain.repository.QUserDiaryRepository
 import co.bearus.magcloud.domain.service.diary.UserDiaryService
+import co.bearus.magcloud.domain.service.notification.NotificationService
 import co.bearus.magcloud.domain.type.ContextLanguage
 import co.bearus.magcloud.util.ULIDUtils
 import org.springframework.data.repository.findByIdOrNull
@@ -29,6 +30,7 @@ class DiaryCommentController(
     private val diaryCommentRepository: JPADiaryCommentRepository,
     private val diaryService: UserDiaryService,
     private val qUserDiaryRepository: QUserDiaryRepository,
+    private val notificationService: NotificationService,
 ) {
     @Transactional
     @PostMapping
@@ -44,7 +46,9 @@ class DiaryCommentController(
             userId = user.userId,
             content = body.content,
         )
-        return diaryCommentRepository.save(comment).toDto()
+        val result = diaryCommentRepository.save(comment).toDto()
+        notificationService.sendCommentCreateNotification(result)
+        return result
     }
 
     @GetMapping

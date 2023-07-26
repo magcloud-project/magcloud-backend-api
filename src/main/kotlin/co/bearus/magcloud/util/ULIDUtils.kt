@@ -7,5 +7,10 @@ class ULIDUtils {
         fun generate(): String {
             return UlidCreator.getMonotonicUlid().toString()
         }
+
+        fun isULID(input: String): Boolean {
+            val ulidRegex = Regex("^[0-9a-z]{26}$")
+            return ulidRegex.matches(input)
+        }
     }
 }

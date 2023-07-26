@@ -13,6 +13,7 @@ import co.bearus.magcloud.domain.repository.JPADiaryLikeRepository
 import co.bearus.magcloud.domain.repository.JPAUserDiaryRepository
 import co.bearus.magcloud.domain.repository.JPAUserRepository
 import co.bearus.magcloud.domain.repository.QUserDiaryRepository
+import co.bearus.magcloud.domain.service.notification.NotificationService
 import co.bearus.magcloud.domain.type.Emotion
 import co.bearus.magcloud.util.DateUtils
 import co.bearus.magcloud.util.DateUtils.Companion.toEpochMillis
@@ -29,6 +30,7 @@ class UserDiaryService(
     private val diaryRepository: JPAUserDiaryRepository,
     private val diaryLikeRepository: JPADiaryLikeRepository,
     private val qDiaryRepository: QUserDiaryRepository,
+    private val notificationService: NotificationService,
 ) {
     @Transactional
     fun createDiary(
@@ -95,6 +97,7 @@ class UserDiaryService(
                 DiaryLikeEntity.of(diaryId, userId)
             )
             diary.likeCount = diaryLikeRepository.countByDiaryId(diaryId).toInt()
+            notificationService.sendDiaryLikedNotification(diaryId)
             return diaryRepository.save(diary).toDto()
         }
         return diary.toDto()
