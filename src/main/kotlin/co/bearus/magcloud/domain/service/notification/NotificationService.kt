@@ -80,12 +80,13 @@ class NotificationService(
     fun sendCommentCreateNotification(comment: DiaryCommentDTO) {
         val diary = diaryRepository.findByIdOrNull(comment.diaryId) ?: return
         val writer = userRepository.findByIdOrNull(comment.userId) ?: return
-        sendMessageToUser(
-            notificationType = NotificationType.SOCIAL,
-            userId = diary.userId,
-            description = "${writer.name}님이 내 일기에 댓글을 달았어요!",
-            routePath = "/comment/${comment.diaryId}"
-        )
+        if(comment.userId != diary.userId)
+            sendMessageToUser(
+                notificationType = NotificationType.SOCIAL,
+                userId = diary.userId,
+                description = "${writer.name}님이 내 일기에 댓글을 달았어요!",
+                routePath = "/comment/${comment.diaryId}"
+            )
 
         val taggedPeoples = StringUtils.extractULIDFromString(comment.content)
         taggedPeoples.forEach {
