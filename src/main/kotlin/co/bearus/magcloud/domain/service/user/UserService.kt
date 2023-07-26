@@ -48,7 +48,7 @@ class UserService(
         val user = userRepository
             .findById(userId)
             .orElseThrow { UserNotFoundException() }
-        user.email = "-${user.email}"
+        user.email = "${user.userId}-${user.email}"
         userSocialRepository.deleteAllByUserId(user.userId)
 
         jpaFriendRepository.deleteAllByFromUserId(user.userId)
